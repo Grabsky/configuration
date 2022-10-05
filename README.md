@@ -145,7 +145,7 @@ repositories {
 
 dependencies {
     // ...other dependencies
-    implementation 'io.github.grabsky:configuration:_version_'
+    implementation 'com.github.grabsky:configuration:0.9.2-pre'
 }
 
 tasks {
