@@ -1,4 +1,6 @@
 # grabsky/configuration
+[![](https://github.com/Grabsky/configuration/actions/workflows/gradle.yml/badge.svg)](https://github.com/Grabsky/configuration/actions/workflows/gradle.yml)  
+[![](https://jitpack.io/v/Grabsky/configuration.svg)](https://jitpack.io/#Grabsky/configuration)
 Experimental [SpongePowered/Configurate](https://github.com/SpongePowered/Configurate) 'wrapper' that aims to reduce time spent on creating HOCON configurations for [PaperMC/Paper](https://github.com/PaperMC/Paper) plugins.
 
 ### Serializers
