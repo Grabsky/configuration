@@ -54,14 +54,16 @@ public class ConfigurationManagerImpl implements ConfigurationManager {
                 field.set(null, config.node((Object[]) path).get(field.getGenericType()));
             }
             // Executing Configuration#onReload function
-            clazz.getDeclaredMethod("onReload").invoke((clazz.isEnum() == true) ? clazz.getEnumConstants()[0] : clazz.getDeclaredConstructor().newInstance());
+            try {
+                clazz.getDeclaredMethod("onReload").invoke((clazz.isEnum() == true) ? clazz.getEnumConstants()[0] : clazz.getDeclaredConstructor().newInstance());
+            } catch (final NoSuchMethodException e) { /* IGNORE */ }
             // Returning 'true' since configuration reload succeeded
             return true;
         } catch (final ConfigurateException | ResourceNotFoundException e) {
             plugin.getLogger().severe(e.getMessage());
             // Returning 'false' since configuration reload failed
             return false;
-        } catch (final InvocationTargetException | IllegalAccessException | NoSuchMethodException | InstantiationException e) {
+        } catch (final InvocationTargetException | IllegalAccessException | InstantiationException e) {
             e.printStackTrace();
             // Returning 'false' since configuration reload failed
             return false;
