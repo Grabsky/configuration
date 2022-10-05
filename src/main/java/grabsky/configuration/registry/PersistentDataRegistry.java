@@ -6,11 +6,12 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 
-public enum PersistentDataRegistry implements Registry<String, PersistentDataType<?, ?>> {
-    /* Singleton. */ INSTANCE;
+public final class PersistentDataRegistry implements Registry<String, PersistentDataType<?, ?>> {
+    /* Singleton. */ public static final PersistentDataRegistry INSTANCE = new PersistentDataRegistry();
 
     private final HashMap<String, PersistentDataType<?, ?>> internalMap = new HashMap<>();
 
+    // INTERNAL USE ONLY; NO INSTANCING ALLOWED
     private PersistentDataRegistry() {
         this.add("byte", PersistentDataType.BYTE);
         this.add("byte_array", PersistentDataType.BYTE_ARRAY);

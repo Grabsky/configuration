@@ -1,77 +1,83 @@
 # grabsky/configuration
+[![](https://github.com/Grabsky/configuration/actions/workflows/gradle.yml/badge.svg)](https://github.com/Grabsky/configuration/actions/workflows/gradle.yml)
+[![](https://jitpack.io/v/Grabsky/configuration.svg)](https://jitpack.io/#Grabsky/configuration)  
 Experimental [SpongePowered/Configurate](https://github.com/SpongePowered/Configurate) 'wrapper' that aims to reduce time spent on creating HOCON configurations for [PaperMC/Paper](https://github.com/PaperMC/Paper) plugins.
 
 ### Serializers
 There are a bunch of type serializers built-in but you need to add them to your `ConfigurationOptions` manually. Keep in mind that deserialization is not implemented.
-
-| Type (class)                                            | Serializer (class)                                           | Notes                                                                                                                      |
-|---------------------------------------------------------|--------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------|
-| `org.bukkit.NamespacedKey`                              | `grabsky.configuration.serializers.NamespacedKeySerializer`  | Uses `namespaced:keys` as values.                                                                                          |
-| `org.bukkit.Material`                                   | `grabsky.configuration.serializers.MaterialSerializer`       | Uses `namespaced:keys` as identifiers.                                                                                     |
-| `org.bukkit.entity.EntityType`                          | `grabsky.configuration.serializers.EntityTypeSerializer`     | Uses `namespaced:keys` as identifiers.                                                                                     |
-| `org.bukkit.enchantments.Enchantment`                   | `grabsky.configuration.serializers.EnchantmentSerializer`    | Uses `namespaced:keys` as identifiers.                                                                                     |
-| `grabsky.configuration.serializers.ItemEnchantment`     | `grabsky.configuration.serializers.ItemEnchantment`          | See [formatting guide](#formatting-guide) below.                                                                           |
-| `grabsky.configuration.serializers.PersistentDataEntry` | `grabsky.configuration.serializers.PersistentDataSerializer` | See [formatting guide](#formatting-guide) below.                                                                           |
-| `org.bukkit.inventory.ItemStack`                        | `grabsky.configuration.serializers.ItemStackSerializer`      | Requires some serializers to work properly. (2)                                                                            |
-| `net.kyori.adventure.text.Component`                    | `grabsky.configuration.serializers.ComponentSerializer`      | Uses [MiniMessage](https://docs.adventure.kyori.net/minimessage/index.html) for String -> Component conversion by default. |
-| `net.kyori.adventure.sound.Sound`                       | `grabsky.configuration.serializers.SoundSerializer`          | Uses `namespaced:keys` as identifiers.                                                                                     |
-
-1. All serializers using `namespaced:keys` as identifiers require `NamespacedKeySerializer`.
-2. Serialization of `ItemStack` requires `MaterialSerializer`, `EnchantmentSerializer`, `ItemEnchantmentSerializer`, `EntityTypeSerializer`, `PersistentDataSerializer` and `ComponentSerializer`.
+```
++-------------------------------------------------------+-------------------------------------------------------------+
+| Type (class)                                          | Serializer (class)                                          |
++-------------------------------------------------------+-------------------------------------------------------------+
+| org.bukkit.NamespacedKey                              | grabsky.configuration.serializers.NamespacedKeySerializer   |
+| org.bukkit.Material                                   | grabsky.configuration.serializers.MaterialSerializer        |
+| org.bukkit.entity.EntityType                          | grabsky.configuration.serializers.EntityTypeSerializer      |
+| org.bukkit.enchantments.Enchantment                   | grabsky.configuration.serializers.EnchantmentSerializer     |
+| org.bukkit.inventory.ItemStack                        | grabsky.configuration.serializers.ItemStackSerializer       |
+|                                                       |                                                             |
+| net.kyori.adventure.text.Component                    | grabsky.configuration.serializers.ComponentSerializer       |
+| net.kyori.adventure.sound.Sound                       | grabsky.configuration.serializers.SoundSerializer           |
+|                                                       |                                                             |
+| grabsky.configuration.serializers.ItemEnchantment     | grabsky.configuration.serializers.ItemEnchantmentSerializer |
+| grabsky.configuration.serializers.PersistentDataEntry | grabsky.configuration.serializers.PersistentDataSerializer  |
++-------------------------------------------------------+-------------------------------------------------------------+
+```
+Most of built-in type serializers depend on eachother.
 
 ### Formatting Guide
 Not familiar with HOCON? Give [this](https://github.com/lightbend/config/blob/main/HOCON.md) a read.
+
 ```hocon
-# NamespacedKey <- NamespacedKeySerializer
+# NamespacedKey (NamespacedKeySerializer)
 namespacedkey = "namespaced:key"
 
-# Material <- MaterialSerializer
+# Material (MaterialSerializer)
 material = "minecraft:stone"
 
-# EntityType <- EntityTypeSerializer
+# EntityType (EntityTypeSerializer)
 entity_type = "minecraft:cow"
 
-# Enchantment <- EnchantmentSerializer
+# Enchantment (EnchantmentSerializer)
 enchantment = "minecraft:sharpness"
 
-# ItemEnchantment <- ItemEnchantmentSerializer
+# ItemEnchantment (ItemEnchantmentSerializer)
 item_enchantment = { key = "minecraft:sharpness", level = 5 }
 
-# PersistentDataEntry <- PersistentDataSerializer (byte, byte_array, integer, integer_array, long, long_array, float, double, string)
+# PersistentDataEntry (PersistentDataSerializer)
 persistent_data_entry = { key = "configuration:test/string", type = "string", value = "I am a String." }
 
-# Component  <- ComponentSerializer
+# Component (ComponentSerializer)
 component = "<red>It uses <rainbow>MiniMessage<red>!"
 
-# Sound <- SoundSerializer
+# Sound (SoundSerializer)
 sound = "minecraft:block.note_block.banjo"
 
-# ItemStack <- ItemStackSerializer
+# ItemStack (ItemStackSerializer)
 item_example {
-    # Material <- MaterialSerializer (required)
+    # Material (MaterialSerializer) - required
     material = "minecraft:sword"
     
-    # Integer (optional, among with all 'meta' entries)
+    # Integer - optional, among with all 'meta' entries
     amount = 1
     
-    # Component <- ComponentSerializer
+    # Component (ComponentSerializer)
     meta.name = "<red>You can use <rainbow>MiniMessage<red> here!"
     
-    # List<Component> <- ComponentSerializer
+    # List<Component> (ComponentSerializer)
     meta.lore = ["<red>and here too."]
     
-    # List<ItemEnchantment> <- ItemEnchantmentSerializer
+    # List<ItemEnchantment> (ItemEnchantmentSerializer)
     meta.enchantments = [
         { key = "minecraft:infinity", level = 1 }
     ]
     
-    # List<ItemFlag> <- EnumSerializer (?)
-    meta.flags = ["HIDE_ENCHANTS"]
+    # List<ItemFlag>
+    meta.flags = ["HIDE_ATTRIBUTES", "HIDE_DESTROYS", "HIDE_DYE", "HIDE_ENCHANTS", "HIDE_PLACED_ON", "HIDE_POTION_EFFECTS", "HIDE_UNBREAKABLE"]
     
     # Integer
     meta.custom_model_data = 7 
     
-    # List<PersistentDataEntry> <- PersistentDataSerializer
+    # List<PersistentDataEntry> (PersistentDataSerializer)
     meta.persistent_data_container = [
         { key = "configuration:test/byte",          type = "byte",          value = 0                                               },
         { key = "configuration:test/byte_array",    type = "byte_array",    value = [0, 1, 1, 0, 0]                                 },
@@ -84,43 +90,42 @@ item_example {
         { key = "configuration:test/string",        type = "string",        value = "I am a String."                                }
     ] 
     
-    # List<ItemEnchantment> <- ItemEnchantmentSerializer (instanceof EnchantmentStorageMeta)
+    # List<ItemEnchantment> (ItemEnchantmentSerializer) - exclusive for enchanted books
     meta.enchantment_storage = [
         { key = "minecraft:efficiency", level = 5 }
         { key = "minecraft:durability", level = 3 }
         { key = "minecraft:fortune", level = 10 },
     ]
     
-    # Integer (instance of Damageable)
+    # Integer - exclusive for 'damageable' items like tools and armor
     meta.durability = 1
     
-    # String (instanceof SkullMeta)
+    # String - exclusive for Material.PLAYER_HEAD.
     meta.skull_texture = "BASE64_ENCODED_VALUE"
     
-    # EntityType <- EntityTypeSerializer (instanceof BlockStateMeta && instanceof CreatureSpawner)
+    # EntityType (EntityTypeSerialize) - exclusive for spawners
     meta.spawner_type = "minecraft:cow"
     
-    # Integer (instanceof BlockStateMeta && instanceof CreatureSpawner)
+    # Integer - exclusive for spawners
     meta.spawner_activation_range = 16  # block radius
     
-    # Integer (instanceof BlockStateMeta && instanceof CreatureSpawner)
+    # Integer - exclusive for spawners
     meta.spawner_min_spawn_delay = 300  # in ticks
     
-    # Integer (instanceof BlockStateMeta && instanceof CreatureSpawner)
+    # Integer - exclusive for spawners
     meta.spawner_max_spawn_delay = 500  # in ticks
     
-    # Integer (instanceof BlockStateMeta && instanceof CreatureSpawner)
+    # Integer - exclusive for spawners
     meta.spawner_max_nearby_entities = 3  # in ticks
     
-    # Integer (instanceof BlockStateMeta && instanceof CreatureSpawner)
+    # Integer - exclusive for spawners
     meta.spawner_spawn_range = 5  # block radius
     
-    # Integer (instanceof BlockStateMeta && instanceof CreatureSpawner)
+    # Integer - exclusive for spawners
     meta.spawner_spawn_count = 2
     
 }
 ```
-
 
 ### Getting Started
 Just take a look at this example.
@@ -152,6 +157,15 @@ tasks {
         relocate('grabsky.configuration', 'com.example.libs.configuration')
     }
 }
+```
+
+```hocon
+# CONFIGURATION FILE (resources/settings.conf)
+
+settings {
+    debug = false  # You should not touch this entry unless you know what you're doing.
+}
+
 ```
 
 ```java
@@ -210,12 +224,14 @@ Supplying your own `String` to `Component` serializer:
 ```java
 final ComponentSerializer componentSerializer = new ComponentSerializer((string) -> YourComponentSerializer.parse(string));
 ```
+
 Supplying your own `namespaced:key` registries:
 ```java
 final MaterialSerializer materialSerializer = new MaterialSerializer((key) -> YourMaterialRegistry.get(key));
 final EntityTypeSerializer entityTypeSerializer = new EntityTypeSerializer((key) -> YourEntityTypeRegistry.get(key));
 final EnchantmentSerializer enchantmentSerializer = new EnchantmentSerializer((key) -> YourEnchantmentRegistry.get(key));
 ```
+
 Supporting your own `PersistentDataType` types:
 ```java
 PersistentDataSerializer.REGISTRY.add("itemstack", YourItemStackDataType.INSTANCE);
