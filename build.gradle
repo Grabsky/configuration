@@ -1,0 +1,33 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+}
+
+group = 'grabsky.configuration'
+version = '0.9.0'
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'io.github.grabsky'
+            artifactId = rootProject.name
+            from components.java
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven { url = 'https://papermc.io/repo/repository/maven-public/' }
+}
+
+dependencies {
+    // Lombok
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+    // Paper API
+    compileOnly 'io.papermc.paper:paper-api:1.19.2-R0.1-SNAPSHOT'
+    testCompileOnly 'io.papermc.paper:paper-api:1.19.2-R0.1-SNAPSHOT'
+    // SpongePowered/Configurate (until it's merged to Paper)
+    api 'org.spongepowered:configurate-hocon:4.1.2'
+}
