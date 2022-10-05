@@ -79,15 +79,15 @@ item_example {
     
     # List<PersistentDataEntry> (PersistentDataSerializer)
     meta.persistent_data_container = [
-        { key = "configuration:test/byte",          type = "byte",          value = 0                                               },
-        { key = "configuration:test/byte_array",    type = "byte_array",    value = [0, 1, 1, 0, 0]                                 },
-        { key = "configuration:test/integer",       type = "integer",       value = 18                                              },
-        { key = "configuration:test/integer_array", type = "integer_array", value = [-2147483648, 0, 2147483647]                    },
-        { key = "configuration:test/long",          type = "long",          value = 2374627346327                                   },
-        { key = "configuration:test/long_array",    type = "long_array",    value = [-9223372036854775808, 0, 9223372036854775807]  },
-        { key = "configuration:test/float",         type = "float",         value = 7.5                                             },
-        { key = "configuration:test/double",        type = "double",        value = 7.500000000000009                               },
-        { key = "configuration:test/string",        type = "string",        value = "I am a String."                                }
+        { key = "configuration:test/byte", type = "byte", value = 0 },
+        { key = "configuration:test/byte_array", type = "byte_array", value = [0, 1, 1, 0, 0] },
+        { key = "configuration:test/integer", type = "integer", value = 18 },
+        { key = "configuration:test/integer_array", type = "integer_array", value = [-2147483648, 0, 2147483647] },
+        { key = "configuration:test/long", type = "long", value = 2374627346327 },
+        { key = "configuration:test/long_array", type = "long_array", value = [-9223372036854775808, 0, 9223372036854775807] },
+        { key = "configuration:test/float", type = "float", value = 7.5 },
+        { key = "configuration:test/double", type = "double", value = 7.500000000000009 },
+        { key = "configuration:test/string", type = "string", value = "I am a String." }
     ] 
     
     # List<ItemEnchantment> (ItemEnchantmentSerializer) - exclusive for enchanted books
@@ -218,8 +218,6 @@ public class PluginMain extends JavaPlugin {
 }
 ```
 ### Customization
-Some of built-in serializers can be partially customizable.
-
 Supplying your own `String` to `Component` serializer:
 ```java
 final ComponentSerializer componentSerializer = new ComponentSerializer((string) -> YourComponentSerializer.parse(string));
