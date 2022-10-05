@@ -1,5 +1,5 @@
 package grabsky.configuration;
 
 public interface Configuration {
-    static void onReload() { /* NO IMPL BY DEFAULT */ }
+    default void onReload() { /* NO IMPL BY DEFAULT */ }
 }
