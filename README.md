@@ -145,7 +145,7 @@ repositories {
 
 dependencies {
     // ...other dependencies
-    implementation 'com.github.grabsky:configuration:0.9.3-pre'
+    implementation 'com.github.grabsky:configuration:0.9.4-pre'
 }
 
 tasks {
@@ -213,7 +213,7 @@ public class PluginMain extends JavaPlugin {
             "settings.conf" // (2) your configuration file name
         );
         
-        this.getLogger().info("Debugging mode is " + (PluginConfig.DEBUG == true) ? "enabled." : "disabled."; 
+        this.getLogger().info("Debugging mode is " + (PluginConfig.DEBUG == true) ? "enabled." : "disabled."); 
     }
 }
 ```
