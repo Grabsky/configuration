@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 
-import static grabsky.configuration.conditions.Conditions.requirePresent;
+import static grabsky.configuration.util.Conditions.requirePresent;
 
 public interface HoconConfig {
 

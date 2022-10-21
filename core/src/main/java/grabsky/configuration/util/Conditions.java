@@ -1,4 +1,4 @@
-package grabsky.configuration.conditions;
+package grabsky.configuration.util;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

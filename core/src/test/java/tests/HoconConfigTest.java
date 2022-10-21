@@ -1,4 +1,4 @@
-package grabsky.configurationtest;
+package tests;
 
 import grabsky.configuration.HoconConfig;
 import grabsky.configuration.exceptions.SerializationException;
@@ -10,7 +10,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.UUID;
 
-import static grabsky.configuration.conditions.Conditions.requirePresent;
+import static grabsky.configuration.util.Conditions.requirePresent;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
