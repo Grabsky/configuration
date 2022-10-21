@@ -25,11 +25,18 @@ repositories {
 }
 
 dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
     // Lombok
     compileOnly 'org.projectlombok:lombok:1.18.24'
     annotationProcessor 'org.projectlombok:lombok:1.18.24'
     // Paper API
     compileOnly 'io.papermc.paper:paper-api:1.19.2-R0.1-SNAPSHOT'
-    // SpongePowered/Configurate (until it's merged to Paper)
-    api 'org.spongepowered:configurate-hocon:4.1.2'
+    // HOCON
+    compileOnly 'com.typesafe:config:1.4.2'
+    testImplementation 'com.typesafe:config:1.4.2'
+}
+
+test {
+    useJUnitPlatform()
 }
