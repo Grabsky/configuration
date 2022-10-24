@@ -119,7 +119,10 @@ public class MainApplication extends Application {
     }
 }
 ```
-## Building (linux)
+
+<br />
+
+## Building (Linux)
 ```shell
 # Cloning repository
 $ git clone https://github.com/Grabsky/configuration.git
@@ -128,5 +131,8 @@ $ cd ./configuration
 # Compiling and publishing to maven local
 $ ./gradlew clean test publishToMavenLocal
 ```
+
+<br />
+
 ## Contributing
 This project is open for contributions. Help in regards on improving performance and safety is very appreciated!
