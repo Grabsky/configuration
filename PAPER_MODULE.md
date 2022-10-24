@@ -1,7 +1,46 @@
 # grabsky/configuration-paper
-This module adds serializers for common Bukkit objects.
+[![](https://github.com/Grabsky/configuration/actions/workflows/gradle.yml/badge.svg)](https://github.com/Grabsky/configuration/actions/workflows/gradle.yml)
+[![](https://jitpack.io/v/Grabsky/configuration.svg)](https://jitpack.io/#Grabsky/configuration)  
+This module adds serializers for common Bukkit objects. Check out [Serializers](#serializers) and [Syntax](#syntax) sections below for more reference.
 
-### Serializers
+<br />
+
+## Requirements
+Requires **Java 17** or higher.
+
+<br />
+
+## Getting Started
+Simply add `configuration-core` and `configuration-paper` modules to your dependencies.
+```groovy
+/* GRADLE BUILD SCRIPT (build.gradle) */
+
+plugins {
+    // ...other plugins
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+}
+
+repositories {
+    // ...other repositories
+    maven { url = 'https://jitpack.io' }
+}
+
+dependencies {
+    // ...other dependencies
+    implementation 'com.github.grabsky:configuration-core:0.9.4-pre'
+    implementation 'com.github.grabsky:configuration-paper:0.9.4-pre'
+}
+
+tasks {
+    // ...other tasks
+    shadowJar {
+        // ...other configurations
+        relocate('grabsky.configuration', 'com.example.libs.configuration')
+    }
+}
+
+```
+## Serializers
 Serializers for following types are included:
 ```
 +---------------------------------------------------------+-------------------------------------------------------------+
@@ -25,38 +64,40 @@ Serializers for following types are included:
 You need to add them to your `Gson` instance manually. Keep in mind that deserialization is not implemented.
 Most of built-in serializers depend on each other.
 
-### Syntax
-Built-in serializers expects following format:
+<br />
+
+## Syntax
+This is an example of what serializers are capable of:
 ```json5
 {
-    // NamespacedKey (NamespacedKeySerializer)
+    // NamespacedKey
     "key": "namespaced:key",
 
-    // Material (MaterialSerializer)
+    // Material
     "material": "minecraft:diamond",
 
-    // EntityType (EntityTypeSerializer)
+    // EntityType
     "entity_type": "minecraft:cow",
 
-    // Enchantment (EnchantmentSerializer)
+    // Enchantment=
     "enchantment": "minecraft:sharpness",
 
-    // EnchantmentEntry (EnchantmentEntrySerializer)
+    // EnchantmentEntry
     "enchantment_entry": { "key": "minecraft:sharpness", "level": 5 },
 
-    // PersistentDataEntry (PersistentDataSerializer)
+    // PersistentDataEntry
     "persistent_data_entry": { "key": "configuration:test/string", "type": "string",  "value": "I am a String." },
 
-    // Component (ComponentSerializer)
+    // Component
     "component": "<red>It uses <rainbow>MiniMessage<red>!",
 
-    // Sound (SoundSerializer)
+    // Sound
     "sound": { "key": "minecraft:block.note_block.banjo", "source": "master", "volume": 1.0, "pitch": 1.0 },
 
-    // ItemStack (ItemStackSerializer)
+    // ItemStack
     "item_example": {
 
-        // Material (MaterialSerializer) - required
+        // Material - required
         "material": "minecraft:diamond_sword",
 
         // Integer - optional, among with all 'meta' entries
@@ -64,18 +105,18 @@ Built-in serializers expects following format:
 
         "meta": {
 
-            // Component (ComponentSerializer)
+            // Component
             "name": "<red>You can use <rainbow>MiniMessage<red> here!",
 
-            // List<Component> (ComponentSerializer)
+            // List<Component>
             "lore": ["<red>and here too."],
 
-            // List<ItemEnchantment> (ItemEnchantmentSerializer)
+            // List<EnchantmentEntry>
             "enchantments": [
                 { "key": "minecraft:infinity", "level": 1 }
             ],
 
-            // List<ItemEnchantment> (ItemEnchantmentSerializer) - exclusive for enchanted books
+            // List<EnchantmentEntry> - exclusive for enchanted books
             "enchantment_storage": [
                 { "key": "minecraft:infinity", "level": 1 }
             ],
@@ -86,7 +127,7 @@ Built-in serializers expects following format:
             // Integer
             "custom_model_data": 7,
 
-            // List<PersistentDataEntry> (PersistentDataSerializer)
+            // List<PersistentDataEntry>
             "persistent_data_container":[
                 { "key": "configuration:test/byte", "type": "byte", "value": 0 },
                 { "key": "configuration:test/byte_array", "type": "byte_array", "value": [0, 1, 1, 0, 1] },
@@ -102,26 +143,26 @@ Built-in serializers expects following format:
             // Integer - exclusive for 'damageable' items like tools and armor
             "durability": 1,
 
-            // String - exclusive for Material.PLAYER_HEAD.
+            // String - exclusive for player head
             "skull_texture": "BASE64_ENCODED_VALUE",
 
-            // EntityType (EntityTypeSerialize) - exclusive for spawners
+            // EntityType - exclusive for spawners
             "spawner_type": "minecraft:cow",
 
-            // Integer - exclusive for spawners
-            "spawner_activation_range": 16, // block radius
+            // Integer - exclusive for spawners (block radius)
+            "spawner_activation_range": 16,
 
-            // Integer - exclusive for spawners
-            "spawner_min_spawn_delay": 300, // in ticks
+            // Integer - exclusive for spawners (ticks)
+            "spawner_min_spawn_delay": 300,
 
-            // Integer - exclusive for spawners
-            "spawner_max_spawn_delay": 500, // in ticks
+            // Integer - exclusive for spawners (ticks)
+            "spawner_max_spawn_delay": 500,
 
-            // Integer - exclusive for spawners
-            "spawner_max_nearby_entities": 3, // in ticks
+            // Integer - exclusive for spawners (ticks)
+            "spawner_max_nearby_entities": 3,
 
-            // Integer - exclusive for spawners
-            "spawner_spawn_range": 5, // block radius
+            // Integer - exclusive for spawners (block radius)
+            "spawner_spawn_range": 5,
 
             // Integer - exclusive for spawners
             "spawner_spawn_count": 2
