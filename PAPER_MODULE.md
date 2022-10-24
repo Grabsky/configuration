@@ -27,7 +27,7 @@ Most of built-in serializers depend on each other.
 
 ### Syntax
 Built-in serializers expects following format:
-```json
+```json5
 {
     // NamespacedKey (NamespacedKeySerializer)
     "key": "namespaced:key",
@@ -51,7 +51,7 @@ Built-in serializers expects following format:
     "component": "<red>It uses <rainbow>MiniMessage<red>!",
 
     // Sound (SoundSerializer)
-    "sound": { "key": "minecraft:block.note_block.banjo", "source": "MASTER", "volume": 1.0, "pitch": 1.0 },
+    "sound": { "key": "minecraft:block.note_block.banjo", "source": "master", "volume": 1.0, "pitch": 1.0 },
 
     // ItemStack (ItemStackSerializer)
     "item_example": {
