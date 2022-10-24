@@ -1,0 +1,33 @@
+{
+    // Test: A
+    "simpleString": "OK",
+
+    // Test: B
+    "simpleInteger": 7,
+
+    // Test: C
+    "simpleDouble": 7.777777,
+
+    // Test: D
+    "simpleObject": {
+        "simpleString": "OK"
+    },
+
+    // Test: E
+    "firstObject": {
+        "secondObject": {
+            "simpleString": "OK"
+        }
+    },
+
+    // Test: F
+    "simpleArray": ["ERROR", "OK", "ERROR"],
+
+    // Test: G
+    "complexArray": [
+        { "simpleString": "OK" }
+    ],
+
+    // Test: H
+    "uuid": "456fb8eb-f13d-4a34-8284-67e2469b634d"
+}
