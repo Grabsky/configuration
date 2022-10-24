@@ -135,4 +135,4 @@ $ ./gradlew clean test publishToMavenLocal
 <br />
 
 ## Contributing
-This project is open for contributions. Help in regards on improving performance and safety is very appreciated!
+This project is open for contributions. Help in regards of improving performance and safety is very appreciated!
