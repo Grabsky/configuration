@@ -10,7 +10,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.function.Function;
 
-/** Converts {@link String} or array of {@link String}s to {@link Component} using provided function. */
+/** Converts {@link String} or {@link List List&lt;String&gt;} to {@link Component} using provided function. */
 public final class ComponentSerializer implements JsonDeserializer<Component> {
 
     /** Default instance of {@link ComponentSerializer} uses {@link MiniMessage#miniMessage()} as a conversion function. */

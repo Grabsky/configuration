@@ -19,7 +19,7 @@ public final class ConfigurationHolder<T extends Configuration> {
      *
      * @param configurationClass class with fields to be replaced.
      * @param file {@link File} containing json configuration.
-     * @return new instance of {@link ConfigurationHolder}.
+     * @return a new instance of {@link ConfigurationHolder}.
      */
     public static <T extends Configuration> ConfigurationHolder<T> of(final Class<T> configurationClass, final File file) {
         return new ConfigurationHolder<>(configurationClass, file);

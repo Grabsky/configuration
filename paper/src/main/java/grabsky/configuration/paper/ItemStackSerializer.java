@@ -21,7 +21,7 @@ import org.bukkit.inventory.ItemStack;
 import java.lang.reflect.Type;
 import java.util.List;
 
-/** Used to create {@link ItemStack} */
+/** Used to create {@link ItemStack}. */
 public final class ItemStackSerializer implements JsonDeserializer<ItemStack> {
 
     /** Default instance of {@link ItemStackSerializer}. */

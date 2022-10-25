@@ -123,7 +123,7 @@ public final class ConfigurationMapperImpl implements ConfigurationMapper {
         return Modifier.isStatic(modifiers) == true && Modifier.isFinal(modifiers) == false;
     }
 
-    // TO-DO: Perhaps there is a better way to do that?
+    // TO-DO: Perhaps there is a better (and smarter) way to do that?
     private static JsonElement getJsonElement(final JsonElement json, final String path) {
         JsonElement result = json;
         for (final String key : path.replace(" ", "").split("[.\\[\\]]")) {

@@ -1,13 +1,8 @@
 package grabsky.configuration;
 
-/**
- * Configuration files you want use with {@link ConfigurationMapper} must extend {@link Configuration}.
- */
+/** Only classes extending {@link Configuration} can be used within {@link ConfigurationMapper}. */
 public abstract class Configuration {
 
-    /**
-     *  Called when {@link ConfigurationMapper} finishes inserting values.
-     *  This method is ignored if not overridden.
-     */
+    /** Called when {@link ConfigurationMapper} finishes inserting field values. */
     public void onReload() { /* EMPTY */ }
 }
