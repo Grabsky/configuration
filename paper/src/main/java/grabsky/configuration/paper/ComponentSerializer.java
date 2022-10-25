@@ -13,7 +13,10 @@ import java.util.function.Function;
 /** Converts {@link String} or {@link List List&lt;String&gt;} to {@link Component} using provided function. */
 public final class ComponentSerializer implements JsonDeserializer<Component> {
 
-    /** Default instance of {@link ComponentSerializer} uses {@link MiniMessage#miniMessage()} as a conversion function. */
+    /**
+     * Default instance of {@link ComponentSerializer} uses {@link MiniMessage#miniMessage()} as a conversion function.
+     * Make sure to call {@link GsonBuilder#disableHtmlEscaping()} when creating a {@link Gson} instance. MiniMessage tags won't work otherwise.
+     */
     public static final ComponentSerializer DEFAULT = new ComponentSerializer(
             (str) -> MiniMessage.miniMessage().deserialize(str),
             (list) -> String.join("<newline><reset>", list)

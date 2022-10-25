@@ -15,8 +15,8 @@ public class JsonTest {
     public static ConfigurationMapper CONFIGURATION_MAPPER = ConfigurationMapper.create(
             new GsonBuilder()
                     .setLenient()
-                    .registerTypeAdapter(UUID.class, UUIDSerializer.INSTANCE)
                     .disableHtmlEscaping()
+                    .registerTypeAdapter(UUID.class, UUIDSerializer.INSTANCE)
                     .create()
     );
 
