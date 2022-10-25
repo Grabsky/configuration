@@ -6,7 +6,8 @@ This module adds serializers for common Bukkit objects. Check out [Serializers](
 <br />
 
 ## Requirements
-Requires **Java 17** or higher.
+Requires **Java 17** or higher.  
+Requires **Paper 1.19** or higher.
 
 <br />
 
