@@ -8,7 +8,7 @@ subprojects { subproject ->
     apply plugin: 'maven-publish'
 
     group = 'grabsky.configuration'
-    version = '0.9.4-pre'
+    version = '0.9.5-pre'
 
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17

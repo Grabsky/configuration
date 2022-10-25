@@ -33,7 +33,7 @@ repositories {
 
 dependencies {
     // ...other dependencies
-    implementation 'com.github.grabsky:configuration-core:0.9.4-pre'
+    implementation 'com.github.grabsky:configuration-core:0.9.5-pre'
 }
 
 tasks {
