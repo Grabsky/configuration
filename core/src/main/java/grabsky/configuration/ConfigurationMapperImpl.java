@@ -8,7 +8,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import grabsky.configuration.exception.ConfigurationException;
-import grabsky.configuration.internal.FieldDataContainer;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
@@ -22,7 +21,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 // TO-DO: Support for Gson's @Since and @Until
-public final class ConfigurationMapperImpl implements ConfigurationMapper {
+/* package private */ final class ConfigurationMapperImpl implements ConfigurationMapper {
     private final Gson gson;
 
     /* package private */ ConfigurationMapperImpl(final Gson gson) {
@@ -98,7 +97,6 @@ public final class ConfigurationMapperImpl implements ConfigurationMapper {
     }
 
     private void insert(@NotNull final Class<?> clazz, @NotNull final FieldDataContainer fields) throws IllegalAccessException, IllegalArgumentException {
-        // Step 1: Mapping fields by iterating over them and replacing their values with those from JsonElement
         for (final Field field : clazz.getDeclaredFields()) {
             final String fieldName = field.getName();
             // ...
@@ -112,15 +110,15 @@ public final class ConfigurationMapperImpl implements ConfigurationMapper {
         clazz.getMethod("onReload").invoke(clazz.getConstructor().newInstance());
     }
 
+    private static boolean isStaticNonFinal(final Field field) {
+        final int modifiers = field.getModifiers();
+        return Modifier.isStatic(modifiers) == true && Modifier.isFinal(modifiers) == false;
+    }
+
     private static JsonElement parseFile(final File file) throws IOException, JsonParseException {
         final BufferedReader reader = new BufferedReader(new FileReader(file));
         // Converting JSON string (from a BufferedReader) to JsonElement
         return JsonParser.parseReader(reader);
-    }
-
-    private static boolean isStaticNonFinal(final Field field) {
-        final int modifiers = field.getModifiers();
-        return Modifier.isStatic(modifiers) == true && Modifier.isFinal(modifiers) == false;
     }
 
     // TO-DO: Perhaps there is a better (and smarter) way to do that?
@@ -143,7 +141,7 @@ public final class ConfigurationMapperImpl implements ConfigurationMapper {
                 result = jsonArray.get(Integer.parseInt(key));
                 continue;
             }
-            // All checks failed meaning that 'result' is most likely a value; escaping loop
+            // All checks failed meaning that 'result' is most likely a value; escaping the loop
             break;
         }
         return result;

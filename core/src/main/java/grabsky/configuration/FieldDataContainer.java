@@ -1,11 +1,8 @@
-package grabsky.configuration.internal;
+package grabsky.configuration;
 
 import java.util.HashMap;
 
-import static org.jetbrains.annotations.ApiStatus.Internal;
-
-@Internal
-public final class FieldDataContainer {
+/* package private */ final class FieldDataContainer {
     private final HashMap<String, FieldData> container = new HashMap<String, FieldData>();
 
     public void add(final String fieldName, final Class<?> fieldType, final Object value) {
