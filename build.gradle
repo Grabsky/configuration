@@ -3,33 +3,41 @@ plugins {
     id 'maven-publish'
 }
 
-group = 'grabsky.configuration'
-version = '0.9.4-pre'
+subprojects { subproject ->
+    apply plugin: 'java-library'
+    apply plugin: 'maven-publish'
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
+    group = 'grabsky.configuration'
+    version = '0.9.4-pre'
 
-publishing {
-    publications {
-        maven(MavenPublication) {
-            groupId = 'com.github.grabsky'
-            artifactId = rootProject.name
-            from components.java
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+
+    java {
+        withSourcesJar()
+        withJavadocJar()
+    }
+
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                groupId = 'com.github.grabsky'
+                artifactId = rootProject.name + '-' + subproject.name
+                from components.java
+            }
         }
     }
-}
 
-repositories {
-    mavenCentral()
-    maven { url = 'https://papermc.io/repo/repository/maven-public/' }
-}
+    repositories {
+        mavenCentral()
+    }
 
-dependencies {
-    // Lombok
-    compileOnly 'org.projectlombok:lombok:1.18.24'
-    annotationProcessor 'org.projectlombok:lombok:1.18.24'
-    // Paper API
-    compileOnly 'io.papermc.paper:paper-api:1.19.2-R0.1-SNAPSHOT'
-    // SpongePowered/Configurate (until it's merged to Paper)
-    api 'org.spongepowered:configurate-hocon:4.1.2'
+    dependencies {
+        // projectlombok/lombok
+        compileOnly 'org.projectlombok:lombok:1.18.24'
+        annotationProcessor 'org.projectlombok:lombok:1.18.24'
+        // JetBrains/java-annotations
+        compileOnly("org.jetbrains:annotations:23.0.0")
+    }
+
 }
