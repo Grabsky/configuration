@@ -31,6 +31,6 @@ public class CaseInsensitiveEnumSerializer<T extends Enum<T>> implements JsonSer
                 return (T) e;
         }
         // No enum was found
-        throw new JsonParseException("No enum matching '" + cons + "' were found for type '" + type.getTypeName() + "'.");
+        throw new JsonParseException("No enum matching '" + cons + "' was found for type '" + type.getTypeName() + "'.");
     }
 }
