@@ -1,7 +1,7 @@
 package grabsky.configuration;
 
 import com.google.gson.Gson;
-import grabsky.configuration.exception.ConfigurationLoadException;
+import grabsky.configuration.exception.ConfigurationException;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -14,18 +14,18 @@ public interface ConfigurationMapper {
      *
      * @param configurationClass class with fields to be replaced.
      * @param file {@link File} containing json configuration.
-     * @throws ConfigurationLoadException when configuration fails to load.
+     * @throws ConfigurationException when configuration fails to load.
      */
-    <T extends Configuration> void map(@NotNull final Class<T> configurationClass, @NotNull final File file) throws ConfigurationLoadException;
+    <T extends Configuration> void map(@NotNull final Class<T> configurationClass, @NotNull final File file) throws ConfigurationException;
 
     /**
      * Maps contents of all {@link ConfigurationHolder} files to their relative classes.
      * When method fails due to {@link com.google.gson.JsonParseException} - fields of relative classes remain unchanged.
      *
      * @param configurations vararg of {@link ConfigurationHolder} instances
-     * @throws ConfigurationLoadException when configuration fails to load.
+     * @throws ConfigurationException when configuration fails to load.
      */
-    void mapCollection(@NotNull final ConfigurationHolder<?>... configurations) throws ConfigurationLoadException;
+    void mapCollection(@NotNull final ConfigurationHolder<?>... configurations) throws ConfigurationException;
 
     /**
      * Creates {@link ConfigurationMapper} instance using provided {@link Gson} instance for re-mapping.

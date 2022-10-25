@@ -92,7 +92,7 @@ public class MainApplication extends Application {
         // creating instance of Gson
         this.gson = new GsonBuilder()
                 .setLenient()
-                .registerTypeAdapter(UUID.class, UUIDSerializer.INSTANCE)
+                .registerTypeAdapter(UUID.class, grabsky.configuration.tests.UUIDSerializer.INSTANCE)
                 .disableHtmlEscaping()
                 .create();
 
@@ -108,9 +108,9 @@ public class MainApplication extends Application {
             //   (1) syntax errors - no field values are overridden, ensuring your application does not break
             //   (2) reflection access errors - very unlikely to happen unless something modifies your field 
             //       declarations (name, type etc.) at the runtime; ex. javassist
-        } catch (final ConfigurationLoadException | IOException exc) {
+        } catch (final ConfigurationException | IOException exc) {
             exc.printStackTrace();
-            // you probably want to shutdown the application when loading of initial configuration failed;
+            // you probably want to shutdown the application when loading of initial configuration fails;
             // might be safe to ignore once "something" is already loaded
             this.shutdown((exc.getCause() instanceof JsonParseException) ? "human error" : "computer error");
         }

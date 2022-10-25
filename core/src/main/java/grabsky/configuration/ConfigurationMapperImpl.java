@@ -7,7 +7,7 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
-import grabsky.configuration.exception.ConfigurationLoadException;
+import grabsky.configuration.exception.ConfigurationException;
 import grabsky.configuration.internal.FieldDataContainer;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,7 +30,7 @@ public final class ConfigurationMapperImpl implements ConfigurationMapper {
     }
 
     @Override
-    public <T extends Configuration> void map(@NotNull final Class<T> configurationClass, @NotNull final File file) throws ConfigurationLoadException {
+    public <T extends Configuration> void map(@NotNull final Class<T> configurationClass, @NotNull final File file) throws ConfigurationException {
         try {
             // Converting JSON string (from a BufferedReader) to JsonElement
             final JsonElement root = parseFile(file);
@@ -41,12 +41,12 @@ public final class ConfigurationMapperImpl implements ConfigurationMapper {
             // Calling provided class' 'onReload' method
             this.call(configurationClass);
         } catch (final IOException | JsonParseException | IllegalAccessException | IllegalArgumentException | NoSuchMethodException | InvocationTargetException | InstantiationException error) {
-            throw new ConfigurationLoadException(configurationClass, file, error);
+            throw new ConfigurationException(configurationClass, file, error);
         }
     }
 
     @Override
-    public void mapCollection(@NotNull final ConfigurationHolder<?>... holders) throws ConfigurationLoadException {
+    public void mapCollection(@NotNull final ConfigurationHolder<?>... holders) throws ConfigurationException {
         final Map<ConfigurationHolder<?>, FieldDataContainer> configurations = new LinkedHashMap<>();
         // Step 1: Collecting values
         for (final ConfigurationHolder<?> holder : holders) {
@@ -61,7 +61,7 @@ public final class ConfigurationMapperImpl implements ConfigurationMapper {
                 // Adding container to the map
                 configurations.put(holder, container);
             } catch (final IOException | JsonParseException error) {
-                throw new ConfigurationLoadException(configurationClass, file, error);
+                throw new ConfigurationException(configurationClass, file, error);
             }
         }
         // Step 2: Inserting values
@@ -75,7 +75,7 @@ public final class ConfigurationMapperImpl implements ConfigurationMapper {
                 // Step 3: Invoking 'Configuration#onReload' on configuration classes
                 this.call(configurationClass);
             } catch (final IllegalAccessException | IllegalArgumentException | NoSuchMethodException | InvocationTargetException | InstantiationException error) {
-                throw new ConfigurationLoadException(configurationClass, holder.getFile(), error);
+                throw new ConfigurationException(configurationClass, holder.getFile(), error);
             }
         }
     }
