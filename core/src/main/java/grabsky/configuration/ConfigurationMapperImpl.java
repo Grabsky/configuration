@@ -30,12 +30,12 @@ public final class ConfigurationMapperImpl implements ConfigurationMapper {
     }
 
     @Override
-    public <T extends Configuration> void map(@NotNull final Class<T> configurationClass, @NotNull final File file) {
+    public <T extends Configuration> void map(@NotNull final Class<T> configurationClass, @NotNull final File file) throws ConfigurationLoadException {
         try {
             // Converting JSON string (from a BufferedReader) to JsonElement
             final JsonElement root = parseFile(file);
             // Updating the fields and returning the result
-            final FieldDataContainer container = collect(configurationClass, root);
+            final FieldDataContainer container = this.collect(configurationClass, root);
             // Inserting collected values to provided class' fields
             this.insert(configurationClass, container);
             // Calling provided class' 'onReload' method
@@ -46,7 +46,7 @@ public final class ConfigurationMapperImpl implements ConfigurationMapper {
     }
 
     @Override
-    public void mapCollection(@NotNull final ConfigurationHolder<?>... holders) {
+    public void mapCollection(@NotNull final ConfigurationHolder<?>... holders) throws ConfigurationLoadException {
         final Map<ConfigurationHolder<?>, FieldDataContainer> configurations = new LinkedHashMap<>();
         // Step 1: Collecting values
         for (final ConfigurationHolder<?> holder : holders) {
@@ -72,15 +72,7 @@ public final class ConfigurationMapperImpl implements ConfigurationMapper {
             // ...
             try {
                 this.insert(configurationClass, container);
-            } catch (final IllegalAccessException | IllegalArgumentException error) {
-                throw new ConfigurationLoadException(configurationClass, holder.getFile(), error);
-            }
-        }
-        // Step 3: Invoking 'Configuration#onReload' on configuration classes
-        for (final ConfigurationHolder<?> holder : configurations.keySet()) {
-            final Class<?> configurationClass = holder.getConfigurationClass();
-            // ...
-            try {
+                // Step 3: Invoking 'Configuration#onReload' on configuration classes
                 this.call(configurationClass);
             } catch (final IllegalAccessException | IllegalArgumentException | NoSuchMethodException | InvocationTargetException | InstantiationException error) {
                 throw new ConfigurationLoadException(configurationClass, holder.getFile(), error);
