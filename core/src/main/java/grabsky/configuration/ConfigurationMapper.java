@@ -11,8 +11,8 @@ public interface ConfigurationMapper {
 
     /**
      * Maps file contents to {@code public}, {@code static}, {@code non-final} fields declared inside provided class.
-     * When method fails due to {@link JsonParseException} or {@link NoSuchMethodException}
-     * - a new {@link ConfigurationException} is thrown and fields of {@link T} remain unchanged.
+     * When method fails due to {@link JsonParseException} - a new {@link ConfigurationException}
+     * is thrown and fields of {@link T} remain unchanged.
      *
      * @param configurationClass class with fields to be replaced.
      * @param file {@link File} containing json configuration.
@@ -22,8 +22,8 @@ public interface ConfigurationMapper {
 
     /**
      * Maps contents of all files to {@code public}, {@code static}, {@code non-final} fields declared in relative classes.
-     * When method fails due to {@link JsonParseException} or {@link NoSuchMethodException}
-     * - a new {@link ConfigurationException} is thrown and <b><i>all</i></b> fields remain unchanged.
+     * When method fails due to {@link JsonParseException} - a new {@link ConfigurationException}
+     * is thrown and <b><i>all</i></b> fields remain unchanged.
      *
      * @param configurations vararg of {@link ConfigurationHolder} instances
      * @throws ConfigurationException when configuration fails to load.

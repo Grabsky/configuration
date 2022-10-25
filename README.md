@@ -59,7 +59,7 @@ tasks {
 ```java
 /* CONFIGURATION CLASS */
 
-public class ApplicationSettings extends Configuration {
+public final class ApplicationSettings extends Configuration {
 
     @JsonPath("settings.debug")
     public static Boolean DEBUG;
@@ -92,7 +92,7 @@ public class MainApplication extends Application {
         // creating instance of Gson
         this.gson = new GsonBuilder()
                 .setLenient()
-                .registerTypeAdapter(UUID.class, grabsky.configuration.tests.UUIDSerializer.INSTANCE)
+                .registerTypeAdapter(UUID.class, UUIDSerializer.INSTANCE)
                 .disableHtmlEscaping()
                 .create();
 
@@ -108,11 +108,15 @@ public class MainApplication extends Application {
             //   (1) syntax errors - no field values are overridden, ensuring your application does not break
             //   (2) reflection access errors - very unlikely to happen unless something modifies your field 
             //       declarations (name, type etc.) at the runtime; ex. javassist
-        } catch (final ConfigurationException | IOException exc) {
-            exc.printStackTrace();
+        } catch (final ConfigurationException | IOException e) {
+            // usually contains useful information
+            e.printStackTrace();
             // you probably want to shutdown the application when loading of initial configuration fails;
             // might be safe to ignore once "something" is already loaded
-            this.shutdown((exc.getCause() instanceof JsonParseException) ? "human error" : "computer error");
+            if (e.getCause() instanceof JsonParseError)
+                this.shutdown("there might be a syntax error somewhere");
+            else
+                this.shutdown("weird to see that happen, perhaps something modified a field declaration?");
         }
 
         System.out.println("debug mode is " + (ExampleConfig.DEBUG == true) ? "enabled" : "disabled");
