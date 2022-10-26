@@ -1,6 +1,7 @@
 # grabsky/configuration
 [![](https://github.com/Grabsky/configuration/actions/workflows/gradle.yml/badge.svg)](https://github.com/Grabsky/configuration/actions/workflows/gradle.yml)
-[![](https://jitpack.io/v/Grabsky/configuration.svg)](https://jitpack.io/#Grabsky/configuration)  
+[![](https://jitpack.io/v/Grabsky/configuration.svg)](https://jitpack.io/#Grabsky/configuration)
+[![](https://www.codefactor.io/repository/github/grabsky/configuration/badge/main)](https://www.codefactor.io/repository/github/grabsky/configuration/overview/main)  
 Experimental library based on [google/gson](https://github.com/SpongePowered/Configurate) that lets you map JSON configuration files to static fields. Breaking changes are likely to happen before a stable release, use at your own risk.
 
 <br />
