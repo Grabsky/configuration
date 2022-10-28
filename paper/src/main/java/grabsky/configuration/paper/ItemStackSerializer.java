@@ -8,7 +8,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.reflect.TypeToken;
-import grabsky.configuration.paper.exception.JsonSerializationException;
+import grabsky.configuration.paper.exception.JsonFormatException;
 import grabsky.configuration.paper.object.EnchantmentEntry;
 import grabsky.configuration.paper.object.PersistentDataEntry;
 import grabsky.configuration.paper.util.BukkitHelpers;
@@ -113,7 +113,7 @@ public final class ItemStackSerializer implements JsonDeserializer<ItemStack> {
             return new ItemStack(material, amount);
         }
         // Not a JsonObject so definitely not a valid ItemStack, right?
-        throw new JsonSerializationException(type, element);
+        throw new JsonFormatException(type, element);
     }
 
 }

@@ -6,9 +6,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Type;
 
-public class JsonSerializationException extends JsonParseException {
+public class JsonFormatException extends JsonParseException {
 
-    public JsonSerializationException(@NotNull final Type type, @Nullable final Object value) {
+    public JsonFormatException(@NotNull final Type type, @Nullable final Object value) {
         super("[" + type.getTypeName() + "] An error occurred during (de)serialization of: " + value);
     }
 

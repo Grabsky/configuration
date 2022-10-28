@@ -1,7 +1,7 @@
 package grabsky.configuration.paper;
 
 import com.google.gson.*;
-import grabsky.configuration.paper.exception.JsonSerializationException;
+import grabsky.configuration.paper.exception.JsonFormatException;
 import grabsky.configuration.paper.object.EnchantmentEntry;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
@@ -23,7 +23,7 @@ public final class EnchantmentEntrySerializer implements JsonDeserializer<Enchan
             final int level = json.get("level").getAsInt();
             return new EnchantmentEntry(enchantment, level);
         }
-        throw new JsonSerializationException(type, element);
+        throw new JsonFormatException(type, element);
     }
 
 }

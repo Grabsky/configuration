@@ -5,7 +5,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import grabsky.configuration.paper.exception.JsonSerializationException;
+import grabsky.configuration.paper.exception.JsonFormatException;
 import grabsky.configuration.paper.object.PersistentDataEntry;
 import grabsky.configuration.paper.object.PersistentDataTypeHolder;
 import org.bukkit.NamespacedKey;
@@ -61,7 +61,7 @@ public final class PersistentDataEntrySerializer implements JsonDeserializer<Per
             final String dataType = json.get("type").getAsString();
             // ...
             if (internalMap.containsKey(dataType) == false)
-                throw new JsonSerializationException(PersistentDataType.class, dataType);
+                throw new JsonFormatException(PersistentDataType.class, dataType);
             // ...
             final PersistentDataType<?, ?> persistentDataType = internalMap.get(dataType);
             // ...
@@ -69,7 +69,7 @@ public final class PersistentDataEntrySerializer implements JsonDeserializer<Per
             // ...
             return new PersistentDataEntry(key, persistentDataType, value);
         }
-        throw new JsonSerializationException(type, element);
+        throw new JsonFormatException(type, element);
     }
 
 }

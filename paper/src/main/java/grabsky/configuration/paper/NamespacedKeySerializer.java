@@ -1,7 +1,7 @@
 package grabsky.configuration.paper;
 
 import com.google.gson.*;
-import grabsky.configuration.paper.exception.JsonSerializationException;
+import grabsky.configuration.paper.exception.JsonFormatException;
 import org.bukkit.NamespacedKey;
 
 import java.lang.reflect.Type;
@@ -20,11 +20,11 @@ public final class NamespacedKeySerializer implements JsonDeserializer<Namespace
             try {
                 return NamespacedKey.fromString(json.getAsString().toLowerCase());
             } catch (final IllegalArgumentException e) {
-                throw new JsonSerializationException(type, json);
+                throw new JsonFormatException(type, json);
             }
         }
         // Throwing an exception in case JsonElement is not a JsonPrimitive, therefore definitely not a valid String.
-        throw new JsonSerializationException(type, element);
+        throw new JsonFormatException(type, element);
     }
 
 }

@@ -6,7 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
-import grabsky.configuration.paper.exception.JsonSerializationException;
+import grabsky.configuration.paper.exception.JsonFormatException;
 import net.kyori.adventure.sound.Sound;
 import org.bukkit.NamespacedKey;
 
@@ -37,7 +37,7 @@ public final class SoundSerializer implements JsonDeserializer<Sound> {
             );
         }
         // Throwing an exception in case JsonElement is not a JsonPrimitive, therefore definitely not a valid String.
-        throw new JsonSerializationException(type, element);
+        throw new JsonFormatException(type, element);
     }
 
 }
