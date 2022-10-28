@@ -21,6 +21,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 // TO-DO: Support for Gson's @Since and @Until
+// TO-DO: Use @Nullable annotation as an indicator whether field can be null or not.
 /* package private */ final class ConfigurationMapperImpl implements ConfigurationMapper {
     private final Gson gson;
 
