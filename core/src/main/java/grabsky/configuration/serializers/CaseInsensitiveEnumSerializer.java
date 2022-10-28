@@ -11,15 +11,15 @@ import com.google.gson.JsonSerializer;
 import java.lang.reflect.Type;
 
 /** Converts {@link String} to {@link T} and vice-versa but using case-insensitive strategy. */
-public class CaseInsensitiveEnumSerializer<T extends Enum<T>> implements JsonSerializer<T>, JsonDeserializer<T> {
+public interface CaseInsensitiveEnumSerializer<T extends Enum<T>> extends JsonSerializer<T>, JsonDeserializer<T> {
 
     @Override
-    public JsonElement serialize(final T src, final Type typeOfSrc, JsonSerializationContext context) {
+    default JsonElement serialize(final T src, final Type typeOfSrc, JsonSerializationContext context) {
         return new JsonPrimitive(src.toString());
     }
 
     @Override @SuppressWarnings("unchecked")
-    public T deserialize(final JsonElement element, final Type type, final JsonDeserializationContext context) throws JsonParseException {
+    default T deserialize(final JsonElement element, final Type type, final JsonDeserializationContext context) throws JsonParseException {
         if (element.isJsonPrimitive() == false)
             throw new JsonParseException("Could not convert '" + element + "' to an enum.");
         // Unwrapping value as String
