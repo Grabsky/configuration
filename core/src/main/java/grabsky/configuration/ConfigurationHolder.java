@@ -9,19 +9,19 @@ public final class ConfigurationHolder<T extends Configuration> {
     @Getter private final Class<T> configurationClass;
     @Getter private final File file;
 
-    private ConfigurationHolder(final Class<T> configurationClass, final File file) {
+    private ConfigurationHolder(final Class<T> configurationClass, final File configurationFile) {
         this.configurationClass = configurationClass;
-        this.file = file;
+        this.file = configurationFile;
     }
 
     /**
      * Creates instance of {@link ConfigurationHolder}.
      *
      * @param configurationClass class with fields to be replaced.
-     * @param file {@link File} containing json configuration.
+     * @param configurationFile {@link File} containing json configuration.
      * @return a new instance of {@link ConfigurationHolder}.
      */
-    public static <T extends Configuration> ConfigurationHolder<T> of(final Class<T> configurationClass, final File file) {
-        return new ConfigurationHolder<>(configurationClass, file);
+    public static <T extends Configuration> ConfigurationHolder<T> of(final Class<T> configurationClass, final File configurationFile) {
+        return new ConfigurationHolder<>(configurationClass, configurationFile);
     }
 }

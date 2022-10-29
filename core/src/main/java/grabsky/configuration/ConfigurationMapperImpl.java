@@ -20,7 +20,6 @@ import java.lang.reflect.Modifier;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-// TO-DO: Support for Gson's @Since and @Until
 /* package private */ final class ConfigurationMapperImpl implements ConfigurationMapper {
     private final Gson gson;
 
@@ -29,10 +28,10 @@ import java.util.Map;
     }
 
     @Override
-    public <T extends Configuration> void map(@NotNull final Class<T> configurationClass, @NotNull final File file) throws ConfigurationException {
+    public <T extends Configuration> void map(@NotNull final Class<T> configurationClass, @NotNull final File configurationFile) throws ConfigurationException {
         try {
             // Converting JSON string (from a BufferedReader) to JsonElement
-            final JsonElement root = parseFile(file);
+            final JsonElement root = parseFile(configurationFile);
             // Updating the fields and returning the result
             final FieldDataContainer container = this.collect(configurationClass, root);
             // Inserting collected values to provided class' fields
@@ -40,7 +39,7 @@ import java.util.Map;
             // Calling provided class' 'onReload' method
             this.call(configurationClass);
         } catch (final IOException | JsonParseException | IllegalAccessException | IllegalArgumentException | NoSuchMethodException | InvocationTargetException | InstantiationException error) {
-            throw new ConfigurationException(configurationClass, file, error);
+            throw new ConfigurationException(configurationClass, configurationFile, error);
         }
     }
 

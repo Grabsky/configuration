@@ -15,10 +15,10 @@ public interface ConfigurationMapper {
      * is thrown and fields of {@link T} remain unchanged.
      *
      * @param configurationClass class with fields to be replaced.
-     * @param file {@link File} containing json configuration.
+     * @param configurationFile {@link File} containing json configuration.
      * @throws ConfigurationException when configuration fails to load.
      */
-    <T extends Configuration> void map(@NotNull final Class<T> configurationClass, @NotNull final File file) throws ConfigurationException;
+    <T extends Configuration> void map(@NotNull final Class<T> configurationClass, @NotNull final File configurationFile) throws ConfigurationException;
 
     /**
      * Maps contents of all files to {@code public}, {@code static}, {@code non-final} fields declared in relative classes.
