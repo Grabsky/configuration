@@ -6,6 +6,6 @@ import java.io.File;
 public class ConfigurationException extends RuntimeException {
 
     public ConfigurationException(final Class<?> configurationClass, final File file, final Throwable cause) {
-        super("[" + configurationClass.getName() + "]  An error occurred during mapping of: " + file.getPath(), cause);
+        super("An error occurred during mapping of " + file.getPath() + " (class = " + configurationClass.getSimpleName() + ")", cause);
     }
 }

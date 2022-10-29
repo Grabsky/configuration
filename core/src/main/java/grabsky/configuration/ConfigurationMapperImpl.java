@@ -21,7 +21,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 // TO-DO: Support for Gson's @Since and @Until
-// TO-DO: Use @Nullable annotation as an indicator whether field can be null or not.
 /* package private */ final class ConfigurationMapperImpl implements ConfigurationMapper {
     private final Gson gson;
 
@@ -60,7 +59,7 @@ import java.util.Map;
                 final FieldDataContainer container = this.collect(configurationClass, json);
                 // Adding container to the map
                 configurations.put(holder, container);
-            } catch (final IOException | JsonParseException error) {
+            } catch (final IOException | JsonParseException | IllegalArgumentException error) {
                 throw new ConfigurationException(configurationClass, file, error);
             }
         }
@@ -80,10 +79,10 @@ import java.util.Map;
         }
     }
 
-    private FieldDataContainer collect(@NotNull final Class<?> clazz, @NotNull final JsonElement root) throws JsonParseException {
+    private FieldDataContainer collect(@NotNull final Class<?> configurationClass, @NotNull final JsonElement root) throws JsonParseException {
         final FieldDataContainer container = new FieldDataContainer();
         // ...
-        for (final Field field : clazz.getDeclaredFields()) {
+        for (final Field field : configurationClass.getDeclaredFields()) {
             // Skipping non-static / non-final fields, fields missing @JsonPath annotation and inaccessible fields
             if (isStaticNonFinal(field) == false || field.canAccess(null) == false || field.isAnnotationPresent(JsonPath.class) == false)
                 continue;
@@ -91,14 +90,17 @@ import java.util.Map;
             final String path = field.getAnnotation(JsonPath.class).value();
             // Getting the value from JsonElement
             final Object obj = gson.fromJson(getJsonElement(root, path), field.getGenericType());
+            // ...
+            if (obj == null && field.getAnnotation(JsonNotNull.class) != null)
+                throw new JsonParseException("Json object at path $." + path + " cannot be null.");
             // Creating and adding ModifiedField to the set
             container.add(field.getName(), field.getType(), obj);
         }
         return container;
     }
 
-    private void insert(@NotNull final Class<?> clazz, @NotNull final FieldDataContainer fields) throws IllegalAccessException, IllegalArgumentException {
-        for (final Field field : clazz.getDeclaredFields()) {
+    private void insert(@NotNull final Class<?> configurationClass, @NotNull final FieldDataContainer fields) throws IllegalAccessException, IllegalArgumentException {
+        for (final Field field : configurationClass.getDeclaredFields()) {
             final String fieldName = field.getName();
             // ...
             if (fields.has(fieldName) == true) {
@@ -107,8 +109,8 @@ import java.util.Map;
         }
     }
 
-    private void call(@NotNull final Class<?> clazz) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-        clazz.getMethod("onReload").invoke(clazz.getConstructor().newInstance());
+    private void call(@NotNull final Class<?> configurationClass) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        configurationClass.getMethod("onReload").invoke(configurationClass.getConstructor().newInstance());
     }
 
     private static boolean isStaticNonFinal(final Field field) {
