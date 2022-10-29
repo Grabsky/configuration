@@ -13,6 +13,10 @@ subprojects { subproject ->
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
 
+    javadoc {
+        (options as CoreJavadocOptions).addStringOption('Xdoclint:none', '-quiet')
+    }
+
     java {
         withSourcesJar()
         withJavadocJar()
