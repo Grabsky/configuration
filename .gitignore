@@ -1,0 +1,10 @@
+# Software-specific
+**/.vscode
+**/.idea
+
+# Gradle
+**/.gradle
+
+# Compiled
+**/build
+**/bin
