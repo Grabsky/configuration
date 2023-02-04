@@ -1,7 +1,7 @@
 # grabsky/configuration
 [![](https://github.com/Grabsky/configuration/actions/workflows/gradle.yml/badge.svg)](https://github.com/Grabsky/configuration/actions/workflows/gradle.yml)
 [![](https://www.codefactor.io/repository/github/grabsky/configuration/badge/main)](https://www.codefactor.io/repository/github/grabsky/configuration/overview/main)  
-Experimental library based on [google/gson](https://github.com/google/gson) that lets you map JSON configuration files to static fields. Breaking changes are likely to happen before a stable release, use at your own risk.
+Experimental library based on **[google/gson](https://github.com/google/gson)** that lets you map JSON configuration files to static fields. Breaking changes are likely to happen before a stable release, use at your own risk.
 
 <br />
 
@@ -11,7 +11,7 @@ Requires **Java 17** (or higher).
 <br />
 
 ## Paper
-If you're planning to use this library for your [PaperMC/Paper](https://github.com/PaperMC/Paper) plugins, you may find [paper module](https://github.com/Grabsky/configuration/blob/main/PAPER_MODULE.md) useful.
+If you're planning to use this library for your **[PaperMC/Paper](https://github.com/PaperMC/Paper)** plugins, you may find **[paper module](https://github.com/Grabsky/configuration/blob/main/PAPER_MODULE.md)** useful.
 
 <br />
 
