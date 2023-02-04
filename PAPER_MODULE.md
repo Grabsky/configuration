@@ -1,13 +1,12 @@
 # grabsky/configuration-paper
 [![](https://github.com/Grabsky/configuration/actions/workflows/gradle.yml/badge.svg)](https://github.com/Grabsky/configuration/actions/workflows/gradle.yml)
-[![](https://jitpack.io/v/Grabsky/configuration.svg)](https://jitpack.io/#Grabsky/configuration)  
+[![](https://www.codefactor.io/repository/github/grabsky/configuration/badge/main)](https://www.codefactor.io/repository/github/grabsky/configuration/overview/main)
 This module adds serializers for common Bukkit objects. Check out [Serializers](#serializers) and [Syntax](#syntax) sections below for more reference.
 
 <br />
 
 ## Requirements
-Requires **Java 17** or higher.  
-Requires **Paper 1.19** or higher.
+Requires **Java 17** (or higher) and **Paper 1.19** (or higher).
 
 <br />
 
@@ -23,13 +22,13 @@ plugins {
 
 repositories {
     // ...other repositories
-    maven { url = 'https://jitpack.io' }
+    maven { url = 'https://repo.grabsky.cloud/releases' }
 }
 
 dependencies {
     // ...other dependencies
-    implementation 'com.github.grabsky.configuration:configuration-core:0.9.6-pre'
-    implementation 'com.github.grabsky.configuration:configuration-paper:0.9.6-pre'
+    implementation 'cloud.grabsky:configuration-core:[version]'
+    implementation 'cloud.grabsky:configuration-paper:[version]'
 }
 
 tasks {
@@ -44,23 +43,19 @@ tasks {
 ## Serializers
 Serializers for following types are included:
 ```
-+---------------------------------------------------------+-------------------------------------------------------------+
-| Type (class)                                            | Serializer (class)                                          |
-+---------------------------------------------------------+-------------------------------------------------------------+
-| org.bukkit.NamespacedKey                                | grabsky.configuration.serializers.NamespacedKeySerializer   |
-| org.bukkit.Material                                     | grabsky.configuration.serializers.MaterialSerializer        |
-| org.bukkit.entity.EntityType                            | grabsky.configuration.serializers.EntityTypeSerializer      |
-| org.bukkit.enchantments.Enchantment                     | grabsky.configuration.serializers.EnchantmentSerializer     |
-| org.bukkit.inventory.ItemFlag                           | grabsky.configuration.serializers.ItemFlagSerializer        |
-| org.bukkit.inventory.ItemStack                          | grabsky.configuration.serializers.ItemStackSerializer       |
-|                                                         |                                                             |
-| net.kyori.adventure.text.Component                      | grabsky.configuration.serializers.ComponentSerializer       |
-| net.kyori.adventure.sound.Sound                         | grabsky.configuration.serializers.SoundSerializer           |
-| net.kyori.adventure.sound.Sound.Source                  | grabsky.configuration.serializers.SoundSourceSerializer     |
-|                                                         |                                                             |
-| grabsky.configuration.paper.EnchantmentEntry            | grabsky.configuration.paper.ItemEnchantmentSerializer       |
-| grabsky.configuration.paper.PersistentDataEntry         | grabsky.configuration.paper.PersistentDataSerializer        |
-+---------------------------------------------------------+-------------------------------------------------------------+
+cloud.grabsky.configuration.paper
+├── MaterialSerializer           (org.bukkit.Material)
+├── EntityTypeSerializer         (org.bukkit.entity.EntityType)
+├── EnchantmentSerializer        (org.bukkit.enchantments.Enchantment)
+├── ItemFlagSerializer           (org.bukkit.inventory.ItemFlag)
+├── ItemStackSerializer          (org.bukkit.inventory.ItemStack)
+│
+├── ComponentSerializer          (net.kyori.adventure.text.Component)
+├── SoundSerializer              (net.kyori.adventure.sound.Sound)
+├── SoundSourceSerializer        (net.kyori.adventure.sound.Sound.Source)
+│
+├── ItemEnchantmentSerializer    (EnchantmentEntry)
+└── PersistentDataSerializer     (PersistentDataEntry)
 ```
 You need to add them to your `Gson` instance manually. Keep in mind that deserialization is not implemented.
 Most of built-in serializers depend on each other.

@@ -55,7 +55,7 @@ subprojects { subproject ->
         compileOnly 'org.projectlombok:lombok:1.18.24'
         annotationProcessor 'org.projectlombok:lombok:1.18.24'
         // JetBrains/java-annotations
-        compileOnly("org.jetbrains:annotations:23.0.0")
+        compileOnly("org.jetbrains:annotations:24.0.0")
     }
 
 }
