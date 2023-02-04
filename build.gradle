@@ -1,5 +1,5 @@
 plugins {
-    id 'java-library'
+    id 'java'
     id 'maven-publish'
 }
 
@@ -7,14 +7,34 @@ subprojects { subproject ->
     apply plugin: 'java-library'
     apply plugin: 'maven-publish'
 
-    group = 'grabsky.configuration'
-    version = '0.9.6-pre'
+    group = 'cloud.grabsky'
+    version = '0.9.7-SNAPSHOT'
 
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
 
-    javadoc {
-        (options as CoreJavadocOptions).addStringOption('Xdoclint:none', '-quiet')
+    final isSnapshot = version.endsWith('-SNAPSHOT')
+    final hash7 = 'git rev-parse --verify --short HEAD'.execute().text.trim()
+
+    publishing {
+        repositories {
+            maven {
+                name 'Cloud'
+                url (isSnapshot == true ? 'https://repo.grabsky.cloud/snapshots' : 'https://repo.grabsky.cloud/releases')
+                credentials {
+                    username System.getenv('REPO_USERNAME')
+                    password System.getenv('REPO_SECRET')
+                }
+                authentication { basic(BasicAuthentication) }
+            }
+        }
+        publications {
+            maven(MavenPublication) {
+                artifactId rootProject.name + '-' + subproject.name
+                version (isSnapshot == true ? hash7 : version)
+                from components.java
+            }
+        }
     }
 
     java {
@@ -22,14 +42,8 @@ subprojects { subproject ->
         withJavadocJar()
     }
 
-    publishing {
-        publications {
-            maven(MavenPublication) {
-                groupId = 'com.github.grabsky'
-                artifactId = rootProject.name + '-' + subproject.name
-                from components.java
-            }
-        }
+    javadoc {
+        (options as CoreJavadocOptions).addStringOption('Xdoclint:none', '-quiet')
     }
 
     repositories {

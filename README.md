@@ -1,13 +1,12 @@
 # grabsky/configuration
 [![](https://github.com/Grabsky/configuration/actions/workflows/gradle.yml/badge.svg)](https://github.com/Grabsky/configuration/actions/workflows/gradle.yml)
-[![](https://jitpack.io/v/Grabsky/configuration.svg)](https://jitpack.io/#Grabsky/configuration)
 [![](https://www.codefactor.io/repository/github/grabsky/configuration/badge/main)](https://www.codefactor.io/repository/github/grabsky/configuration/overview/main)  
 Experimental library based on [google/gson](https://github.com/google/gson) that lets you map JSON configuration files to static fields. Breaking changes are likely to happen before a stable release, use at your own risk.
 
 <br />
 
 ## Requirements
-Requires **Java 17** or higher.
+Requires **Java 17** (or higher).
 
 <br />
 
@@ -16,36 +15,23 @@ If you're planning to use this library for your [PaperMC/Paper](https://github.c
 
 <br />
 
+
 ## Getting Started
-Just take a look at this example.
-
+To use this project in your plugin, add following repository:
 ```groovy
-/* GRADLE BUILD SCRIPT (build.gradle) */
-
-plugins {
-    // ...other plugins
-    id 'com.github.johnrengelman.shadow' version '7.1.2'
-}
-
 repositories {
-    // ...other repositories
-    maven { url = 'https://jitpack.io' }
-}
-
-dependencies {
-    // ...other dependencies
-    implementation 'com.github.grabsky.configuration:configuration-core:0.9.6-pre'
-}
-
-tasks {
-    // ...other tasks
-    shadowJar {
-        // ...other configurations
-        relocate('com.google.gson', 'com.example.libs.gson')
-        relocate('grabsky.configuration', 'com.example.libs.configuration')
-    }
+    maven { url = 'https://repo.grabsky.cloud/releases' }
 }
 ```
+Then specify dependency:
+```groovy
+dependencies {
+    implementation 'cloud.grabsky:configuration-core:[version]'
+}
+```
+Consider **[relocating](https://imperceptiblethoughts.com/shadow/configuration/relocation/)** to prevent version mismatch issues.
+
+<br />
 
 ```json5
 /* CONFIGURATION FILE (resources/settings.json) */
@@ -140,4 +126,4 @@ $ ./gradlew clean test publishToMavenLocal
 <br />
 
 ## Contributing
-This project is open for contributions. Help in regards of improving performance and safety is very appreciated!
+This project is open for contributions. Help in regards of improving performance, adding new features or fixing bugs is greatly appreciated.
