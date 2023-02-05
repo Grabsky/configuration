@@ -24,11 +24,19 @@
 package cloud.grabsky.configuration.paper;
 
 import cloud.grabsky.configuration.serializers.CaseInsensitiveEnumSerializer;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import net.kyori.adventure.sound.Sound;
 
-/** Converts {@link String} to {@link Sound.Source} and vice-versa but using case-insensitive strategy. */
+/**
+ * Converts {@link String} to {@link Sound.Source} and vice-versa but using case-insensitive strategy.
+ */
+@NoArgsConstructor(access = AccessLevel.PRIVATE) // NO INSTANTIATING ALLOWED
 public final class SoundSourceSerializer implements CaseInsensitiveEnumSerializer<Sound.Source> {
 
-    /** Default instance of {@link SoundSourceSerializer}. */
+    /**
+     * Default instance of {@link SoundSourceSerializer}.
+     */
     public static final SoundSourceSerializer INSTANCE = new SoundSourceSerializer();
+
 }

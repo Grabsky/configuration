@@ -25,19 +25,28 @@ package cloud.grabsky.configuration.paper;
 
 import cloud.grabsky.configuration.paper.exception.JsonFormatException;
 import cloud.grabsky.configuration.paper.object.EnchantmentEntry;
-import com.google.gson.*;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 
 import java.lang.reflect.Type;
 
-/** Converts {@link NamespacedKey} {@code (key)} and {@link Integer} {@code (level)} to {@link Enchantment}. */
+/**
+ * Converts {@link NamespacedKey} {@code (key)} and {@link Integer} {@code (level)} to {@link Enchantment}.
+ */
+@NoArgsConstructor(access = AccessLevel.PRIVATE) // NO INSTANTIATING ALLOWED
 public final class EnchantmentEntrySerializer implements JsonDeserializer<EnchantmentEntry> {
 
-    /** Default instance of {@link EnchantmentSerializer}. */
+    /**
+     * Default instance of {@link EnchantmentSerializer}.
+     */
     public static final EnchantmentEntrySerializer INSTANCE = new EnchantmentEntrySerializer();
-
-    private EnchantmentEntrySerializer() { /* INSTANTIATING NOT ALLOWED */ }
 
     @Override
     public EnchantmentEntry deserialize(final JsonElement element, final Type type, final JsonDeserializationContext context) throws JsonParseException {

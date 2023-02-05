@@ -24,11 +24,19 @@
 package cloud.grabsky.configuration.paper;
 
 import cloud.grabsky.configuration.serializers.CaseInsensitiveEnumSerializer;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.bukkit.inventory.ItemFlag;
 
-/** Converts {@link String} to {@link ItemFlag} and vice-versa but using case-insensitive strategy. */
+/**
+ * Converts {@link String} to {@link ItemFlag} and vice-versa but using case-insensitive strategy.
+ */
+@NoArgsConstructor(access = AccessLevel.PRIVATE) // NO INSTANTIATING ALLOWED
 public final class ItemFlagSerializer implements CaseInsensitiveEnumSerializer<ItemFlag> {
 
-    /** Default instance of {@link ItemFlagSerializer}. */
+    /**
+     * Default instance of {@link ItemFlagSerializer}.
+     */
     public static final ItemFlagSerializer INSTANCE = new ItemFlagSerializer();
+
 }

@@ -24,7 +24,10 @@
 package cloud.grabsky.configuration.paper.util;
 
 import cloud.grabsky.configuration.paper.exception.ResourceNotFoundException;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -32,7 +35,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class Resources {
+@Internal
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class Resources {
 
     // Copies InputStream to a file
     public static void copy(final InputStream is, final File file) throws IOException {

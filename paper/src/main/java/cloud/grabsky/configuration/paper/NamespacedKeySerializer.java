@@ -23,19 +23,28 @@
  */
 package cloud.grabsky.configuration.paper;
 
-import com.google.gson.*;
 import cloud.grabsky.configuration.paper.exception.JsonFormatException;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.bukkit.NamespacedKey;
 
 import java.lang.reflect.Type;
 
-/** Converts {@link String} to {@link org.bukkit.NamespacedKey}. */
+/**
+ * Converts {@link String} to {@link org.bukkit.NamespacedKey}.
+ */
+@NoArgsConstructor(access = AccessLevel.PRIVATE) // NO INSTANTIATING ALLOWED
 public final class NamespacedKeySerializer implements JsonDeserializer<NamespacedKey> {
 
-    /** Default instance of {@link NamespacedKeySerializer}. */
+    /**
+     * Default instance of {@link NamespacedKeySerializer}.
+     */
     public static final NamespacedKeySerializer INSTANCE = new NamespacedKeySerializer();
-
-    private NamespacedKeySerializer() { /* INSTANTIATING NOT ALLOWED */ }
 
     @Override
     public NamespacedKey deserialize(final JsonElement element, final Type type, final JsonDeserializationContext context) throws JsonParseException {

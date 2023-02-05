@@ -23,11 +23,13 @@
  */
 package cloud.grabsky.configuration.paper;
 
+import cloud.grabsky.configuration.paper.exception.JsonFormatException;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
-import cloud.grabsky.configuration.paper.exception.JsonFormatException;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.entity.EntityType;
@@ -36,13 +38,16 @@ import java.lang.reflect.Type;
 
 import static cloud.grabsky.configuration.paper.util.Conditions.requirePresent;
 
-/** Converts {@link NamespacedKey} to {@link EntityType}. */
+/**
+ * Converts {@link NamespacedKey} to {@link EntityType}.
+ */
+@NoArgsConstructor(access = AccessLevel.PRIVATE) // NO INSTANTIATING ALLOWED
 public final class EntityTypeSerializer implements JsonDeserializer<EntityType> {
 
-    /** Default instance of {@link EntityTypeSerializer}. */
+    /**
+     * Default instance of {@link EntityTypeSerializer}.
+     */
     public static final EntityTypeSerializer INSTANCE = new EntityTypeSerializer();
-
-    private EntityTypeSerializer() { /* INSTANTIATING NOT ALLOWED */ }
 
     @Override
     public EntityType deserialize(final JsonElement element, final Type type, final JsonDeserializationContext context) throws JsonParseException {

@@ -37,7 +37,9 @@ import org.bukkit.persistence.PersistentDataType;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 
-/** Converts {@link NamespacedKey} {@code (key)}, {@link PersistentDataType} {@code (type)} and {@link Object} {@code (value)} to {@link PersistentDataEntry}. */
+/**
+ * Converts {@link NamespacedKey} {@code (key)}, {@link PersistentDataType} {@code (type)} and {@link Object} {@code (value)} to {@link PersistentDataEntry}.
+ */
 public final class PersistentDataEntrySerializer implements JsonDeserializer<PersistentDataEntry> {
 
     /**

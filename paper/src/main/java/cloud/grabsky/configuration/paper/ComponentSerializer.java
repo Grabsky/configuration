@@ -23,7 +23,14 @@
  */
 package cloud.grabsky.configuration.paper;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
 import com.google.gson.reflect.TypeToken;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -33,7 +40,9 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.function.Function;
 
-/** Converts {@link String} or {@link List List&lt;String&gt;} to {@link Component} using provided function. */
+/**
+ * Converts {@link String} or {@link List List&lt;String&gt;} to {@link Component} using provided function.
+ */
 public final class ComponentSerializer implements JsonDeserializer<Component> {
 
     /**

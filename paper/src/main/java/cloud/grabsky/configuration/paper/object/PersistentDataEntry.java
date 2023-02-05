@@ -23,15 +23,23 @@
  */
 package cloud.grabsky.configuration.paper.object;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.bukkit.NamespacedKey;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
 public final class PersistentDataEntry {
-    @Getter @NotNull private final NamespacedKey key;
-    @Getter @NotNull private final PersistentDataType<?, ?> persistentDataType;
-    @Getter @NotNull private final Object value;
+
+    @Getter(AccessLevel.PUBLIC)
+    private final @NotNull NamespacedKey key;
+
+    @Getter(AccessLevel.PUBLIC)
+    private final @NotNull PersistentDataType<?, ?> persistentDataType;
+
+    @Getter(AccessLevel.PUBLIC)
+    private final @NotNull Object value;
+
 }

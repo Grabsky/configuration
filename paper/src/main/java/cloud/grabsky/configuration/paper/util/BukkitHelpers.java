@@ -23,10 +23,12 @@
  */
 package cloud.grabsky.configuration.paper.util;
 
-import com.destroystokyo.paper.profile.PlayerProfile;
-import com.destroystokyo.paper.profile.ProfileProperty;
 import cloud.grabsky.configuration.paper.object.EnchantmentEntry;
 import cloud.grabsky.configuration.paper.object.PersistentDataEntry;
+import com.destroystokyo.paper.profile.PlayerProfile;
+import com.destroystokyo.paper.profile.ProfileProperty;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -46,7 +48,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.UUID;
 
+import static org.jetbrains.annotations.ApiStatus.Internal;
+
+@Internal
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class BukkitHelpers {
+
     private static final UUID EMPTY_UUID = UUID.nameUUIDFromBytes(new byte[0]);
 
     @SuppressWarnings("unchecked cast")

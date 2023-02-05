@@ -23,12 +23,19 @@
  */
 package cloud.grabsky.configuration.paper.util;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class Conditions {
+@Internal
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class Conditions {
 
-    /** Returns provided {@link T} if not null, throws {@link E} otherwise.  */
+    /**
+     * Returns provided {@link T} if not null, throws {@link E} otherwise.
+     */
     public static <T, E extends Throwable> @NotNull T requirePresent(@Nullable final T value, final E exception) throws E {
         // Throwing exception if value is null
         if (value == null) throw exception;
@@ -36,7 +43,9 @@ public class Conditions {
         return value;
     }
 
-    /** Returns {@code value} if not null, {@code def} otherwise. */
+    /**
+     * Returns {@code value} if not null, {@code def} otherwise.
+     */
     public static <T> @NotNull T requirePresent(@Nullable final T value, final T def) {
         return (value != null) ? value : def;
     }

@@ -35,6 +35,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.reflect.TypeToken;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
@@ -44,18 +46,21 @@ import org.bukkit.inventory.ItemStack;
 import java.lang.reflect.Type;
 import java.util.List;
 
-/** Used to create {@link ItemStack}. */
+/**
+ * Converts a bunch of fields to {@link ItemStack}.
+ */
+@NoArgsConstructor(access = AccessLevel.PRIVATE) // NO INSTANTIATING ALLOWED
 public final class ItemStackSerializer implements JsonDeserializer<ItemStack> {
 
-    /** Default instance of {@link ItemStackSerializer}. */
+    /**
+     * Default instance of {@link ItemStackSerializer}.
+     */
     public static final ItemStackSerializer INSTANCE = new ItemStackSerializer();
 
     private static final Type LIST_COMPONENT = TypeToken.getParameterized(List.class, Component.class).getType();
     private static final Type LIST_ENCHANTMENT_ENTRY = TypeToken.getParameterized(List.class, EnchantmentEntry.class).getType();
     private static final Type LIST_ITEM_FLAG = TypeToken.getParameterized(List.class, ItemFlag.class).getType();
     private static final Type LIST_PDE = TypeToken.getParameterized(List.class, PersistentDataEntry.class).getType();
-
-    private ItemStackSerializer() { /* INSTANTIATING NOT ALLOWED */ }
 
     @Override
     public ItemStack deserialize(final JsonElement element, final Type type, final JsonDeserializationContext context) throws JsonParseException {
