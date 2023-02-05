@@ -111,14 +111,12 @@ This is an example of what serializers are capable of:
   ```json5
   "sound_source": "master"
   ```
-- **[SoundSerializer](#serializers)** depends on **[NamespacedKeySerializer](#serializers)** and *
-  *[SoundSourceSerializer](#serializers)**.
+- **[SoundSerializer](#serializers)** depends on **[NamespacedKeySerializer](#serializers)** and **[SoundSourceSerializer](#serializers)**.
 
   ```json5
   "sound": { "key": "minecraft:block.note_block.banjo", "source": "master", "volume": 1.0, "pitch": 1.0 }
   ```
-- **[ItemStackSerializer](#serializers)** depends on ***all*** serializers listed above, ***except*** *
-  *[SoundSourceSerializer](#serializers)** and **[SoundSerializer](#serializers)**.
+- **[ItemStackSerializer](#serializers)** depends on ***all*** serializers listed above, ***except*** **[SoundSourceSerializer](#serializers)** and **[SoundSerializer](#serializers)**.
 
   ```json5
   "item_example": {
