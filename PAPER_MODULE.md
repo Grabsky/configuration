@@ -7,162 +7,185 @@ This module adds serializers for common Bukkit objects. Check out **[Serializers
 
 ## Requirements
 Requires **Java 17** (or higher) and **Paper 1.19** (or higher).
-y
+
 <br />
 
 ## Getting Started
-Simply add `configuration-core` and `configuration-paper` modules to your dependencies.
+
+To use this project in your plugin, add following repository:
+
 ```groovy
-/* GRADLE BUILD SCRIPT (build.gradle) */
-
-plugins {
-    // ...other plugins
-    id 'com.github.johnrengelman.shadow' version '7.1.2'
-}
-
 repositories {
-    // ...other repositories
-    maven { url = 'https://repo.grabsky.cloud/releases' }
+  maven { url = 'https://repo.grabsky.cloud/releases' }
 }
-
-dependencies {
-    // ...other dependencies
-    implementation 'cloud.grabsky:configuration-core:[version]'
-    implementation 'cloud.grabsky:configuration-paper:[version]'
-}
-
-tasks {
-    // ...other tasks
-    shadowJar {
-        // ...other configurations
-        relocate('grabsky.configuration', 'com.example.libs.configuration')
-    }
-}
-
 ```
+
+Then specify dependency:
+
+```groovy
+dependencies {
+  implementation 'cloud.grabsky:configuration-core:[version]'
+  implementation 'cloud.grabsky:configuration-paper:[version]'
+}
+```
+
+Consider **[relocating](https://imperceptiblethoughts.com/shadow/configuration/relocation/)** to prevent version
+mismatch issues.
+
+<br />
+
 ## Serializers
+
 Serializers for following types are included:
+
 ```
 cloud.grabsky.configuration.paper
-├── MaterialSerializer           (org.bukkit.Material)
-├── EntityTypeSerializer         (org.bukkit.entity.EntityType)
-├── EnchantmentSerializer        (org.bukkit.enchantments.Enchantment)
-├── ItemFlagSerializer           (org.bukkit.inventory.ItemFlag)
-├── ItemStackSerializer          (org.bukkit.inventory.ItemStack)
+├── MaterialSerializer             (org.bukkit.Material)
+├── EntityTypeSerializer           (org.bukkit.entity.EntityType)
+├── EnchantmentSerializer          (org.bukkit.enchantments.Enchantment)
+├── ItemFlagSerializer             (org.bukkit.inventory.ItemFlag)
+├── ItemStackSerializer            (org.bukkit.inventory.ItemStack)
 │
-├── ComponentSerializer          (net.kyori.adventure.text.Component)
-├── SoundSerializer              (net.kyori.adventure.sound.Sound)
-├── SoundSourceSerializer        (net.kyori.adventure.sound.Sound.Source)
+├── ComponentSerializer            (net.kyori.adventure.text.Component)
+├── SoundSerializer                (net.kyori.adventure.sound.Sound)
+├── SoundSourceSerializer          (net.kyori.adventure.sound.Sound.Source)
 │
-├── ItemEnchantmentSerializer    (EnchantmentEntry)
-└── PersistentDataSerializer     (PersistentDataEntry)
+├── EnchantmentEntrySerializer     (cloud.grabsky.configuration.paper.object.EnchantmentEntry)
+└── PersistentDataEntrySerializer  (cloud.grabsky.configuration.paper.object.PersistentDataEntry)
 ```
-You need to add them to your `Gson` instance manually. Keep in mind that deserialization is not implemented.
-Most of built-in serializers depend on each other.
+
+You need to add them to your `Gson` instance manually:
+
+```java
+final Gson gson=new GsonBuilder()
+        // other options
+        .registerTypeAdapter(NamespacedKey.class,NamespacedKeySerializer.INSTANCE)
+        .create();
+```
+
+Keep in mind that deserialization is ***not*** implemented. Most of built-in serializers depend on each other.
 
 <br />
 
 ## Syntax
+
 This is an example of what serializers are capable of:
-```json5
-{
-    // NamespacedKey
-    "key": "namespaced:key",
 
-    // Material
-    "material": "minecraft:diamond",
+- **[NamespacedKeySerializer](#serializers)** does not depend on any serializer.
 
-    // EntityType
-    "entity_type": "minecraft:cow",
+  ```json5
+  "key": "namespaced:key"
+  ```
+- **[MaterialSerializer](#serializers)** depends on **[NamespacedKeySerializer](#serializers)**.
 
-    // Enchantment=
-    "enchantment": "minecraft:sharpness",
+  ```json5
+  "material": "minecraft:diamond"
+  ```
+- **[EntityTypeSerializer](#serializers)** depends on **[NamespacedKeySerializer](#serializers)**.
 
-    // EnchantmentEntry
-    "enchantment_entry": { "key": "minecraft:sharpness", "level": 5 },
+  ```json5
+  "entity_type": "minecraft:cow"
+  ```
+- **[EnchantmentSerializer](#serializers)** depends on **[NamespacedKeySerializer](#serializers)**.
 
-    // PersistentDataEntry
-    "persistent_data_entry": { "key": "configuration:test/string", "type": "string",  "value": "I am a String." },
+  ```json5
+  "enchantment": "minecraft:sharpness"
+  ```
+- **[EnchantmentEntrySerializer](#serializers)** depends on **[EnchantmentSerializer](#serializers)**.
 
-    // Component
-    "component": "<red>It uses <rainbow>MiniMessage<red>!",
+  ```json5
+  "enchantment_entry": { "key": "minecraft:sharpness", "level": 5 }
+  ```
+- **[PersistentDataEntrySerializer](#serializers)** depends on **[NamespacedKeySerializer](#serializers)**.
 
-    // Sound
-    "sound": { "key": "minecraft:block.note_block.banjo", "source": "master", "volume": 1.0, "pitch": 1.0 },
+  ```json5
+  "persistent_data_entry": { "key": "configuration:test/string", "type": "string",  "value": "I am a String." }
+  ```
+- **[ComponentSerializer](#serializers)** does not depend on any serializer.
 
-    // ItemStack
-    "item_example": {
+  ```json5
+  "component": "<red>It uses <rainbow>MiniMessage<red>!"
+  ```
+- **[SoundSourceSerializer](#serializers)** does not depend on any serializer.
 
-        // Material - required
-        "material": "minecraft:diamond_sword",
+  ```json5
+  "sound_source": "master"
+  ```
+- **[SoundSerializer](#serializers)** depends on **[NamespacedKeySerializer](#serializers)** and *
+  *[SoundSourceSerializer](#serializers)**.
 
-        // Integer - optional, among with all 'meta' entries
-        "amount": 1,
+  ```json5
+  "sound": { "key": "minecraft:block.note_block.banjo", "source": "master", "volume": 1.0, "pitch": 1.0 }
+  ```
+- **[ItemStackSerializer](#serializers)** depends on ***all*** serializers listed above, ***except*** *
+  *[SoundSourceSerializer](#serializers)** and **[SoundSerializer](#serializers)**.
 
-        "meta": {
+  ```json5
+  "item_example": {
 
-            // Component
-            "name": "<red>You can use <rainbow>MiniMessage<red> here!",
+      // required
+      "material": "minecraft:diamond_sword",
 
-            // List<Component>
-            "lore": ["<red>and here too."],
+      // optional (defaults to 1)
+      "amount": 1,
 
-            // List<EnchantmentEntry>
-            "enchantments": [
-                { "key": "minecraft:infinity", "level": 1 }
-            ],
+      // optional (defaults to none, empty meta)
+      "meta": {
+          "name": "<red>You can use <rainbow>MiniMessage<red> here!",
 
-            // List<EnchantmentEntry> - exclusive for enchanted books
-            "enchantment_storage": [
-                { "key": "minecraft:infinity", "level": 1 }
-            ],
+          "lore": ["<red>and here too."],
 
-            // List<ItemFlag>
-            "flags": ["HIDE_ATTRIBUTES", "HIDE_DESTROYS", "HIDE_DYE", "HIDE_ENCHANTS", "HIDE_PLACED_ON", "HIDE_POTION_EFFECTS", "HIDE_UNBREAKABLE"],
+          "enchantments": [
+              { "key": "minecraft:infinity", "level": 1 }
+          ],
 
-            // Integer
-            "custom_model_data": 7,
+          // exclusive to enchanted books
+          "enchantment_storage": [
+              { "key": "minecraft:infinity", "level": 1 }
+          ],
 
-            // List<PersistentDataEntry>
-            "persistent_data_container":[
-                { "key": "configuration:test/byte", "type": "byte", "value": 0 },
-                { "key": "configuration:test/byte_array", "type": "byte_array", "value": [0, 1, 1, 0, 1] },
-                { "key": "configuration:test/integer", "type": "integer", "value": 0 },
-                { "key": "configuration:test/integer_array", "type": "integer_array", "value": [-5, 0, 5] },
-                { "key": "configuration:test/long", "type": "long", "value": 173 },
-                { "key": "configuration:test/long_array", "type": "long_array", "value": [-50, 0, 50] },
-                { "key": "configuration:test/float", "type": "float", "value": 7.5 },
-                { "key": "configuration:test/double", "type": "double", "value": 7.5005 },
-                { "key": "configuration:test/string", "type": "string", "value": "I am a String." }
-            ],
+          "flags": ["HIDE_ATTRIBUTES", "HIDE_DESTROYS", "HIDE_DYE", "HIDE_ENCHANTS", "HIDE_PLACED_ON", "HIDE_POTION_EFFECTS", "HIDE_UNBREAKABLE"],
 
-            // Integer - exclusive for 'damageable' items like tools and armor
-            "durability": 1,
+          "custom_model_data": 7,
 
-            // String - exclusive for player head
-            "skull_texture": "BASE64_ENCODED_VALUE",
+          "persistent_data_container":[
+              { "key": "configuration:test/byte", "type": "byte", "value": 0 },
+              { "key": "configuration:test/byte_array", "type": "byte_array", "value": [0, 1, 1, 0, 1] },
+              { "key": "configuration:test/integer", "type": "integer", "value": 0 },
+              { "key": "configuration:test/integer_array", "type": "integer_array", "value": [-5, 0, 5] },
+              { "key": "configuration:test/long", "type": "long", "value": 173 },
+              { "key": "configuration:test/long_array", "type": "long_array", "value": [-50, 0, 50] },
+              { "key": "configuration:test/float", "type": "float", "value": 7.5 },
+              { "key": "configuration:test/double", "type": "double", "value": 7.5005 },
+              { "key": "configuration:test/string", "type": "string", "value": "I am a String." }
+          ],
 
-            // EntityType - exclusive for spawners
-            "spawner_type": "minecraft:cow",
+          // exclusive to 'damageable' items like tools and armor
+          "durability": 1,
 
-            // Integer - exclusive for spawners (block radius)
-            "spawner_activation_range": 16,
+          // exclusive to player heads
+          "skull_texture": "BASE64_ENCODED_VALUE",
 
-            // Integer - exclusive for spawners (ticks)
-            "spawner_min_spawn_delay": 300,
+          // exclusive to spawners
+          "spawner_type": "minecraft:cow",
 
-            // Integer - exclusive for spawners (ticks)
-            "spawner_max_spawn_delay": 500,
+          // exclusive to spawners (block radius)
+          "spawner_activation_range": 16,
 
-            // Integer - exclusive for spawners (ticks)
-            "spawner_max_nearby_entities": 3,
+          // exclusive to spawners (ticks)
+          "spawner_min_spawn_delay": 300,
 
-            // Integer - exclusive for spawners (block radius)
-            "spawner_spawn_range": 5,
+          // exclusive to spawners (ticks)
+          "spawner_max_spawn_delay": 500,
 
-            // Integer - exclusive for spawners
-            "spawner_spawn_count": 2
-        }
-    }
-}
-```
+          // exclusive to spawners (ticks)
+          "spawner_max_nearby_entities": 3,
+
+          // exclusive to spawners (block radius)
+          "spawner_spawn_range": 5,
+
+          // exclusive to spawners
+          "spawner_spawn_count": 2
+      }
+  }
+  ```
