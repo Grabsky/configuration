@@ -1,6 +1,6 @@
 # grabsky/configuration-paper
 [![](https://github.com/Grabsky/configuration/actions/workflows/gradle.yml/badge.svg)](https://github.com/Grabsky/configuration/actions/workflows/gradle.yml)
-[![](https://www.codefactor.io/repository/github/grabsky/configuration/badge/main)](https://www.codefactor.io/repository/github/grabsky/configuration/overview/main)
+[![](https://www.codefactor.io/repository/github/grabsky/configuration/badge/main)](https://www.codefactor.io/repository/github/grabsky/configuration/overview/main)  
 This module adds serializers for common Bukkit objects. Check out **[Serializers](#serializers)** and **[Syntax](#syntax)** sections below for more reference.
 
 <br />
