@@ -1,8 +1,10 @@
 package cloud.grabsky.configuration.tests.tests;
 
+import cloud.grabsky.configuration.Serialization;
+import cloud.grabsky.configuration.Path;
 import cloud.grabsky.configuration.Configuration;
-import cloud.grabsky.configuration.JsonPath;
 import cloud.grabsky.configuration.exception.ConfigurationException;
+import cloud.grabsky.configuration.tests.TestIntegerSerializer;
 import cloud.grabsky.configuration.tests.util.TestUtil;
 import cloud.grabsky.configuration.tests.JsonTest;
 import org.junit.jupiter.api.Test;
@@ -38,36 +40,37 @@ public class TestA extends JsonTest {
 
     }
 
-    public static final class Config extends Configuration {
+    public static final class Config implements Configuration {
         public static boolean WAS_RELOADED = false;
 
-        @JsonPath("simpleString")
+        @Path("simpleString")
         public static String TEST_A;
 
-        @JsonPath("simpleInteger")
+        @Path("simpleInteger") @Serialization(deserializer = TestIntegerSerializer.class)
         public static Integer TEST_B;
 
-        @JsonPath("simpleDouble")
+        @Path("simpleDouble")
         public static Double TEST_C;
 
-        @JsonPath("simpleObject.simpleString")
+        @Path("simpleObject.simpleString")
         public static String TEST_D;
 
-        @JsonPath("firstObject.secondObject.simpleString")
+        @Path("firstObject.secondObject.simpleString")
         public static String TEST_E;
 
-        @JsonPath("simpleArray[1]")
+        @Path("simpleArray[1]")
         public static String TEST_F;
 
-        @JsonPath("complexArray[0].simpleString")
+        @Path("complexArray[0].simpleString")
         public static String TEST_G;
 
-        @JsonPath("uuid")
+        @Path("uuid")
         public static UUID TEST_H;
 
         @Override
         public void onReload() {
             WAS_RELOADED = true;
+            System.out.println(TEST_B);
         }
 
     }

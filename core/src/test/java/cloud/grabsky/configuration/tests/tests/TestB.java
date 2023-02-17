@@ -1,7 +1,7 @@
 package cloud.grabsky.configuration.tests.tests;
 
+import cloud.grabsky.configuration.Path;
 import cloud.grabsky.configuration.Configuration;
-import cloud.grabsky.configuration.JsonPath;
 import cloud.grabsky.configuration.exception.ConfigurationException;
 import cloud.grabsky.configuration.tests.JsonTest;
 import org.junit.jupiter.api.Test;
@@ -39,12 +39,12 @@ public class TestB extends JsonTest {
         assertEquals("OK", Config.FAILS);
     }
 
-    public static final class Config extends Configuration {
+    public static final class Config implements Configuration {
 
-        @JsonPath("neverFails")
+        @Path("neverFails")
         public static String NEVER_FAILS;
 
-        @JsonPath("fails")
+        @Path("fails")
         public static String FAILS;
 
     }

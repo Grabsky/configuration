@@ -41,12 +41,12 @@ import java.lang.annotation.Target;
  *     }
  *   }
  * </pre>
- * Element: {@code @JsonPath("customer.name")} <br>
- * Whole array: {@code @JsonPath("customer.invoices")} <br>
- * Element from array: {@code @JsonPath("customer.invoices[0]")}
+ * Element: {@code @Path("customer.name")} <br>
+ * Whole array: {@code @Path("customer.invoices")} <br>
+ * Element from array: {@code @Path("customer.invoices[0]")}
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface JsonPath {
+public @interface Path {
     String value();
 }

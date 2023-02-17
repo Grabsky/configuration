@@ -23,19 +23,23 @@
  */
 package cloud.grabsky.configuration;
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import java.io.File;
 
-/** Holds information about single configuration. */
+/**
+ * Holds information about single configuration.
+ */
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ConfigurationHolder<T extends Configuration> {
-    @Getter private final Class<T> configurationClass;
-    @Getter private final File file;
 
-    private ConfigurationHolder(final Class<T> configurationClass, final File configurationFile) {
-        this.configurationClass = configurationClass;
-        this.file = configurationFile;
-    }
+    @Getter(AccessLevel.PUBLIC)
+    private final Class<T> configurationClass;
+
+    @Getter(AccessLevel.PUBLIC)
+    private final File file;
 
     /**
      * Creates instance of {@link ConfigurationHolder}.
@@ -47,4 +51,5 @@ public final class ConfigurationHolder<T extends Configuration> {
     public static <T extends Configuration> ConfigurationHolder<T> of(final Class<T> configurationClass, final File configurationFile) {
         return new ConfigurationHolder<>(configurationClass, configurationFile);
     }
+
 }
