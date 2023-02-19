@@ -55,13 +55,13 @@ public final class PaperConfigurationMapper extends ConfigurationMapper {
         builder.registerTypeAdapter(EnchantmentEntry.class, EnchantmentEntrySerializer.INSTANCE);
         builder.registerTypeAdapter(Enchantment.class, EnchantmentSerializer.INSTANCE);
         builder.registerTypeAdapter(EntityType.class, EntityTypeSerializer.INSTANCE);
-        builder.registerTypeAdapter(ItemFlag.class, ItemFlagSerializer.INSTANCE);
+        builder.registerTypeAdapter(ItemFlag.class, ItemFlagTypeAdapter.INSTANCE);
         builder.registerTypeAdapter(ItemStack.class, ItemStackSerializer.INSTANCE);
         builder.registerTypeAdapter(Material.class, MaterialSerializer.INSTANCE);
         builder.registerTypeAdapter(NamespacedKey.class, NamespacedKeySerializer.INSTANCE);
         builder.registerTypeAdapter(PersistentDataEntry.class, PersistentDataEntrySerializer.DEFAULT);
         builder.registerTypeAdapter(Sound.class, SoundSerializer.INSTANCE);
-        builder.registerTypeAdapter(Sound.Source.class, SoundSourceSerializer.INSTANCE);
+        builder.registerTypeAdapter(Sound.Source.class, SoundSourceTypeAdapter.INSTANCE);
         // ...
         if (consumer != null) {
             consumer.accept(builder);

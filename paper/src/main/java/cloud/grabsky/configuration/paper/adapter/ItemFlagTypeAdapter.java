@@ -24,20 +24,20 @@
 package cloud.grabsky.configuration.paper.adapter;
 
 import cloud.grabsky.configuration.serializers.AbstractEnumTypeAdapter;
-import net.kyori.adventure.sound.Sound;
+import org.bukkit.inventory.ItemFlag;
 
 /**
- * Converts {@link String} to {@link Sound.Source} and vice-versa but using case-insensitive strategy.
+ * Converts {@link String} to {@link ItemFlag} and vice-versa but using case-insensitive strategy.
  */
-public final class SoundSourceSerializer extends AbstractEnumTypeAdapter<Sound.Source> {
+public final class ItemFlagTypeAdapter extends AbstractEnumTypeAdapter<ItemFlag> {
 
     /**
-     * Default instance of {@link SoundSourceSerializer}.
+     * Default instance of {@link ItemFlagTypeAdapter}.
      */
-    public static final SoundSourceSerializer INSTANCE = new SoundSourceSerializer();
+    public static final ItemFlagTypeAdapter INSTANCE = new ItemFlagTypeAdapter();
 
-    private SoundSourceSerializer() {
-        super(Sound.Source.class, false);
+    private ItemFlagTypeAdapter() {
+        super(ItemFlag.class, false);
     }
 
 }
