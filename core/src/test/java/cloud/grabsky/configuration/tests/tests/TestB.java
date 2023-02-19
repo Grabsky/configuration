@@ -1,7 +1,7 @@
 package cloud.grabsky.configuration.tests.tests;
 
-import cloud.grabsky.configuration.Path;
-import cloud.grabsky.configuration.Configuration;
+import cloud.grabsky.configuration.JsonConfiguration;
+import cloud.grabsky.configuration.JsonPath;
 import cloud.grabsky.configuration.exception.ConfigurationException;
 import cloud.grabsky.configuration.tests.JsonTest;
 import org.junit.jupiter.api.Test;
@@ -9,9 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 
 import static cloud.grabsky.configuration.tests.util.TestUtil.getFileFromClassPath;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestB extends JsonTest {
 
@@ -39,12 +37,12 @@ public class TestB extends JsonTest {
         assertEquals("OK", Config.FAILS);
     }
 
-    public static final class Config implements Configuration {
+    public static final class Config implements JsonConfiguration {
 
-        @Path("neverFails")
+        @JsonPath("neverFails")
         public static String NEVER_FAILS;
 
-        @Path("fails")
+        @JsonPath("fails")
         public static String FAILS;
 
     }

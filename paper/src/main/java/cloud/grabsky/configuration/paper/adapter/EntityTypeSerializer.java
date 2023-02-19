@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 Grabsky
+ * Copyright (c) 2023 Grabsky <44530932+Grabsky@users.noreply.github.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -21,10 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package cloud.grabsky.configuration.paper;
+package cloud.grabsky.configuration.paper.adapter;
 
 import cloud.grabsky.configuration.paper.exception.JsonFormatException;
-import cloud.grabsky.configuration.paper.util.Conditions;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -33,26 +32,28 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
-import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.EntityType;
 
 import java.lang.reflect.Type;
 
+import static cloud.grabsky.configuration.paper.util.Conditions.requirePresent;
+
 /**
- * Converts {@link NamespacedKey} to {@link Enchantment}.
+ * Converts {@link NamespacedKey} to {@link EntityType}.
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE) // NO INSTANTIATING ALLOWED
-public final class EnchantmentSerializer implements JsonDeserializer<Enchantment> {
+public final class EntityTypeSerializer implements JsonDeserializer<EntityType> {
 
     /**
-     * Default instance of {@link EnchantmentSerializer}.
+     * Default instance of {@link EntityTypeSerializer}.
      */
-    public static final EnchantmentSerializer INSTANCE = new EnchantmentSerializer();
+    public static final EntityTypeSerializer INSTANCE = new EntityTypeSerializer();
 
     @Override
-    public Enchantment deserialize(final JsonElement element, final Type type, final JsonDeserializationContext context) throws JsonParseException {
+    public EntityType deserialize(final JsonElement element, final Type type, final JsonDeserializationContext context) throws JsonParseException {
         final NamespacedKey key = context.deserialize(element, NamespacedKey.class);
         // Throwing an exception in case JsonElement is not a JsonPrimitive, therefore definitely not a valid String.
-        return Conditions.requirePresent(Registry.ENCHANTMENT.get(key), new JsonFormatException(type, element));
+        return requirePresent(Registry.ENTITY_TYPE.get(key), new JsonFormatException(type, element));
     }
 
 }

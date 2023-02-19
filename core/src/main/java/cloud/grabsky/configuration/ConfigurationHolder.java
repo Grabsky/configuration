@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 Grabsky
+ * Copyright (c) 2023 Grabsky <44530932+Grabsky@users.noreply.github.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -30,10 +30,10 @@ import lombok.RequiredArgsConstructor;
 import java.io.File;
 
 /**
- * Holds information about single configuration.
+ * Holds information about single configuration element.
  */
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ConfigurationHolder<T extends Configuration> {
+public final class ConfigurationHolder<T extends JsonConfiguration> {
 
     @Getter(AccessLevel.PUBLIC)
     private final Class<T> configurationClass;
@@ -48,7 +48,7 @@ public final class ConfigurationHolder<T extends Configuration> {
      * @param configurationFile {@link File} containing json configuration.
      * @return a new instance of {@link ConfigurationHolder}.
      */
-    public static <T extends Configuration> ConfigurationHolder<T> of(final Class<T> configurationClass, final File configurationFile) {
+    public static <T extends JsonConfiguration> ConfigurationHolder<T> of(final Class<T> configurationClass, final File configurationFile) {
         return new ConfigurationHolder<>(configurationClass, configurationFile);
     }
 

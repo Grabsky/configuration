@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 Grabsky
+ * Copyright (c) 2023 Grabsky <44530932+Grabsky@users.noreply.github.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -21,17 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package cloud.grabsky.configuration;
+package cloud.grabsky.configuration.paper.adapter;
 
-import com.google.gson.JsonDeserializer;
+import cloud.grabsky.configuration.serializers.AbstractEnumTypeAdapter;
+import net.kyori.adventure.sound.Sound;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+/**
+ * Converts {@link String} to {@link Sound.Source} and vice-versa but using case-insensitive strategy.
+ */
+public final class SoundSourceSerializer extends AbstractEnumTypeAdapter<Sound.Source> {
 
-@Target(ElementType.FIELD)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Serialization {
-    Class<? extends JsonDeserializer<?>> deserializer();
+    /**
+     * Default instance of {@link SoundSourceSerializer}.
+     */
+    public static final SoundSourceSerializer INSTANCE = new SoundSourceSerializer();
+
+    private SoundSourceSerializer() {
+        super(Sound.Source.class, false);
+    }
+
 }

@@ -1,20 +1,16 @@
 package cloud.grabsky.configuration.tests.tests;
 
-import cloud.grabsky.configuration.Serialization;
-import cloud.grabsky.configuration.Path;
-import cloud.grabsky.configuration.Configuration;
+import cloud.grabsky.configuration.JsonConfiguration;
+import cloud.grabsky.configuration.JsonPath;
 import cloud.grabsky.configuration.exception.ConfigurationException;
-import cloud.grabsky.configuration.tests.TestIntegerSerializer;
-import cloud.grabsky.configuration.tests.util.TestUtil;
 import cloud.grabsky.configuration.tests.JsonTest;
+import cloud.grabsky.configuration.tests.util.TestUtil;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestA extends JsonTest {
 
@@ -32,39 +28,31 @@ public class TestA extends JsonTest {
         assertEquals(7.777777D, Config.TEST_C);
         assertEquals("OK", Config.TEST_D);
         assertEquals("OK", Config.TEST_E);
-        assertEquals("OK", Config.TEST_F);
-        assertEquals("OK", Config.TEST_G);
         assertEquals(UUID.fromString("456fb8eb-f13d-4a34-8284-67e2469b634d"), Config.TEST_H);
 
         assertTrue(Config.WAS_RELOADED);
 
     }
 
-    public static final class Config implements Configuration {
+    public static final class Config implements JsonConfiguration {
         public static boolean WAS_RELOADED = false;
 
-        @Path("simpleString")
+        @JsonPath("simpleString")
         public static String TEST_A;
 
-        @Path("simpleInteger") @Serialization(deserializer = TestIntegerSerializer.class)
+        @JsonPath("simpleInteger")
         public static Integer TEST_B;
 
-        @Path("simpleDouble")
+        @JsonPath("simpleDouble")
         public static Double TEST_C;
 
-        @Path("simpleObject.simpleString")
+        @JsonPath("simpleObject.simpleString")
         public static String TEST_D;
 
-        @Path("firstObject.secondObject.simpleString")
+        @JsonPath("firstObject.secondObject.simpleString")
         public static String TEST_E;
 
-        @Path("simpleArray[1]")
-        public static String TEST_F;
-
-        @Path("complexArray[0].simpleString")
-        public static String TEST_G;
-
-        @Path("uuid")
+        @JsonPath("uuid")
         public static UUID TEST_H;
 
         @Override

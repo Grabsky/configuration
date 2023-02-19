@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 Grabsky
+ * Copyright (c) 2023 Grabsky <44530932+Grabsky@users.noreply.github.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -23,10 +23,17 @@
  */
 package cloud.grabsky.configuration;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.ApiStatus.Internal;
+
 import java.util.HashMap;
 
-/* package private */ final class FieldDataContainer {
-    private final HashMap<String, FieldData> container = new HashMap<String, FieldData>();
+@Internal
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+public final class FieldDataContainer {
+
+    private final HashMap<String, FieldData> container = new HashMap<>();
 
     public void add(final String fieldName, final Class<?> fieldType, final Object value) {
         container.put(fieldName, new FieldData(fieldType, value));

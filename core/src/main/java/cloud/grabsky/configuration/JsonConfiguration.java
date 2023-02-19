@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 Grabsky
+ * Copyright (c) 2023 Grabsky <44530932+Grabsky@users.noreply.github.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -21,22 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package cloud.grabsky.configuration.paper;
+package cloud.grabsky.configuration;
 
-import cloud.grabsky.configuration.serializers.CaseInsensitiveEnumSerializer;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-import net.kyori.adventure.sound.Sound;
+import java.lang.module.Configuration;
 
 /**
- * Converts {@link String} to {@link Sound.Source} and vice-versa but using case-insensitive strategy.
+ * Only classes extending {@link Configuration} can be used within {@link ConfigurationMapper}.
  */
-@NoArgsConstructor(access = AccessLevel.PRIVATE) // NO INSTANTIATING ALLOWED
-public final class SoundSourceSerializer implements CaseInsensitiveEnumSerializer<Sound.Source> {
+public interface JsonConfiguration {
 
     /**
-     * Default instance of {@link SoundSourceSerializer}.
+     * Called when {@link ConfigurationMapper} finishes inserting field values.
      */
-    public static final SoundSourceSerializer INSTANCE = new SoundSourceSerializer();
+    default void onReload() { /* EMPTY IMPLEMENTATION BY DEFAULT */ }
 
 }

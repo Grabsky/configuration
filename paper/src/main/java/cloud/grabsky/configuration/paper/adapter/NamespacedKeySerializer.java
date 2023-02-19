@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 Grabsky
+ * Copyright (c) 2023 Grabsky <44530932+Grabsky@users.noreply.github.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -21,39 +21,42 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package cloud.grabsky.configuration.paper;
+package cloud.grabsky.configuration.paper.adapter;
 
 import cloud.grabsky.configuration.paper.exception.JsonFormatException;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.Registry;
 
 import java.lang.reflect.Type;
 
-import static cloud.grabsky.configuration.paper.util.Conditions.requirePresent;
-
 /**
- * Converts {@link NamespacedKey} to {@link Material}.
+ * Converts {@link String} to {@link org.bukkit.NamespacedKey}.
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE) // NO INSTANTIATING ALLOWED
-public final class MaterialSerializer implements JsonDeserializer<Material> {
+public final class NamespacedKeySerializer implements JsonDeserializer<NamespacedKey> {
 
     /**
-     * Default instance of {@link MaterialSerializer}.
+     * Default instance of {@link NamespacedKeySerializer}.
      */
-    public static final MaterialSerializer INSTANCE = new MaterialSerializer();
+    public static final NamespacedKeySerializer INSTANCE = new NamespacedKeySerializer();
 
     @Override
-    public Material deserialize(final JsonElement element, final Type type, final JsonDeserializationContext context) throws JsonParseException {
-        final NamespacedKey key = context.deserialize(element, NamespacedKey.class);
+    public NamespacedKey deserialize(final JsonElement element, final Type type, final JsonDeserializationContext context) throws JsonParseException {
+        if (element instanceof JsonPrimitive json) {
+            try {
+                return NamespacedKey.fromString(json.getAsString().toLowerCase());
+            } catch (final IllegalArgumentException e) {
+                throw new JsonFormatException(type, json);
+            }
+        }
         // Throwing an exception in case JsonElement is not a JsonPrimitive, therefore definitely not a valid String.
-        return requirePresent(Registry.MATERIAL.get(key), new JsonFormatException(type, element));
+        throw new JsonFormatException(type, element);
     }
 
 }

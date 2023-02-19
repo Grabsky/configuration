@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 Grabsky
+ * Copyright (c) 2023 Grabsky <44530932+Grabsky@users.noreply.github.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -25,10 +25,15 @@ package cloud.grabsky.configuration.exception;
 
 import java.io.File;
 
-/** Use {@link #getCause} to get instance of exception that caused this exception to be thrown. */
+/**
+ * {@link ConfigurationException} is thrown when mapping of configuration file fails.
+ *
+ * @apiNote Use {@link #getCause()} to know the cause of failure.
+ */
 public class ConfigurationException extends RuntimeException {
 
     public ConfigurationException(final Class<?> configurationClass, final File file, final Throwable cause) {
-        super("An error occurred during mapping of " + file.getPath() + " (class = " + configurationClass.getSimpleName() + ")", cause);
+        super("An error occurred during mapping of " + file.getPath() + " to " + configurationClass.getSimpleName(), cause);
     }
+
 }

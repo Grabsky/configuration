@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 Grabsky
+ * Copyright (c) 2023 Grabsky <44530932+Grabsky@users.noreply.github.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -21,22 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package cloud.grabsky.configuration.paper;
+package cloud.grabsky.configuration;
 
-import cloud.grabsky.configuration.serializers.CaseInsensitiveEnumSerializer;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-import org.bukkit.inventory.ItemFlag;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Converts {@link String} to {@link ItemFlag} and vice-versa but using case-insensitive strategy.
+ * Fields marked with {@link JsonNullable} can receive {@code null} as a value.
  */
-@NoArgsConstructor(access = AccessLevel.PRIVATE) // NO INSTANTIATING ALLOWED
-public final class ItemFlagSerializer implements CaseInsensitiveEnumSerializer<ItemFlag> {
-
-    /**
-     * Default instance of {@link ItemFlagSerializer}.
-     */
-    public static final ItemFlagSerializer INSTANCE = new ItemFlagSerializer();
-
-}
+@Target(ElementType.FIELD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface JsonNullable { /* MARKER */ }

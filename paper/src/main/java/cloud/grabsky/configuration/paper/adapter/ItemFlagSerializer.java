@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 Grabsky
+ * Copyright (c) 2023 Grabsky <44530932+Grabsky@users.noreply.github.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -21,12 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package cloud.grabsky.configuration;
+package cloud.grabsky.configuration.paper.adapter;
 
-/** Only classes extending {@link Configuration} can be used within {@link ConfigurationMapper}. */
-public interface Configuration {
+import cloud.grabsky.configuration.serializers.AbstractEnumTypeAdapter;
+import org.bukkit.inventory.ItemFlag;
 
-    /** Called when {@link ConfigurationMapper} finishes inserting field values. */
-    default void onReload() { /* EMPTY */ }
+/**
+ * Converts {@link String} to {@link ItemFlag} and vice-versa but using case-insensitive strategy.
+ */
+public final class ItemFlagSerializer extends AbstractEnumTypeAdapter<ItemFlag> {
+
+    /**
+     * Default instance of {@link ItemFlagSerializer}.
+     */
+    public static final ItemFlagSerializer INSTANCE = new ItemFlagSerializer();
+
+    private ItemFlagSerializer() {
+        super(ItemFlag.class, false);
+    }
 
 }

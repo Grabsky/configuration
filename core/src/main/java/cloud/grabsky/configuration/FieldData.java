@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 Grabsky
+ * Copyright (c) 2023 Grabsky <44530932+Grabsky@users.noreply.github.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -23,11 +23,19 @@
  */
 package cloud.grabsky.configuration;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
-@AllArgsConstructor
-/* package private */ final class FieldData {
-    @Getter private final Class<?> type;
-    @Getter private final Object value;
+@Internal
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+public final class FieldData {
+
+    @Getter(AccessLevel.PUBLIC)
+    private final Class<?> type;
+
+    @Getter(AccessLevel.PUBLIC)
+    private final Object value;
+
 }
