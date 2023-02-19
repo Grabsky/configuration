@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package cloud.grabsky.configuration.serializers;
+package cloud.grabsky.configuration.adapter;
 
 import com.google.gson.JsonParseException;
 import com.google.gson.TypeAdapter;

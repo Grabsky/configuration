@@ -23,7 +23,7 @@
  */
 package cloud.grabsky.configuration.paper.adapter;
 
-import cloud.grabsky.configuration.serializers.AbstractEnumTypeAdapter;
+import cloud.grabsky.configuration.adapter.AbstractEnumTypeAdapter;
 import org.bukkit.inventory.ItemFlag;
 
 /**
