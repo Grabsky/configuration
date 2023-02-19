@@ -42,6 +42,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -74,7 +75,7 @@ public class ConfigurationMapper {
             // Converting JSON string (from a BufferedReader) to JsonElement
             final JsonElement root = parseFile(configurationFile);
             // Updating the fields and returning the result
-            final FieldDataContainer container = this.collect(configurationClass, root);
+            final Map<String, FieldData> container = this.collect(configurationClass, root);
             // Inserting collected values to provided class' fields
             insert(configurationClass, container);
             // Calling provided class' 'onReload' method
@@ -93,7 +94,7 @@ public class ConfigurationMapper {
      * @throws ConfigurationException when configuration fails to load.
      */
     public void map(@NotNull final ConfigurationHolder<? extends JsonConfiguration>... holders) throws ConfigurationException {
-        final Map<ConfigurationHolder<?>, FieldDataContainer> configurations = new LinkedHashMap<>();
+        final Map<ConfigurationHolder<?>, Map<String, FieldData>> configurations = new LinkedHashMap<>();
         // Step 1: Collecting values
         for (final ConfigurationHolder<? extends JsonConfiguration> holder : holders) {
             final Class<? extends JsonConfiguration> configurationClass = holder.getConfigurationClass();
@@ -103,7 +104,7 @@ public class ConfigurationMapper {
                 // Reading JsonElement from the file
                 final JsonElement json = parseFile(configurationFile);
                 // Parsing values and collecting them to FieldDataContainer
-                final FieldDataContainer container = this.collect(configurationClass, json);
+                final Map<String, FieldData> container = this.collect(configurationClass, json);
                 // Adding container to the map
                 configurations.put(holder, container);
             } catch (final IOException | JsonParseException | IllegalArgumentException error) {
@@ -114,7 +115,7 @@ public class ConfigurationMapper {
         for (var entry : configurations.entrySet()) {
             final ConfigurationHolder<?> holder = entry.getKey();
             final Class<? extends JsonConfiguration> configurationClass = holder.getConfigurationClass();
-            final FieldDataContainer container = entry.getValue();
+            final Map<String, FieldData> container = entry.getValue();
             // ...
             try {
                 insert(configurationClass, container);
@@ -127,8 +128,8 @@ public class ConfigurationMapper {
     }
 
     // Parses and "collects" values defined in configuration class. Fields not annotated with @JsonPath annotation are ignored.
-    private <T extends JsonConfiguration> FieldDataContainer collect(@NotNull final Class<T> configurationClass, @NotNull final JsonElement root) throws JsonParseException, IllegalArgumentException {
-        final FieldDataContainer container = new FieldDataContainer();
+    private <T extends JsonConfiguration> Map<String, FieldData> collect(@NotNull final Class<T> configurationClass, @NotNull final JsonElement root) throws JsonParseException, IllegalArgumentException {
+        final Map<String, FieldData> container = new HashMap<>();
         // For each declared field...
         for (final Field field : configurationClass.getDeclaredFields()) {
             // Skipping non-static / non-final fields, fields missing @JsonPath annotation or inaccessible fields
@@ -151,7 +152,7 @@ public class ConfigurationMapper {
                     throw new JsonParseException("Json object at path $." + path + " cannot be null");
                 }
                 // Creating and adding ModifiedField to the set
-                container.add(field.getName(), field.getType(), o);
+                container.put(field.getName(), new FieldData(field.getType(), o));
             } catch (final IOException | IllegalAccessException error) {
                 throw new JsonParseException(error);
             }
@@ -162,11 +163,11 @@ public class ConfigurationMapper {
     /* STATIC HELPERS */
 
     // Updates field values to stored those inside FieldDataContainer. Other fields are ignored.
-    private static <T extends JsonConfiguration> void insert(@NotNull final Class<T> configurationClass, @NotNull final FieldDataContainer fields) throws IllegalAccessException, IllegalArgumentException {
+    private static <T extends JsonConfiguration> void insert(@NotNull final Class<T> configurationClass, @NotNull final Map<String, FieldData> fields) throws IllegalAccessException, IllegalArgumentException {
         for (final Field field : configurationClass.getDeclaredFields()) {
             final String fieldName = field.getName();
             // ...
-            if (fields.has(fieldName) == true) {
+            if (fields.containsKey(fieldName) == true) {
                 field.set(null, fields.get(fieldName).getValue());
             }
         }
