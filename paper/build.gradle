@@ -4,6 +4,6 @@ repositories {
 
 dependencies {
     api project(':core')
-    // Paper API (1.19+)
+    // papier api (1.19+)
     compileOnly 'io.papermc.paper:paper-api:1.19-R0.1-SNAPSHOT'
 }
