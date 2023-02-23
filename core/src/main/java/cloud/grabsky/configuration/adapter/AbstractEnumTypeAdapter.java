@@ -23,14 +23,15 @@
  */
 package cloud.grabsky.configuration.adapter;
 
-import com.google.gson.JsonParseException;
-import com.google.gson.TypeAdapter;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonToken;
-import com.google.gson.stream.JsonWriter;
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.JsonDataException;
+import com.squareup.moshi.JsonReader;
+import com.squareup.moshi.JsonReader.Token;
+import com.squareup.moshi.JsonWriter;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
@@ -38,7 +39,7 @@ import java.io.IOException;
  * Converts {@link String} to {@link T} and vice-versa but using case-insensitive strategy.
  */
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
-public abstract class AbstractEnumTypeAdapter<T extends Enum<T>> extends TypeAdapter<T> {
+public abstract class AbstractEnumTypeAdapter<T extends Enum<T>> extends JsonAdapter<T> {
 
     @Getter(AccessLevel.PUBLIC)
     protected final Class<T> type;
@@ -47,8 +48,8 @@ public abstract class AbstractEnumTypeAdapter<T extends Enum<T>> extends TypeAda
     protected final boolean isCaseSensitive;
 
     @Override
-    public T read(final JsonReader in) throws IOException {
-        if (in.peek() == JsonToken.STRING) {
+    public T fromJson(final @NotNull JsonReader in) throws IOException {
+        if (in.peek() == Token.STRING) {
             final String value = in.nextString();
             // Iterating over enum constants for that (enum) type
             for (final T en : type.getEnumConstants()) {
@@ -60,22 +61,22 @@ public abstract class AbstractEnumTypeAdapter<T extends Enum<T>> extends TypeAda
                     return en;
             }
             // No enum with specified name was found; throwing an exception
-            throw new JsonParseException("No enum matching '" + value + "' was found for type '" + type.getSimpleName() + "'.");
-        } else if (in.peek() == JsonToken.NUMBER) {
+            throw new JsonDataException("No enum matching '" + value + "' was found for type '" + type.getSimpleName() + "'.");
+        } else if (in.peek() == Token.NUMBER) {
              final int index = in.nextInt();
              // Trying to return enum at specified index
              try {
                  return type.getEnumConstants()[index];
              } catch (final IndexOutOfBoundsException error) {
-                 throw new JsonParseException("Enum index out of bounds for " + type.getSimpleName() + "($." + in.getPath() + ")", error);
+                 throw new JsonDataException("Enum index out of bounds for " + type.getSimpleName() + "($." + in.getPath() + ")", error);
              }
         }
         // Unexpected value type was found; throwing an exception
-        throw new JsonParseException("Expected STRING or NUMBER, but found " + in.peek() + "($." + in.getPath() + ")");
+        throw new JsonDataException("Expected STRING or NUMBER, but found " + in.peek() + "($." + in.getPath() + ")");
     }
 
     @Override
-    public void write(final JsonWriter out, final T value) throws UnsupportedOperationException {
+    public void toJson(final @NotNull JsonWriter out, final T value) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("NOT IMPLEMENTED");
     }
 

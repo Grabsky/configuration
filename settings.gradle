@@ -1,4 +1,7 @@
-rootProject.name = 'configuration'
+rootProject.name = "configuration"
 
-include 'core'
-include 'paper'
+include("core")
+include("paper")
+
+project(":core").name = "configuration-core"
+project(":paper").name = "configuration-paper"

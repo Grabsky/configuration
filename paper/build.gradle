@@ -3,7 +3,7 @@ repositories {
 }
 
 dependencies {
-    api project(':core')
+    api project(":configuration-core")
     // papier api (1.19+)
-    compileOnly 'io.papermc.paper:paper-api:1.19-R0.1-SNAPSHOT'
+    compileOnly("io.papermc.paper:paper-api:1.19-R0.1-SNAPSHOT")
 }

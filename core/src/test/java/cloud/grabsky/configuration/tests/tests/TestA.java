@@ -1,5 +1,6 @@
 package cloud.grabsky.configuration.tests.tests;
 
+import cloud.grabsky.configuration.JsonAdapter;
 import cloud.grabsky.configuration.JsonConfiguration;
 import cloud.grabsky.configuration.JsonPath;
 import cloud.grabsky.configuration.exception.ConfigurationException;
@@ -8,6 +9,7 @@ import cloud.grabsky.configuration.tests.util.TestUtil;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,6 +30,7 @@ public class TestA extends JsonTest {
         assertEquals(7.777777D, Config.TEST_C);
         assertEquals("OK", Config.TEST_D);
         assertEquals("OK", Config.TEST_E);
+        assertEquals("OK", Config.TEST_F.get(1));
         assertEquals(UUID.fromString("456fb8eb-f13d-4a34-8284-67e2469b634d"), Config.TEST_H);
 
         assertTrue(Config.WAS_RELOADED);
@@ -52,13 +55,15 @@ public class TestA extends JsonTest {
         @JsonPath("firstObject.secondObject.simpleString")
         public static String TEST_E;
 
+        @JsonPath("simpleArray")
+        public static List<String> TEST_F;
+
         @JsonPath("uuid")
         public static UUID TEST_H;
 
         @Override
         public void onReload() {
             WAS_RELOADED = true;
-            System.out.println(TEST_B);
         }
 
     }
