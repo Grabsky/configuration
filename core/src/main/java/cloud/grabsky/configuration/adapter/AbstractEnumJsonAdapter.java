@@ -60,19 +60,19 @@ public abstract class AbstractEnumJsonAdapter<T extends Enum<T>> extends JsonAda
                 else if (en.name().equalsIgnoreCase(value) == true)
                     return en;
             }
-            // No enum with specified name was found; throwing an exception
-            throw new JsonDataException("No enum matching '" + value + "' was found for type '" + type.getSimpleName() + "'.");
+            // ...
+            return null;
         } else if (in.peek() == Token.NUMBER) {
              final int index = in.nextInt();
              // Trying to return enum at specified index
              try {
                  return type.getEnumConstants()[index];
              } catch (final IndexOutOfBoundsException error) {
-                 throw new JsonDataException("Enum index out of bounds for " + type.getSimpleName() + "($." + in.getPath() + ")", error);
+                 return null;
              }
         }
         // Unexpected value type was found; throwing an exception
-        throw new JsonDataException("Expected STRING or NUMBER, but found " + in.peek() + "($." + in.getPath() + ")");
+        throw new JsonDataException("Expected STRING or NUMBER, but found " + in.peek() + " ($." + in.getPath() + ")");
     }
 
     @Override
