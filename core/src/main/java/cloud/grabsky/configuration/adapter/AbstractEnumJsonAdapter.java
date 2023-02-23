@@ -39,7 +39,7 @@ import java.io.IOException;
  * Converts {@link String} to {@link T} and vice-versa but using case-insensitive strategy.
  */
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
-public abstract class AbstractEnumTypeAdapter<T extends Enum<T>> extends JsonAdapter<T> {
+public abstract class AbstractEnumJsonAdapter<T extends Enum<T>> extends JsonAdapter<T> {
 
     @Getter(AccessLevel.PUBLIC)
     protected final Class<T> type;

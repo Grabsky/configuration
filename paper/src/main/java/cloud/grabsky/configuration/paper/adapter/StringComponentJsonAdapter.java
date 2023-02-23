@@ -23,14 +23,13 @@
  */
 package cloud.grabsky.configuration.paper.adapter;
 
-import com.google.gson.TypeAdapter;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonToken;
-import com.google.gson.stream.JsonWriter;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.JsonReader;
+import com.squareup.moshi.JsonReader.Token;
+import com.squareup.moshi.JsonWriter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.List;
@@ -38,31 +37,25 @@ import java.util.List;
 /**
  * Converts {@link String} or {@link List List&lt;String&gt;} to {@link Component} using provided function.
  */
-@AllArgsConstructor(access = AccessLevel.PUBLIC)
-public final class ComponentTypeAdapter extends TypeAdapter<Component> {
+public final class StringComponentJsonAdapter extends JsonAdapter<String> {
 
     /**
-     * Default instance of {@link ComponentTypeAdapter} uses {@link MiniMessage} as a conversion method.
+     * Default instance of {@link StringComponentJsonAdapter} uses {@link MiniMessage} as a conversion method.
      */
-    public static final ComponentTypeAdapter INSTANCE = new ComponentTypeAdapter();
+    public static final StringComponentJsonAdapter INSTANCE = new StringComponentJsonAdapter();
 
     private final MiniMessage miniMessage = MiniMessage.miniMessage();
 
     @Override
-    public Component read(final JsonReader in) throws IOException {
-        if (in.peek() == JsonToken.STRING) {
-            final String text = in.nextString();
-            // Returning empty component if value is null or blank
-            if ("".equals(text) == true)
-                return Component.empty();
-            // Parsing and returning
-            return miniMessage.deserialize(text);
-        } else if (in.peek() == JsonToken.BEGIN_ARRAY) {
+    public String fromJson(final @NotNull JsonReader in) throws IOException {
+        if (in.peek() == Token.STRING) {
+            return in.nextString();
+        } else if (in.peek() == Token.BEGIN_ARRAY) {
             final StringBuilder builder = new StringBuilder();
             // ...
             in.beginArray();
             // ...
-            while (in.hasNext() == true && in.peek() == JsonToken.STRING) {
+            while (in.hasNext() == true && in.peek() == Token.STRING) {
                 final String text = in.nextString();
                 // ...
                 builder.append(text);
@@ -74,16 +67,15 @@ public final class ComponentTypeAdapter extends TypeAdapter<Component> {
             // ...
             in.endArray();
             // ...
-            return miniMessage.deserialize(builder.toString());
+            return builder.toString();
         } else {
             in.skipValue();
         }
-        return Component.empty();
+        return null;
     }
 
     @Override
-    public void write(final JsonWriter out, final Component value) {
+    public void toJson(final @NotNull JsonWriter out, final String value) {
         throw new UnsupportedOperationException("NOT IMPLEMENTED");
     }
-
 }

@@ -21,18 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package cloud.grabsky.configuration.paper.exception;
+package cloud.grabsky.configuration.paper.adapter;
 
-import com.google.gson.JsonParseException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import cloud.grabsky.configuration.adapter.AbstractEnumJsonAdapter;
+import net.kyori.adventure.sound.Sound;
 
-import java.lang.reflect.Type;
+/**
+ * Converts {@link String} to {@link Sound.Source} and vice-versa but using case-insensitive strategy.
+ */
+public final class SoundSourceJsonAdapter extends AbstractEnumJsonAdapter<Sound.Source> {
 
-public class JsonFormatException extends JsonParseException {
+    /**
+     * Default instance of {@link SoundSourceJsonAdapter}.
+     */
+    public static final SoundSourceJsonAdapter INSTANCE = new SoundSourceJsonAdapter();
 
-    public JsonFormatException(@NotNull final Type type, @Nullable final Object value) {
-        super("[" + type.getTypeName() + "] An error occurred during (de)serialization of: " + value);
+    private SoundSourceJsonAdapter() {
+        super(Sound.Source.class, false);
     }
 
 }

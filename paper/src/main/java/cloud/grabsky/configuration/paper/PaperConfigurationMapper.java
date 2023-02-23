@@ -24,21 +24,9 @@
 package cloud.grabsky.configuration.paper;
 
 import cloud.grabsky.configuration.ConfigurationMapper;
-import cloud.grabsky.configuration.paper.adapter.*;
-import cloud.grabsky.configuration.paper.moshi_adapters.ComponentJsonAdapter;
-import cloud.grabsky.configuration.paper.object.EnchantmentEntry;
-import cloud.grabsky.configuration.paper.object.PersistentDataEntry;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import cloud.grabsky.configuration.paper.adapter.ComponentJsonAdapter;
 import com.squareup.moshi.Moshi;
-import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.EntityType;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

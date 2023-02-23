@@ -23,21 +23,21 @@
  */
 package cloud.grabsky.configuration.paper.adapter;
 
-import cloud.grabsky.configuration.adapter.AbstractEnumTypeAdapter;
-import net.kyori.adventure.sound.Sound;
+import cloud.grabsky.configuration.adapter.AbstractEnumJsonAdapter;
+import org.bukkit.inventory.ItemFlag;
 
 /**
- * Converts {@link String} to {@link Sound.Source} and vice-versa but using case-insensitive strategy.
+ * Converts {@link String} to {@link ItemFlag} and vice-versa but using case-insensitive strategy.
  */
-public final class SoundSourceTypeAdapter extends AbstractEnumTypeAdapter<Sound.Source> {
+public final class ItemFlagJsonAdapter extends AbstractEnumJsonAdapter<ItemFlag> {
 
     /**
-     * Default instance of {@link SoundSourceTypeAdapter}.
+     * Default instance of {@link ItemFlagJsonAdapter}.
      */
-    public static final SoundSourceTypeAdapter INSTANCE = new SoundSourceTypeAdapter();
+    public static final ItemFlagJsonAdapter INSTANCE = new ItemFlagJsonAdapter();
 
-    private SoundSourceTypeAdapter() {
-        super(Sound.Source.class, false);
+    private ItemFlagJsonAdapter() {
+        super(ItemFlag.class, false);
     }
 
 }

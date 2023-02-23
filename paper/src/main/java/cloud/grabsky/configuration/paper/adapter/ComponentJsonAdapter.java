@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package cloud.grabsky.configuration.paper.moshi_adapters;
+package cloud.grabsky.configuration.paper.adapter;
 
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.JsonReader;
@@ -29,7 +29,6 @@ import com.squareup.moshi.JsonReader.Token;
 import com.squareup.moshi.JsonWriter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import org.checkerframework.checker.units.qual.N;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -38,19 +37,24 @@ import java.util.List;
 /**
  * Converts {@link String} or {@link List List&lt;String&gt;} to {@link Component} using provided function.
  */
-public final class StringComponentJsonAdapter extends JsonAdapter<String> {
+public final class ComponentJsonAdapter extends JsonAdapter<Component> {
 
     /**
-     * Default instance of {@link StringComponentJsonAdapter} uses {@link MiniMessage} as a conversion method.
+     * Default instance of {@link ComponentJsonAdapter} uses {@link MiniMessage} as a conversion method.
      */
-    public static final StringComponentJsonAdapter INSTANCE = new StringComponentJsonAdapter();
+    public static final ComponentJsonAdapter INSTANCE = new ComponentJsonAdapter();
 
     private final MiniMessage miniMessage = MiniMessage.miniMessage();
 
     @Override
-    public String fromJson(final @NotNull JsonReader in) throws IOException {
+    public Component fromJson(final @NotNull JsonReader in) throws IOException {
         if (in.peek() == Token.STRING) {
-            return in.nextString();
+            final String text = in.nextString();
+            // Returning empty component if value is null or blank
+            if ("".equals(text) == true)
+                return Component.empty();
+            // Parsing and returning
+            return miniMessage.deserialize(text);
         } else if (in.peek() == Token.BEGIN_ARRAY) {
             final StringBuilder builder = new StringBuilder();
             // ...
@@ -68,15 +72,15 @@ public final class StringComponentJsonAdapter extends JsonAdapter<String> {
             // ...
             in.endArray();
             // ...
-            return builder.toString();
+            return miniMessage.deserialize(builder.toString());
         } else {
             in.skipValue();
         }
-        return null;
+        return Component.empty();
     }
 
     @Override
-    public void toJson(final @NotNull JsonWriter out, final String value) {
+    public void toJson(final JsonWriter out, final Component value) {
         throw new UnsupportedOperationException("NOT IMPLEMENTED");
     }
 }
