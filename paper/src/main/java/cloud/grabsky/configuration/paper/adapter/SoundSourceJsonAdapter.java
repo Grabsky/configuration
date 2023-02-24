@@ -30,11 +30,7 @@ import net.kyori.adventure.sound.Sound;
  * Converts {@link String} to {@link Sound.Source} and vice-versa but using case-insensitive strategy.
  */
 public final class SoundSourceJsonAdapter extends AbstractEnumJsonAdapter<Sound.Source> {
-
-    /**
-     * Default instance of {@link SoundSourceJsonAdapter}.
-     */
-    public static final SoundSourceJsonAdapter INSTANCE = new SoundSourceJsonAdapter();
+    /* SINGLETON */ public static final SoundSourceJsonAdapter INSTANCE = new SoundSourceJsonAdapter();
 
     private SoundSourceJsonAdapter() {
         super(Sound.Source.class, false);

@@ -24,6 +24,7 @@
 package cloud.grabsky.configuration.paper.adapter;
 
 import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.JsonDataException;
 import com.squareup.moshi.JsonReader;
 import com.squareup.moshi.JsonReader.Token;
 import com.squareup.moshi.JsonWriter;
@@ -71,7 +72,7 @@ public final class StringComponentJsonAdapter extends JsonAdapter<String> {
         } else {
             in.skipValue();
         }
-        return null;
+        throw new JsonDataException("Expected STRING or BEGIN_ARRAY, but found " + in.peek() + " at $." + in.getPath());
     }
 
     @Override

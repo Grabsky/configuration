@@ -30,11 +30,7 @@ import org.bukkit.inventory.ItemFlag;
  * Converts {@link String} to {@link ItemFlag} and vice-versa but using case-insensitive strategy.
  */
 public final class ItemFlagJsonAdapter extends AbstractEnumJsonAdapter<ItemFlag> {
-
-    /**
-     * Default instance of {@link ItemFlagJsonAdapter}.
-     */
-    public static final ItemFlagJsonAdapter INSTANCE = new ItemFlagJsonAdapter();
+    /* SINGLETON */ public static final ItemFlagJsonAdapter INSTANCE = new ItemFlagJsonAdapter();
 
     private ItemFlagJsonAdapter() {
         super(ItemFlag.class, false);

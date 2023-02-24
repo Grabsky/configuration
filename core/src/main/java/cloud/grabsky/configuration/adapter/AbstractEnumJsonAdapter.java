@@ -49,30 +49,18 @@ public abstract class AbstractEnumJsonAdapter<T extends Enum<T>> extends JsonAda
 
     @Override
     public T fromJson(final @NotNull JsonReader in) throws IOException {
-        if (in.peek() == Token.STRING) {
-            final String value = in.nextString();
-            // Iterating over enum constants for that (enum) type
-            for (final T en : type.getEnumConstants()) {
-                // Matching... (case sensitive)
-                if (isCaseSensitive == true && en.name().equals(value) == true)
-                    return en;
+        final String value = in.nextString();
+        // Iterating over enum constants for that (enum) type
+        for (final T en : type.getEnumConstants()) {
+            // Matching... (case sensitive)
+            if (isCaseSensitive == true && en.name().equals(value) == true)
+                return en;
                 // Matching... (case insensitive; default)
-                else if (en.name().equalsIgnoreCase(value) == true)
-                    return en;
-            }
-            // ...
-            return null;
-        } else if (in.peek() == Token.NUMBER) {
-             final int index = in.nextInt();
-             // Trying to return enum at specified index
-             try {
-                 return type.getEnumConstants()[index];
-             } catch (final IndexOutOfBoundsException error) {
-                 return null;
-             }
+            else if (en.name().equalsIgnoreCase(value) == true)
+                return en;
         }
-        // Unexpected value type was found; throwing an exception
-        throw new JsonDataException("Expected STRING or NUMBER, but found " + in.peek() + " ($." + in.getPath() + ")");
+        // ...
+        throw new JsonDataException("Expected ENUM of " + type.getSimpleName() + ", but found '" + value + "' at $." + in.getPath());
     }
 
     @Override

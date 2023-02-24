@@ -30,6 +30,10 @@ import java.lang.annotation.Target;
 
 /**
  * Fields marked with {@link JsonNullable} can receive {@code null} as a value.
+ *
+ * @apiNote This annotation <b><u>does not</u></b> allow for parsing failures, if exception is thrown
+ * within the corresponding {@link com.squareup.moshi.JsonAdapter#fromJson JsonAdapter#fromJson} method,
+ * configuration mapping process is still going to fail.
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)

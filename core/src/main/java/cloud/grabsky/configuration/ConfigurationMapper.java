@@ -120,9 +120,9 @@ public class ConfigurationMapper {
             // Skipping non-static / non-final fields, fields missing @JsonPath annotation or inaccessible fields
             if (isStaticNonFinal(field) == false || field.canAccess(null) == false || field.isAnnotationPresent(JsonPath.class) == false)
                 continue;
-            // Getting 'path' passed to the @JsonPath annotation for that field
+            // Getting path passed to the @JsonPath annotation for that field
             final String path = field.getAnnotation(JsonPath.class).value();
-            // Getting the value from JsonElement
+            // Creating a copy of current reader and placing it at desired path
             final JsonReader contextReader = atPath(reader.peekJson(), path);
             // Obtaining correct TypeAdapter<T> based on context
             final JsonAdapter<?> adapter = (field.getAnnotation(cloud.grabsky.configuration.JsonAdapter.class) != null)
@@ -138,6 +138,8 @@ public class ConfigurationMapper {
             }
             // Creating and adding FieldData to the set
             container.put(field.getName(), new FieldData(field.getType(), o));
+            // Closing reader...
+            contextReader.close();
         }
         return container;
     }
@@ -162,17 +164,16 @@ public class ConfigurationMapper {
     }
 
     // "Puts" JsonReader at a specified path.
-    private static @Nullable JsonReader atPath(final JsonReader reader, final String path) throws IOException, IllegalArgumentException {
+    private static JsonReader atPath(final JsonReader reader, final String path) throws IOException, IllegalArgumentException {
+        final String jPath = "$." + path;
         reader.setLenient(true);
         // ...
         while (reader.peek() != Token.END_DOCUMENT) {
-            if (reader.getPath().equals("$." + path) == true)
+            if (reader.getPath().equals(jPath) == true)
                 return reader;
             // ...
             switch (reader.peek()) {
-                case NAME -> {
-                    final String ignored = reader.nextName();
-                }
+                case NAME -> reader.nextName(); // ignoring the result
                 case BEGIN_OBJECT -> reader.beginObject();
                 case END_OBJECT -> reader.endObject();
                 case BEGIN_ARRAY -> reader.beginArray();

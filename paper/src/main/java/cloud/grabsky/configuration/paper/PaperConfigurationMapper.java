@@ -40,35 +40,24 @@ public final class PaperConfigurationMapper extends ConfigurationMapper {
     }
 
     /**
-     * Creates pre-configured instance of {@link ConfigurationMapper}:
-     * <ul>
-     *     <li>All module-provided serializers are registered.</li>
-     *     <li>Lenient JSON specification is enabled - mainly to allow comments.</li>
-     *     <li>HTML escaping disabled - to allow MiniMessage tags without the need of escaping them.</li>
-     * </ul>
+     * Creates pre-configured instance of {@link PaperConfigurationMapper}
+     * with all module-provided adapters registered.
      */
     public static @NotNull PaperConfigurationMapper create() {
         return create((Consumer<Moshi.Builder>) null);
     }
 
     /**
-     * Creates pre-configured instance of {@link ConfigurationMapper}:
-     * <ul>
-     *     <li>All module-provided serializers are registered.</li>
-     *     <li>Lenient JSON specification is enabled - mainly to allow comments.</li>
-     *     <li>HTML escaping disabled - to allow MiniMessage tags without the need of escaping them.</li>
-     * </ul>
-     * Provided {@link Consumer} is applied after serializers are registered, so
-     * they can be overridden, but before other configurations are made.
+     * Creates pre-configured instance of {@link ConfigurationMapper}
+     * with all module-provided adapters registered.
      */
     public static @NotNull PaperConfigurationMapper create(@Nullable final Consumer<Moshi.Builder> consumer) {
         final Moshi.Builder builder = new Moshi.Builder();
         // ...
         builder.add(Component.class, ComponentJsonAdapter.INSTANCE);
         // ...
-        if (consumer != null) {
+        if (consumer != null)
             consumer.accept(builder);
-        }
         // ...
         return new PaperConfigurationMapper(builder.build());
     }

@@ -23,6 +23,8 @@
  */
 package cloud.grabsky.configuration.exception;
 
+import cloud.grabsky.configuration.JsonConfiguration;
+
 import java.io.File;
 
 /**
@@ -32,7 +34,7 @@ import java.io.File;
  */
 public class ConfigurationException extends RuntimeException {
 
-    public ConfigurationException(final Class<?> configurationClass, final File file, final Throwable cause) {
+    public ConfigurationException(final Class<? extends JsonConfiguration> configurationClass, final File file, final Throwable cause) {
         super("An error occurred during mapping of " + file.getPath() + " to " + configurationClass.getSimpleName(), cause);
     }
 
