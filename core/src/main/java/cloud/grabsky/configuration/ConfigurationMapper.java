@@ -95,7 +95,7 @@ public class ConfigurationMapper {
                 final Map<String, FieldData> container = this.collect(configurationClass, reader);
                 // Adding container to the map
                 configurations.put(holder, container);
-            } catch (final IOException | JsonDataException | IllegalArgumentException error) {
+            } catch (final IOException | RuntimeException error) {
                 throw new ConfigurationException(configurationClass, configurationFile, error);
             }
         }
