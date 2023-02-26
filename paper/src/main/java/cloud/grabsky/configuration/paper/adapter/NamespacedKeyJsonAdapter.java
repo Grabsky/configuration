@@ -24,6 +24,7 @@
 package cloud.grabsky.configuration.paper.adapter;
 
 import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.JsonDataException;
 import com.squareup.moshi.JsonReader;
 import com.squareup.moshi.JsonWriter;
 import lombok.AccessLevel;
@@ -46,7 +47,7 @@ public final class NamespacedKeyJsonAdapter extends JsonAdapter<NamespacedKey> {
         final String[] parts = value.split(":");
         // ...
         if (parts.length < 1 || parts.length > 2)
-            throw new IllegalStateException("Invalid NamespacedKey: " + value);
+            throw new JsonDataException("Invalid NamespacedKey: " + value);
         // ...
         return (parts.length == 1)
                 ? new NamespacedKey(NamespacedKey.MINECRAFT, parts[0]) // defaults to 'minecraft:' namespace
