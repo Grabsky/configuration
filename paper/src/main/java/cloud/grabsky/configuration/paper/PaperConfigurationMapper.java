@@ -24,10 +24,7 @@
 package cloud.grabsky.configuration.paper;
 
 import cloud.grabsky.configuration.ConfigurationMapper;
-import cloud.grabsky.configuration.paper.adapter.ComponentJsonAdapter;
-import cloud.grabsky.configuration.paper.adapter.EntityTypeJsonAdapterFactory;
-import cloud.grabsky.configuration.paper.adapter.MaterialJsonAdapterFactory;
-import cloud.grabsky.configuration.paper.adapter.NamespacedKeyJsonAdapter;
+import cloud.grabsky.configuration.paper.adapter.*;
 import com.squareup.moshi.Moshi;
 import net.kyori.adventure.text.Component;
 import org.bukkit.NamespacedKey;
@@ -62,6 +59,7 @@ public final class PaperConfigurationMapper extends ConfigurationMapper {
         builder.add(Component.class, ComponentJsonAdapter.INSTANCE);
         builder.add(NamespacedKey.class, NamespacedKeyJsonAdapter.INSTANCE);
         // adapter factories
+        builder.add(EnchantmentJsonAdapterFactory.INSTANCE);
         builder.add(EntityTypeJsonAdapterFactory.INSTANCE);
         builder.add(MaterialJsonAdapterFactory.INSTANCE);
         // ...
