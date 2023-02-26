@@ -25,8 +25,10 @@ package cloud.grabsky.configuration.paper;
 
 import cloud.grabsky.configuration.ConfigurationMapper;
 import cloud.grabsky.configuration.paper.adapter.ComponentJsonAdapter;
+import cloud.grabsky.configuration.paper.adapter.NamespacedKeyJsonAdapter;
 import com.squareup.moshi.Moshi;
 import net.kyori.adventure.text.Component;
+import org.bukkit.NamespacedKey;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -55,6 +57,7 @@ public final class PaperConfigurationMapper extends ConfigurationMapper {
         final Moshi.Builder builder = new Moshi.Builder();
         // ...
         builder.add(Component.class, ComponentJsonAdapter.INSTANCE);
+        builder.add(NamespacedKey.class, NamespacedKeyJsonAdapter.INSTANCE);
         // ...
         if (consumer != null)
             consumer.accept(builder);
