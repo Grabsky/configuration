@@ -81,7 +81,7 @@ public final class ComponentJsonAdapter extends JsonAdapter<Component> {
     }
 
     @Override
-    public void toJson(final JsonWriter out, final Component value) {
+    public void toJson(final @NotNull JsonWriter out, final Component value) {
         throw new UnsupportedOperationException("NOT IMPLEMENTED");
     }
 }
