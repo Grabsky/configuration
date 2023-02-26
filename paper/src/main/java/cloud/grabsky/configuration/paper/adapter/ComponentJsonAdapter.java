@@ -43,7 +43,7 @@ import java.util.List;
  */
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 public final class ComponentJsonAdapter extends JsonAdapter<Component> {
-    public static final ComponentJsonAdapter INSTANCE = new ComponentJsonAdapter(MiniMessage.miniMessage());
+    /* DEFAULT */ public static final ComponentJsonAdapter INSTANCE = new ComponentJsonAdapter(MiniMessage.miniMessage());
 
     private final MiniMessage miniMessage;
 

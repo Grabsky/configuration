@@ -46,9 +46,8 @@ import static cloud.grabsky.configuration.paper.util.Conditions.requirePresent;
 public final class EnchantmentJsonAdapterFactory implements JsonAdapter.Factory {
     /* SINGLETON */ public static final EnchantmentJsonAdapterFactory INSTANCE = new EnchantmentJsonAdapterFactory();
 
-    @Nullable
     @Override
-    public JsonAdapter<Enchantment> create(final @NotNull Type type, final @NotNull Set<? extends Annotation> annotations, final @NotNull Moshi moshi) {
+    public @Nullable JsonAdapter<Enchantment> create(final @NotNull Type type, final @NotNull Set<? extends Annotation> annotations, final @NotNull Moshi moshi) {
         if (Enchantment.class.isAssignableFrom(Types.getRawType(type)) == false)
             return null;
         // ...

@@ -28,6 +28,8 @@ import com.squareup.moshi.JsonDataException;
 import com.squareup.moshi.JsonReader;
 import com.squareup.moshi.JsonReader.Token;
 import com.squareup.moshi.JsonWriter;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.jetbrains.annotations.NotNull;
@@ -38,14 +40,11 @@ import java.util.List;
 /**
  * Converts {@link String} or {@link List List&lt;String&gt;} to {@link Component} using provided function.
  */
+@RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 public final class StringComponentJsonAdapter extends JsonAdapter<String> {
+    /* DEFAULT */ public static final StringComponentJsonAdapter INSTANCE = new StringComponentJsonAdapter(MiniMessage.miniMessage());
 
-    /**
-     * Default instance of {@link StringComponentJsonAdapter} uses {@link MiniMessage} as a conversion method.
-     */
-    public static final StringComponentJsonAdapter INSTANCE = new StringComponentJsonAdapter();
-
-    private final MiniMessage miniMessage = MiniMessage.miniMessage();
+    private final MiniMessage miniMessage;
 
     @Override
     public String fromJson(final @NotNull JsonReader in) throws IOException {
