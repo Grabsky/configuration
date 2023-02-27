@@ -37,8 +37,10 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Set;
 
+import static com.squareup.moshi.Types.getRawType;
+
 /**
- * Creates {@link JsonAdapter JsonAdapter&lt;Material&gt;} which converts {@link String} (as {@link NamespacedKey}) to {@link Material}.
+ * {@link JsonAdapter JsonAdapter&lt;Material&gt;} converts {@link String} (as {@link NamespacedKey}) to {@link Material}.
  */
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class MaterialAdapterFactory implements JsonAdapter.Factory {
@@ -46,26 +48,24 @@ public final class MaterialAdapterFactory implements JsonAdapter.Factory {
 
     @Override
     public @Nullable JsonAdapter<Material> create(final @NotNull Type type, final @NotNull Set<? extends Annotation> annotations, final @NotNull Moshi moshi) {
-        if (Material.class.isAssignableFrom(Types.getRawType(type)) == false)
+        if (Material.class.isAssignableFrom(getRawType(type)) == false)
             return null;
         // ...
-        final JsonAdapter<NamespacedKey> namespacedKeyAdapter = moshi.adapter(NamespacedKey.class);
+        final JsonAdapter<NamespacedKey> adapter = moshi.adapter(NamespacedKey.class);
         // ...
         return new JsonAdapter<Material>() {
 
             @Override
             public Material fromJson(final @NotNull JsonReader in) throws IOException {
-                final NamespacedKey materialKey = namespacedKeyAdapter.fromJson(in);
+                final NamespacedKey key = adapter.fromJson(in);
                 // ...
-                if (materialKey != null) {
-                    final Material material = Registry.MATERIAL.get(materialKey);
+                if (key != null) {
+                    final Material material = Registry.MATERIAL.get(key);
                     // ...
                     if (material != null)
                         return material;
-                    // ...
-                    throw new JsonDataException("Incorrect Material key: " + materialKey.asString());
                 }
-                throw new JsonDataException("Incorrect Material key: " + null);
+                throw new JsonDataException("Expected " + Material.class.getName() + " at " + in.getPath() + " but found: " + key);
             }
 
             @Override

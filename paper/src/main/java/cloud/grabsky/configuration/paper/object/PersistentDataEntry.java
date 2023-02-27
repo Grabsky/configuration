@@ -23,23 +23,51 @@
  */
 package cloud.grabsky.configuration.paper.object;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import com.squareup.moshi.JsonAdapter;
+import lombok.*;
 import org.bukkit.NamespacedKey;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
-@AllArgsConstructor(access = AccessLevel.PUBLIC)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class PersistentDataEntry {
 
     @Getter(AccessLevel.PUBLIC)
     private final @NotNull NamespacedKey key;
 
     @Getter(AccessLevel.PUBLIC)
-    private final @NotNull PersistentDataType<?, ?> persistentDataType;
+    private final @NotNull PersistentDataType<?, ?> type;
+
+    @Getter(AccessLevel.PUBLIC)
+    private final @NotNull JsonAdapter<?> adapter;
 
     @Getter(AccessLevel.PUBLIC)
     private final @NotNull Object value;
+
+    /* BUILDER */
+
+    @NoArgsConstructor(access = AccessLevel.PUBLIC)
+    public static final class Builder {
+
+        @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC)
+        private NamespacedKey key;
+
+        @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC)
+        private PersistentDataType<?, ?> dataType;
+
+        @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC)
+        private JsonAdapter<?> adapter;
+
+        @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC)
+        private Object value;
+
+        public PersistentDataEntry build() {
+            if (key == null || dataType == null || adapter == null || value == null)
+                return null;
+            // ...
+            return new PersistentDataEntry(key, dataType, adapter, value);
+        }
+
+    }
 
 }

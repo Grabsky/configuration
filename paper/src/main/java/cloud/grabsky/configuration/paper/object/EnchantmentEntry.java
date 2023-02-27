@@ -23,13 +23,11 @@
  */
 package cloud.grabsky.configuration.paper.object;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.*;
 import org.bukkit.enchantments.Enchantment;
 import org.jetbrains.annotations.NotNull;
 
-@AllArgsConstructor(access = AccessLevel.PUBLIC)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class EnchantmentEntry {
 
     @Getter(AccessLevel.PUBLIC)
@@ -37,5 +35,25 @@ public final class EnchantmentEntry {
 
     @Getter(AccessLevel.PUBLIC)
     private final int level;
+
+    /* BUILDER */
+
+    @NoArgsConstructor(access = AccessLevel.PUBLIC)
+    public static final class Builder {
+
+        @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC)
+        private Enchantment enchantment;
+
+        @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC)
+        private Integer level;
+
+        public EnchantmentEntry build() {
+            if (enchantment == null || level == null || level < 1)
+                return null;
+            // ...
+            return new EnchantmentEntry(enchantment, level);
+        }
+
+    }
 
 }

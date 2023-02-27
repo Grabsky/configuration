@@ -36,7 +36,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 
 /**
- * Converts {@link String} to {@link T} and vice-versa but using case-insensitive strategy.
+ * Converts {@link String} to {@link T} using case-insensitive strategy.
  */
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 public abstract class AbstractEnumJsonAdapter<T extends Enum<T>> extends JsonAdapter<T> {
@@ -55,16 +55,16 @@ public abstract class AbstractEnumJsonAdapter<T extends Enum<T>> extends JsonAda
             // Matching... (case sensitive)
             if (isCaseSensitive == true && en.name().equals(value) == true)
                 return en;
-                // Matching... (case insensitive; default)
+            // Matching... (case insensitive; default)
             else if (en.name().equalsIgnoreCase(value) == true)
                 return en;
         }
         // ...
-        throw new JsonDataException("Expected ENUM of " + type.getSimpleName() + ", but found '" + value + "' at $." + in.getPath());
+        throw new JsonDataException("Expected " + type.getName() + " at " + in.getPath() + " but found: " + value);
     }
 
     @Override
-    public void toJson(final @NotNull JsonWriter out, final T value) throws UnsupportedOperationException {
+    public void toJson(final @NotNull JsonWriter out, final T value) {
         throw new UnsupportedOperationException("NOT IMPLEMENTED");
     }
 

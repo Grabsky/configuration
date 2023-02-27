@@ -37,6 +37,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Set;
 
+import static com.squareup.moshi.Types.getRawType;
+
 /**
  * Creates {@link JsonAdapter JsonAdapter&lt;EntityType&gt;} which converts {@link String} (as {@link NamespacedKey}) to {@link EntityType}.
  */
@@ -46,26 +48,24 @@ public final class EntityTypeAdapterFactory implements JsonAdapter.Factory {
 
     @Override
     public @Nullable JsonAdapter<EntityType> create(final @NotNull Type type, final @NotNull Set<? extends Annotation> annotations, final @NotNull Moshi moshi) {
-        if (EntityType.class.isAssignableFrom(Types.getRawType(type)) == false)
+        if (EntityType.class.isAssignableFrom(getRawType(type)) == false)
             return null;
         // ...
-        final JsonAdapter<NamespacedKey> namespacedKeyAdapter = moshi.adapter(NamespacedKey.class);
+        final JsonAdapter<NamespacedKey> adapter = moshi.adapter(NamespacedKey.class);
         // ...
         return new JsonAdapter<EntityType>() {
 
             @Override
             public EntityType fromJson(final @NotNull JsonReader in) throws IOException {
-                final NamespacedKey entityKey = namespacedKeyAdapter.fromJson(in);
+                final NamespacedKey key = adapter.fromJson(in);
                 // ...
-                if (entityKey != null) {
-                    final EntityType entity = Registry.ENTITY_TYPE.get(entityKey);
+                if (key != null) {
+                    final EntityType entity = Registry.ENTITY_TYPE.get(key);
                     // ...
                     if (entity != null)
                         return entity;
-                    // ...
-                    throw new JsonDataException("Incorrect EntityType key: " + entityKey.asString());
                 }
-                throw new JsonDataException("Incorrect EntityType key: " + null);
+                throw new JsonDataException("Expected " + EntityType.class.getName() + " at " + in.getPath() + " but found: " + key);
             }
 
             @Override

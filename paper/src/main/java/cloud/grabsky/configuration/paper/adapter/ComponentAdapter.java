@@ -60,9 +60,7 @@ public final class ComponentAdapter extends JsonAdapter<Component> {
             in.beginArray();
             // ...
             while (in.hasNext() == true && in.peek() == Token.STRING) {
-                final String text = in.nextString();
-                // ...
-                builder.append(text);
+                builder.append(in.nextString());
                 // ...
                 if (in.hasNext() == true) {
                     builder.append("<newline><reset>");

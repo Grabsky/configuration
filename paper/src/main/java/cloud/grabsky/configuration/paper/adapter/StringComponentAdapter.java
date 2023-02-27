@@ -29,49 +29,45 @@ import com.squareup.moshi.JsonReader;
 import com.squareup.moshi.JsonReader.Token;
 import com.squareup.moshi.JsonWriter;
 import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import net.kyori.adventure.text.Component;
+import lombok.NoArgsConstructor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.util.List;
 
 /**
- * Converts {@link String} or {@link List List&lt;String&gt;} to {@link Component} using provided function.
+ * Converts {@link String} or {@link String String[]} to concatenated ({@link MiniMessage}) {@link String}
  */
-@RequiredArgsConstructor(access = AccessLevel.PUBLIC)
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class StringComponentAdapter extends JsonAdapter<String> {
-    /* DEFAULT */ public static final StringComponentAdapter INSTANCE = new StringComponentAdapter(MiniMessage.miniMessage());
-
-    private final MiniMessage miniMessage;
+    /* DEFAULT */ public static final StringComponentAdapter INSTANCE = new StringComponentAdapter();
 
     @Override
     public String fromJson(final @NotNull JsonReader in) throws IOException {
-        if (in.peek() == Token.STRING) {
-            return in.nextString();
-        } else if (in.peek() == Token.BEGIN_ARRAY) {
-            final StringBuilder builder = new StringBuilder();
-            // ...
-            in.beginArray();
-            // ...
-            while (in.hasNext() == true && in.peek() == Token.STRING) {
-                final String text = in.nextString();
-                // ...
-                builder.append(text);
-                // ...
-                if (in.hasNext() == true) {
-                    builder.append("<newline><reset>");
-                }
+        switch (in.peek()) {
+            case STRING -> {
+                return in.nextString();
             }
-            // ...
-            in.endArray();
-            // ...
-            return builder.toString();
-        } else {
-            in.skipValue();
+            case BEGIN_ARRAY -> {
+                final StringBuilder builder = new StringBuilder();
+                // ...
+                in.beginArray();
+                // ...
+                while (in.hasNext() == true && in.peek() == Token.STRING) {
+                    builder.append(in.nextString());
+                    // ...
+                    if (in.hasNext() == true) {
+                        builder.append("<newline><reset>");
+                    }
+                }
+                // ...
+                in.endArray();
+                // ...
+                return builder.toString();
+            }
+            default -> in.skipValue();
         }
-        throw new JsonDataException("Expected STRING or BEGIN_ARRAY, but found " + in.peek() + " at $." + in.getPath());
+        throw new JsonDataException("Expected STRING or BEGIN_ARRAY at " + in.getPath() + " but found: " + in.peek());
     }
 
     @Override

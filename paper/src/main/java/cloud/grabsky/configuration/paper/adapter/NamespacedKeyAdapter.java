@@ -47,7 +47,7 @@ public final class NamespacedKeyAdapter extends JsonAdapter<NamespacedKey> {
         final String[] parts = value.split(":");
         // ...
         if (parts.length < 1 || parts.length > 2)
-            throw new JsonDataException("Invalid NamespacedKey: " + value);
+            throw new JsonDataException("Expected " + NamespacedKey.class.getName() + " at " + in.getPath() + " but found: " + value);
         // ...
         return (parts.length == 1)
                 ? new NamespacedKey(NamespacedKey.MINECRAFT, parts[0]) // defaults to 'minecraft:' namespace

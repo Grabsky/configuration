@@ -26,6 +26,7 @@ package cloud.grabsky.configuration.paper.adapter;
 import com.squareup.moshi.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.enchantments.Enchantment;
@@ -37,6 +38,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Set;
 
+import static com.squareup.moshi.Types.getRawType;
+
 /**
  * Creates {@link JsonAdapter JsonAdapter&lt;Enchantment&gt;} which converts {@link String} (as {@link NamespacedKey}) to {@link Enchantment}.
  */
@@ -46,26 +49,24 @@ public final class EnchantmentAdapterFactory implements JsonAdapter.Factory {
 
     @Override
     public @Nullable JsonAdapter<Enchantment> create(final @NotNull Type type, final @NotNull Set<? extends Annotation> annotations, final @NotNull Moshi moshi) {
-        if (Enchantment.class.isAssignableFrom(Types.getRawType(type)) == false)
+        if (Enchantment.class.isAssignableFrom(getRawType(type)) == false)
             return null;
         // ...
-        final JsonAdapter<NamespacedKey> namespacedKeyAdapter = moshi.adapter(NamespacedKey.class);
+        final JsonAdapter<NamespacedKey> adapter = moshi.adapter(NamespacedKey.class);
         // ...
         return new JsonAdapter<Enchantment>() {
 
             @Override
             public Enchantment fromJson(final @NotNull JsonReader in) throws IOException {
-                final NamespacedKey enchantmentKey = namespacedKeyAdapter.fromJson(in);
+                final NamespacedKey key = adapter.fromJson(in);
                 // ...
-                if (enchantmentKey != null) {
-                    final Enchantment Enchantment = Registry.ENCHANTMENT.get(enchantmentKey);
+                if (key != null) {
+                    final Enchantment enchantment = Registry.ENCHANTMENT.get(key);
                     // ...
-                    if (Enchantment != null)
-                        return Enchantment;
-                    // ...
-                    throw new JsonDataException("Incorrect Enchantment key: " + enchantmentKey.asString());
+                    if (enchantment != null)
+                        return enchantment;
                 }
-                throw new JsonDataException("Incorrect Enchantment key: " + null);
+                throw new JsonDataException("Expected " + Enchantment.class.getName() + " at " + in.getPath() + " but found: " + key);
             }
 
             @Override
