@@ -38,7 +38,7 @@ import java.io.IOException;
 /**
  * Converts {@link String} or {@link String String[]} to concatenated ({@link MiniMessage}) {@link String}
  */
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 public final class StringComponentAdapter extends JsonAdapter<String> {
     /* DEFAULT */ public static final StringComponentAdapter INSTANCE = new StringComponentAdapter();
 
