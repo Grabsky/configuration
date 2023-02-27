@@ -63,6 +63,7 @@ public final class PaperConfigurationMapper extends ConfigurationMapper {
         builder.add(Sound.Source.class, SoundSourceAdapter.INSTANCE);
         // adapter factories
         builder.add(EnchantmentAdapterFactory.INSTANCE);
+        builder.add(EnchantmentEntryAdapterFactory.INSTANCE);
         builder.add(EntityTypeAdapterFactory.INSTANCE);
         builder.add(MaterialAdapterFactory.INSTANCE);
         // ...
