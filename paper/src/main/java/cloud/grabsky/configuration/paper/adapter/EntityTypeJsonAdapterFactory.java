@@ -51,10 +51,7 @@ public final class EntityTypeJsonAdapterFactory implements JsonAdapter.Factory {
         if (EntityType.class.isAssignableFrom(Types.getRawType(type)) == false)
             return null;
         // ...
-        final JsonAdapter<NamespacedKey> namespacedKeyAdapter = requirePresent(
-                moshi.adapter(NamespacedKey.class),
-                new IllegalArgumentException("No adapter found for type: " + NamespacedKey.class.getName())
-        );
+        final JsonAdapter<NamespacedKey> namespacedKeyAdapter = moshi.adapter(NamespacedKey.class);
         // ...
         return new JsonAdapter<EntityType>() {
 
