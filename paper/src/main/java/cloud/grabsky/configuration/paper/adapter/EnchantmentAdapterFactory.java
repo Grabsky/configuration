@@ -25,10 +25,10 @@ package cloud.grabsky.configuration.paper.adapter;
 
 import com.squareup.moshi.*;
 import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
-import org.bukkit.entity.EntityType;
+import org.bukkit.enchantments.Enchantment;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,41 +37,39 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Set;
 
-import static cloud.grabsky.configuration.paper.util.Conditions.requirePresent;
-
 /**
- * Creates {@link JsonAdapter JsonAdapter&lt;EntityType&gt;} which converts {@link String} (as {@link NamespacedKey}) to {@link EntityType}.
+ * Creates {@link JsonAdapter JsonAdapter&lt;Enchantment&gt;} which converts {@link String} (as {@link NamespacedKey}) to {@link Enchantment}.
  */
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class EntityTypeJsonAdapterFactory implements JsonAdapter.Factory {
-    /* SINGLETON */ public static final EntityTypeJsonAdapterFactory INSTANCE = new EntityTypeJsonAdapterFactory();
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class EnchantmentAdapterFactory implements JsonAdapter.Factory {
+    /* SINGLETON */ public static final EnchantmentAdapterFactory INSTANCE = new EnchantmentAdapterFactory();
 
     @Override
-    public @Nullable JsonAdapter<EntityType> create(final @NotNull Type type, final @NotNull Set<? extends Annotation> annotations, final @NotNull Moshi moshi) {
-        if (EntityType.class.isAssignableFrom(Types.getRawType(type)) == false)
+    public @Nullable JsonAdapter<Enchantment> create(final @NotNull Type type, final @NotNull Set<? extends Annotation> annotations, final @NotNull Moshi moshi) {
+        if (Enchantment.class.isAssignableFrom(Types.getRawType(type)) == false)
             return null;
         // ...
         final JsonAdapter<NamespacedKey> namespacedKeyAdapter = moshi.adapter(NamespacedKey.class);
         // ...
-        return new JsonAdapter<EntityType>() {
+        return new JsonAdapter<Enchantment>() {
 
             @Override
-            public EntityType fromJson(final @NotNull JsonReader in) throws IOException {
-                final NamespacedKey entityKey = namespacedKeyAdapter.fromJson(in);
+            public Enchantment fromJson(final @NotNull JsonReader in) throws IOException {
+                final NamespacedKey enchantmentKey = namespacedKeyAdapter.fromJson(in);
                 // ...
-                if (entityKey != null) {
-                    final EntityType entity = Registry.ENTITY_TYPE.get(entityKey);
+                if (enchantmentKey != null) {
+                    final Enchantment Enchantment = Registry.ENCHANTMENT.get(enchantmentKey);
                     // ...
-                    if (entity != null)
-                        return entity;
+                    if (Enchantment != null)
+                        return Enchantment;
                     // ...
-                    throw new JsonDataException("Incorrect EntityType key: " + entityKey.asString());
+                    throw new JsonDataException("Incorrect Enchantment key: " + enchantmentKey.asString());
                 }
-                throw new JsonDataException("Incorrect EntityType key: " + null);
+                throw new JsonDataException("Incorrect Enchantment key: " + null);
             }
 
             @Override
-            public void toJson(final @NotNull JsonWriter out, final EntityType value) {
+            public void toJson(final @NotNull JsonWriter out, final Enchantment value) {
                 throw new UnsupportedOperationException("NOT IMPLEMENTED");
             }
 

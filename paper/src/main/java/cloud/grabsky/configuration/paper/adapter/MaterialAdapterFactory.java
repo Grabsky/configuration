@@ -37,14 +37,12 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Set;
 
-import static cloud.grabsky.configuration.paper.util.Conditions.requirePresent;
-
 /**
  * Creates {@link JsonAdapter JsonAdapter&lt;Material&gt;} which converts {@link String} (as {@link NamespacedKey}) to {@link Material}.
  */
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class MaterialJsonAdapterFactory implements JsonAdapter.Factory {
-    /* SINGLETON */ public static final MaterialJsonAdapterFactory INSTANCE = new MaterialJsonAdapterFactory();
+public final class MaterialAdapterFactory implements JsonAdapter.Factory {
+    /* SINGLETON */ public static final MaterialAdapterFactory INSTANCE = new MaterialAdapterFactory();
 
     @Override
     public @Nullable JsonAdapter<Material> create(final @NotNull Type type, final @NotNull Set<? extends Annotation> annotations, final @NotNull Moshi moshi) {

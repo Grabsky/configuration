@@ -28,7 +28,6 @@ import cloud.grabsky.configuration.paper.adapter.*;
 import com.squareup.moshi.Moshi;
 import net.kyori.adventure.text.Component;
 import org.bukkit.NamespacedKey;
-import org.bukkit.entity.EntityType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -56,12 +55,12 @@ public final class PaperConfigurationMapper extends ConfigurationMapper {
     public static @NotNull PaperConfigurationMapper create(@Nullable final Consumer<Moshi.Builder> consumer) {
         final Moshi.Builder builder = new Moshi.Builder();
         // adapters
-        builder.add(Component.class, ComponentJsonAdapter.INSTANCE);
-        builder.add(NamespacedKey.class, NamespacedKeyJsonAdapter.INSTANCE);
+        builder.add(Component.class, ComponentAdapter.INSTANCE);
+        builder.add(NamespacedKey.class, NamespacedKeyAdapter.INSTANCE);
         // adapter factories
-        builder.add(EnchantmentJsonAdapterFactory.INSTANCE);
-        builder.add(EntityTypeJsonAdapterFactory.INSTANCE);
-        builder.add(MaterialJsonAdapterFactory.INSTANCE);
+        builder.add(EnchantmentAdapterFactory.INSTANCE);
+        builder.add(EntityTypeAdapterFactory.INSTANCE);
+        builder.add(MaterialAdapterFactory.INSTANCE);
         // ...
         if (consumer != null)
             consumer.accept(builder);

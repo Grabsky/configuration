@@ -24,7 +24,6 @@
 package cloud.grabsky.configuration.paper.adapter;
 
 import com.squareup.moshi.JsonAdapter;
-import com.squareup.moshi.JsonDataException;
 import com.squareup.moshi.JsonReader;
 import com.squareup.moshi.JsonReader.Token;
 import com.squareup.moshi.JsonWriter;
@@ -41,15 +40,20 @@ import java.util.List;
  * Converts {@link String} or {@link List List&lt;String&gt;} to {@link Component} using provided function.
  */
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
-public final class StringComponentJsonAdapter extends JsonAdapter<String> {
-    /* DEFAULT */ public static final StringComponentJsonAdapter INSTANCE = new StringComponentJsonAdapter(MiniMessage.miniMessage());
+public final class ComponentAdapter extends JsonAdapter<Component> {
+    /* DEFAULT */ public static final ComponentAdapter INSTANCE = new ComponentAdapter(MiniMessage.miniMessage());
 
     private final MiniMessage miniMessage;
 
     @Override
-    public String fromJson(final @NotNull JsonReader in) throws IOException {
+    public Component fromJson(final @NotNull JsonReader in) throws IOException {
         if (in.peek() == Token.STRING) {
-            return in.nextString();
+            final String text = in.nextString();
+            // Returning empty component if value is null or blank
+            if ("".equals(text) == true)
+                return Component.empty();
+            // Parsing and returning
+            return miniMessage.deserialize(text);
         } else if (in.peek() == Token.BEGIN_ARRAY) {
             final StringBuilder builder = new StringBuilder();
             // ...
@@ -67,15 +71,15 @@ public final class StringComponentJsonAdapter extends JsonAdapter<String> {
             // ...
             in.endArray();
             // ...
-            return builder.toString();
+            return miniMessage.deserialize(builder.toString());
         } else {
             in.skipValue();
         }
-        throw new JsonDataException("Expected STRING or BEGIN_ARRAY, but found " + in.peek() + " at $." + in.getPath());
+        return Component.empty();
     }
 
     @Override
-    public void toJson(final @NotNull JsonWriter out, final String value) {
+    public void toJson(final @NotNull JsonWriter out, final Component value) {
         throw new UnsupportedOperationException("NOT IMPLEMENTED");
     }
 }

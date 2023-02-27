@@ -38,8 +38,8 @@ import java.io.IOException;
  * Converts {@link String} to {@link NamespacedKey}.
  */
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class NamespacedKeyJsonAdapter extends JsonAdapter<NamespacedKey> {
-    /* SINGLETON */ public static final NamespacedKeyJsonAdapter INSTANCE = new NamespacedKeyJsonAdapter();
+public final class NamespacedKeyAdapter extends JsonAdapter<NamespacedKey> {
+    /* SINGLETON */ public static final NamespacedKeyAdapter INSTANCE = new NamespacedKeyAdapter();
 
     @Override
     public NamespacedKey fromJson(final @NotNull JsonReader in) throws IOException {
