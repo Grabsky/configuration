@@ -27,7 +27,7 @@ import cloud.grabsky.configuration.adapter.AbstractEnumJsonAdapter;
 import org.bukkit.inventory.ItemFlag;
 
 /**
- * Converts {@link String} to {@link ItemFlag} and vice-versa but using case-insensitive strategy.
+ * Converts {@link String} to {@link ItemFlag} using case-insensitive strategy.
  */
 public final class ItemFlagAdapter extends AbstractEnumJsonAdapter<ItemFlag> {
     /* SINGLETON */ public static final ItemFlagAdapter INSTANCE = new ItemFlagAdapter();

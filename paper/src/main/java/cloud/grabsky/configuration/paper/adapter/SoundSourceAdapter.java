@@ -27,7 +27,7 @@ import cloud.grabsky.configuration.adapter.AbstractEnumJsonAdapter;
 import net.kyori.adventure.sound.Sound;
 
 /**
- * Converts {@link String} to {@link Sound.Source} and vice-versa but using case-insensitive strategy.
+ * Converts {@link String} to {@link Sound.Source} using case-insensitive strategy.
  */
 public final class SoundSourceAdapter extends AbstractEnumJsonAdapter<Sound.Source> {
     /* SINGLETON */ public static final SoundSourceAdapter INSTANCE = new SoundSourceAdapter();

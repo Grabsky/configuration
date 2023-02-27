@@ -26,8 +26,10 @@ package cloud.grabsky.configuration.paper;
 import cloud.grabsky.configuration.ConfigurationMapper;
 import cloud.grabsky.configuration.paper.adapter.*;
 import com.squareup.moshi.Moshi;
+import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 import org.bukkit.NamespacedKey;
+import org.bukkit.inventory.ItemFlag;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -56,7 +58,9 @@ public final class PaperConfigurationMapper extends ConfigurationMapper {
         final Moshi.Builder builder = new Moshi.Builder();
         // adapters
         builder.add(Component.class, ComponentAdapter.INSTANCE);
+        builder.add(ItemFlag.class, ItemFlagAdapter.INSTANCE);
         builder.add(NamespacedKey.class, NamespacedKeyAdapter.INSTANCE);
+        builder.add(Sound.Source.class, SoundSourceAdapter.INSTANCE);
         // adapter factories
         builder.add(EnchantmentAdapterFactory.INSTANCE);
         builder.add(EntityTypeAdapterFactory.INSTANCE);
