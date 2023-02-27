@@ -39,9 +39,6 @@ public final class PersistentDataEntry {
     private final @NotNull PersistentDataType<?, ?> type;
 
     @Getter(AccessLevel.PUBLIC)
-    private final @NotNull JsonAdapter<?> adapter;
-
-    @Getter(AccessLevel.PUBLIC)
     private final @NotNull Object value;
 
     /* BUILDER */
@@ -56,16 +53,17 @@ public final class PersistentDataEntry {
         private PersistentDataType<?, ?> dataType;
 
         @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC)
-        private JsonAdapter<?> adapter;
-
-        @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC)
         private Object value;
 
+        public boolean isValid() {
+            return (key != null && dataType != null && value != null);
+        }
+
         public PersistentDataEntry build() {
-            if (key == null || dataType == null || adapter == null || value == null)
+            if (this.isValid() == false)
                 return null;
             // ...
-            return new PersistentDataEntry(key, dataType, adapter, value);
+            return new PersistentDataEntry(key, dataType, value);
         }
 
     }

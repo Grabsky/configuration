@@ -48,7 +48,7 @@ public final class EnchantmentEntry {
         private Integer level;
 
         public boolean isValid() {
-            return enchantment != null && level != null && level > 0;
+            return (enchantment != null && level != null && level > 0);
         }
 
         public EnchantmentEntry build() {
