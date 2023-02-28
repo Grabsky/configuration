@@ -23,9 +23,15 @@
  */
 package cloud.grabsky.configuration.paper.object;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.bukkit.enchantments.Enchantment;
 import org.jetbrains.annotations.NotNull;
+
+import static cloud.grabsky.configuration.paper.util.Conditions.requirePresent;
+import static org.jetbrains.annotations.ApiStatus.Internal;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class EnchantmentEntry {
@@ -36,26 +42,20 @@ public final class EnchantmentEntry {
     @Getter(AccessLevel.PUBLIC)
     private final int level;
 
-    /* BUILDER */
+    /* LAZY INITIALIZER / BUILDER */
 
+    @Internal
     @NoArgsConstructor(access = AccessLevel.PUBLIC)
-    public static final class Builder {
+    public static final class Init {
 
-        @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC)
-        private Enchantment enchantment;
+        public Enchantment enchantment;
+        public Integer level;
 
-        @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC)
-        private Integer level;
-
-        public boolean isValid() {
-            return (enchantment != null && level != null && level > 0);
-        }
-
-        public EnchantmentEntry build() {
-            if (this.isValid() == false)
-                return null;
-            // ...
-            return new EnchantmentEntry(enchantment, level);
+        public EnchantmentEntry init() throws IllegalStateException {
+            return new EnchantmentEntry(
+                    requirePresent(enchantment, new IllegalStateException("Field 'enchantment' (" + Enchantment.class.getName() + ") cannot be null.")),
+                    requirePresent(level, new IllegalStateException("Field 'level' (" + Integer.class.getName() + ") cannot be null."))
+            );
         }
 
     }

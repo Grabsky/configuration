@@ -53,7 +53,7 @@ public final class MaterialAdapterFactory implements JsonAdapter.Factory {
         // ...
         final JsonAdapter<NamespacedKey> adapter = moshi.adapter(NamespacedKey.class);
         // ...
-        return new JsonAdapter<Material>() {
+        return new JsonAdapter<>() {
 
             @Override
             public Material fromJson(final @NotNull JsonReader in) throws IOException {

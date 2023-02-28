@@ -53,7 +53,7 @@ public final class EntityTypeAdapterFactory implements JsonAdapter.Factory {
         // ...
         final JsonAdapter<NamespacedKey> adapter = moshi.adapter(NamespacedKey.class);
         // ...
-        return new JsonAdapter<EntityType>() {
+        return new JsonAdapter<>() {
 
             @Override
             public EntityType fromJson(final @NotNull JsonReader in) throws IOException {

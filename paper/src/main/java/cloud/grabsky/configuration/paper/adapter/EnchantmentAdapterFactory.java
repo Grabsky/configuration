@@ -54,7 +54,7 @@ public final class EnchantmentAdapterFactory implements JsonAdapter.Factory {
         // ...
         final JsonAdapter<NamespacedKey> adapter = moshi.adapter(NamespacedKey.class);
         // ...
-        return new JsonAdapter<Enchantment>() {
+        return new JsonAdapter<>() {
 
             @Override
             public Enchantment fromJson(final @NotNull JsonReader in) throws IOException {

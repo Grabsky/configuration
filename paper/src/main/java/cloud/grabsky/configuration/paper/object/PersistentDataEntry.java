@@ -23,11 +23,16 @@
  */
 package cloud.grabsky.configuration.paper.object;
 
-import com.squareup.moshi.JsonAdapter;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
+
+import static cloud.grabsky.configuration.paper.util.Conditions.requirePresent;
+import static org.jetbrains.annotations.ApiStatus.Internal;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class PersistentDataEntry {
@@ -41,29 +46,22 @@ public final class PersistentDataEntry {
     @Getter(AccessLevel.PUBLIC)
     private final @NotNull Object value;
 
-    /* BUILDER */
+    /* LAZY INITIALIZER / BUILDER */
 
+    @Internal
     @NoArgsConstructor(access = AccessLevel.PUBLIC)
-    public static final class Builder {
+    public static final class Init {
 
-        @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC)
-        private NamespacedKey key;
+        public NamespacedKey key;
+        public PersistentDataType<?, ?> type;
+        public Object value;
 
-        @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC)
-        private PersistentDataType<?, ?> dataType;
-
-        @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.PUBLIC)
-        private Object value;
-
-        public boolean isValid() {
-            return (key != null && dataType != null && value != null);
-        }
-
-        public PersistentDataEntry build() {
-            if (this.isValid() == false)
-                return null;
-            // ...
-            return new PersistentDataEntry(key, dataType, value);
+        public PersistentDataEntry init() throws IllegalStateException {
+            return new PersistentDataEntry(
+                    requirePresent(key, new IllegalStateException("Field 'key' (" + NamespacedKey.class.getName() + ") cannot be null.")),
+                    requirePresent(type, new IllegalStateException("Field 'type' (" + PersistentDataType.class.getName() + ") cannot be null.")),
+                    requirePresent(value, new IllegalStateException("Field 'value' (" + type.getComplexType().getName() + ") cannot be null."))
+            );
         }
 
     }

@@ -30,12 +30,10 @@ import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemFlag;
-import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
-
 
 public final class PaperConfigurationMapper extends ConfigurationMapper {
 
@@ -67,6 +65,7 @@ public final class PaperConfigurationMapper extends ConfigurationMapper {
         builder.add(EnchantmentEntryAdapterFactory.INSTANCE);
         builder.add(EntityTypeAdapterFactory.INSTANCE);
         builder.add(MaterialAdapterFactory.INSTANCE);
+        builder.add(PersistentDataEntryAdapterFactory.INSTANCE);
         builder.add(PersistentDataTypeAdapterFactory.INSTANCE);
         // ...
         if (consumer != null)

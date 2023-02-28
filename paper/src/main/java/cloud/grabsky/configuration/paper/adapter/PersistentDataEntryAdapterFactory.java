@@ -23,11 +23,12 @@
  */
 package cloud.grabsky.configuration.paper.adapter;
 
-import cloud.grabsky.configuration.paper.object.EnchantmentEntry;
+import cloud.grabsky.configuration.paper.object.PersistentDataEntry;
 import com.squareup.moshi.*;
 import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import org.bukkit.enchantments.Enchantment;
+import lombok.NoArgsConstructor;
+import org.bukkit.NamespacedKey;
+import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,31 +40,35 @@ import java.util.Set;
 import static com.squareup.moshi.Types.getRawType;
 
 /**
- * Creates {@link JsonAdapter JsonAdapter&lt;EnchantmentEntry&gt;} which converts JSON object to {@link EnchantmentEntry}.
+ * Creates {@link JsonAdapter JsonAdapter&lt;PersistentDataEntry&gt;} which converts JSON object to {@link PersistentDataType}.
  */
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class EnchantmentEntryAdapterFactory implements JsonAdapter.Factory {
-    /* SINGLETON */ public static final EnchantmentEntryAdapterFactory INSTANCE = new EnchantmentEntryAdapterFactory();
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class PersistentDataEntryAdapterFactory implements JsonAdapter.Factory {
+    /* DEFAULT */ public static final PersistentDataEntryAdapterFactory INSTANCE = new PersistentDataEntryAdapterFactory();
 
     @Override
-    public @Nullable JsonAdapter<EnchantmentEntry> create(final @NotNull Type type, final @NotNull Set<? extends Annotation> annotations, final @NotNull Moshi moshi) {
-        if (EnchantmentEntry.class.isAssignableFrom(getRawType(type)) == false)
+    public @Nullable JsonAdapter<PersistentDataEntry> create(final @NotNull Type type, final @NotNull Set<? extends Annotation> annotations, final @NotNull Moshi moshi) {
+        if (PersistentDataEntry.class.isAssignableFrom(getRawType(type)) == false)
             return null;
         // ...
-        final JsonAdapter<Enchantment> adapter = moshi.adapter(Enchantment.class);
-        // ...
         return new JsonAdapter<>() {
+
             @Override
-            public EnchantmentEntry fromJson(final @NotNull JsonReader in) throws IOException {
-                // ...
+            public PersistentDataEntry fromJson(final @NotNull JsonReader in) throws IOException {
                 in.beginObject();
                 // ...
-                final EnchantmentEntry.Init initializer = new EnchantmentEntry.Init();
+                final PersistentDataEntry.Init initializer = new PersistentDataEntry.Init();
                 // ...
                 while (in.hasNext() == true) {
-                    switch (in.nextName()) {
-                        case "key" -> initializer.enchantment = adapter.fromJson(in);
-                        case "level" -> initializer.level = in.nextInt();
+                    final String name = in.nextName();
+                    switch (name) {
+                        case "key" -> initializer.key = moshi.adapter(NamespacedKey.class).fromJson(in);
+                        case "type" -> initializer.type = moshi.adapter(PersistentDataType.class).fromJson(in);
+                        case "value" -> {
+                            if (initializer.type == null)
+                                throw new JsonDataException("Property 'value' must be specified AFTER 'type' at " + in.getPath());
+                            initializer.value = moshi.adapter(initializer.type.getComplexType()).fromJson(in);
+                        }
                         default -> in.skipValue();
                     }
                 }
@@ -74,11 +79,10 @@ public final class EnchantmentEntryAdapterFactory implements JsonAdapter.Factory
             }
 
             @Override
-            public void toJson(final @NotNull JsonWriter out, final EnchantmentEntry value) {
+            public void toJson(final @NotNull JsonWriter out, final PersistentDataEntry value) {
                 throw new UnsupportedOperationException("NOT IMPLEMENTED");
             }
 
         };
     }
-
 }
