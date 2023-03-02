@@ -23,6 +23,7 @@
  */
 package cloud.grabsky.configuration.paper.object;
 
+import cloud.grabsky.configuration.util.LazyInit;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,7 +32,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
-import static cloud.grabsky.configuration.paper.util.Conditions.requirePresent;
+import static cloud.grabsky.configuration.util.LazyInit.notNull;
 import static org.jetbrains.annotations.ApiStatus.Internal;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -50,17 +51,18 @@ public final class PersistentDataEntry {
 
     @Internal
     @NoArgsConstructor(access = AccessLevel.PUBLIC)
-    public static final class Init {
+    public static final class Init implements LazyInit<PersistentDataEntry> {
 
         public NamespacedKey key;
         public PersistentDataType<?, ?> type;
         public Object value;
 
+        @Override @SuppressWarnings("unchecked")
         public PersistentDataEntry init() throws IllegalStateException {
             return new PersistentDataEntry(
-                    requirePresent(key, new IllegalStateException("Field 'key' (" + NamespacedKey.class.getName() + ") cannot be null.")),
-                    requirePresent(type, new IllegalStateException("Field 'type' (" + PersistentDataType.class.getName() + ") cannot be null.")),
-                    requirePresent(value, new IllegalStateException("Field 'value' (" + type.getComplexType().getName() + ") cannot be null."))
+                    notNull(key, "key", NamespacedKey.class),
+                    notNull(type, "type", PersistentDataType.class),
+                    notNull(value, "value", (Class<Object>) type.getComplexType())
             );
         }
 

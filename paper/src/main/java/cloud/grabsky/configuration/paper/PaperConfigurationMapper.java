@@ -67,6 +67,7 @@ public final class PaperConfigurationMapper extends ConfigurationMapper {
         builder.add(MaterialAdapterFactory.INSTANCE);
         builder.add(PersistentDataEntryAdapterFactory.INSTANCE);
         builder.add(PersistentDataTypeAdapterFactory.INSTANCE);
+        builder.add(SoundAdapterFactory.INSTANCE);
         // ...
         if (consumer != null)
             consumer.accept(builder);

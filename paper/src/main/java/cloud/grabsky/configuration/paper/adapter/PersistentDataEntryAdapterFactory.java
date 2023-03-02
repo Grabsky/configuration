@@ -42,9 +42,10 @@ import static com.squareup.moshi.Types.getRawType;
 /**
  * Creates {@link JsonAdapter JsonAdapter&lt;PersistentDataEntry&gt;} which converts JSON object to {@link PersistentDataType}.
  */
+// Future TO-DO: Change implementation to allow properties to be in any order.
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class PersistentDataEntryAdapterFactory implements JsonAdapter.Factory {
-    /* DEFAULT */ public static final PersistentDataEntryAdapterFactory INSTANCE = new PersistentDataEntryAdapterFactory();
+    /* SINGLETON */ public static final PersistentDataEntryAdapterFactory INSTANCE = new PersistentDataEntryAdapterFactory();
 
     @Override
     public @Nullable JsonAdapter<PersistentDataEntry> create(final @NotNull Type type, final @NotNull Set<? extends Annotation> annotations, final @NotNull Moshi moshi) {

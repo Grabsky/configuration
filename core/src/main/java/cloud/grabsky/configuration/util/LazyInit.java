@@ -21,45 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package cloud.grabsky.configuration.paper.object;
+package cloud.grabsky.configuration.util;
 
-import cloud.grabsky.configuration.util.LazyInit;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.bukkit.enchantments.Enchantment;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import static cloud.grabsky.configuration.util.LazyInit.notNull;
-import static org.jetbrains.annotations.ApiStatus.Internal;
+public interface LazyInit<T> {
 
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class EnchantmentEntry {
-
-    @Getter(AccessLevel.PUBLIC)
-    private final @NotNull Enchantment enchantment;
-
-    @Getter(AccessLevel.PUBLIC)
-    private final int level;
-
-    /* LAZY INITIALIZER / BUILDER */
-
-    @Internal
-    @NoArgsConstructor(access = AccessLevel.PUBLIC)
-    public static final class Init implements LazyInit<EnchantmentEntry> {
-
-        public Enchantment enchantment;
-        public Integer level;
-
-        @Override
-        public EnchantmentEntry init() throws IllegalStateException {
-            return new EnchantmentEntry(
-                    notNull(enchantment, "enchantment", Enchantment.class),
-                    notNull(level, "enchantment", Integer.class)
-            );
-        }
-
+    T init() throws IllegalStateException;
+    
+    static <T> T notNull(final @Nullable T obj, final @NotNull String field, final @NotNull Class<T> type) throws IllegalStateException {
+        if (obj == null)
+            throw new IllegalStateException("Field " + field + " : " + type.getName() + " cannot be null.");
+        // ...
+        return obj;
     }
 
 }
