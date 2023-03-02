@@ -23,7 +23,7 @@
  */
 package cloud.grabsky.configuration;
 
-import cloud.grabsky.configuration.exception.ConfigurationException;
+import cloud.grabsky.configuration.exception.ConfigurationMappingException;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.JsonDataException;
 import com.squareup.moshi.JsonReader;
@@ -62,27 +62,27 @@ public class ConfigurationMapper {
 
     /**
      * Maps file contents to {@code public}, {@code static}, {@code non-final} fields declared inside provided class.
-     * When method fails due to {@link JsonDataException} - a new {@link ConfigurationException}
+     * When method fails due to {@link JsonDataException} - a new {@link ConfigurationMappingException}
      * is thrown and fields of {@link T} remain unchanged.
      *
      * @param configurationClass class with fields to be replaced.
      * @param configurationFile {@link File} containing json configuration.
-     * @throws ConfigurationException when configuration fails to load.
+     * @throws ConfigurationMappingException when configuration fails to load.
      */
-    public final <T extends JsonConfiguration> void map(@NotNull final Class<T> configurationClass, @NotNull final File configurationFile) throws ConfigurationException {
+    public final <T extends JsonConfiguration> void map(@NotNull final Class<T> configurationClass, @NotNull final File configurationFile) throws ConfigurationMappingException {
         this.map(ConfigurationHolder.of(configurationClass, configurationFile));
     }
 
     /**
      * Maps contents of all files to {@code public}, {@code static}, {@code non-final} fields declared in relative classes.
-     * When method fails due to {@link JsonDataException} - a new {@link ConfigurationException}
+     * When method fails due to {@link JsonDataException} - a new {@link ConfigurationMappingException}
      * is thrown and <b><i>all</i></b> fields remain unchanged.
      *
      * @param holders vararg of {@link ConfigurationHolder} instances
-     * @throws ConfigurationException when configuration fails to load.
+     * @throws ConfigurationMappingException when configuration fails to load.
      */
     @SafeVarargs
-    public final void map(@NotNull final ConfigurationHolder<? extends JsonConfiguration>... holders) throws ConfigurationException {
+    public final void map(@NotNull final ConfigurationHolder<? extends JsonConfiguration>... holders) throws ConfigurationMappingException {
         final Map<ConfigurationHolder<?>, Map<String, FieldData>> configurations = new LinkedHashMap<>();
         // Step 1: Collecting values
         for (var holder : holders) {
@@ -97,7 +97,7 @@ public class ConfigurationMapper {
                 // Adding container to the map
                 configurations.put(holder, container);
             } catch (final IOException | RuntimeException error) {
-                throw new ConfigurationException(configurationClass, configurationFile, error);
+                throw new ConfigurationMappingException(configurationClass, configurationFile, error);
             }
         }
         // Step 2: Inserting values
@@ -108,7 +108,7 @@ public class ConfigurationMapper {
                 // Step 3: Calling #onReload method on each of configuration classes
                 createInstance(configurationClass).onReload();
             } catch (final IllegalAccessException | IllegalArgumentException error) {
-                throw new ConfigurationException(configurationClass, holder.getFile(), error);
+                throw new ConfigurationMappingException(configurationClass, holder.getFile(), error);
             }
         });
     }

@@ -2,7 +2,7 @@ package cloud.grabsky.configuration.tests.tests;
 
 import cloud.grabsky.configuration.JsonConfiguration;
 import cloud.grabsky.configuration.JsonPath;
-import cloud.grabsky.configuration.exception.ConfigurationException;
+import cloud.grabsky.configuration.exception.ConfigurationMappingException;
 import cloud.grabsky.configuration.tests.JsonTest;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class TestB extends JsonTest {
 
     @Test
-    public void checkSingleFallback() throws ConfigurationException {
+    public void checkSingleFallback() throws ConfigurationMappingException {
         final File fileB = getFileFromClassPath("test_b.json");
         final File malformedFileB = getFileFromClassPath("test_b.malformed.json");
 
@@ -33,7 +33,7 @@ public class TestB extends JsonTest {
         assertEquals("OK", Config.FAILS);
 
         // Mapping malformed file; Fields should remain unchanged because of the parsing failure
-        assertThrows(ConfigurationException.class, () -> CONFIGURATION_MAPPER.map(Config.class, malformedFileB));
+        assertThrows(ConfigurationMappingException.class, () -> CONFIGURATION_MAPPER.map(Config.class, malformedFileB));
 
         assertEquals("OK", Config.NEVER_FAILS);
         assertEquals("OK", Config.FAILS);

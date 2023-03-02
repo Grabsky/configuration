@@ -2,7 +2,7 @@ package cloud.grabsky.configuration.tests.tests;
 
 import cloud.grabsky.configuration.JsonConfiguration;
 import cloud.grabsky.configuration.JsonPath;
-import cloud.grabsky.configuration.exception.ConfigurationException;
+import cloud.grabsky.configuration.exception.ConfigurationMappingException;
 import cloud.grabsky.configuration.tests.JsonTest;
 import cloud.grabsky.configuration.tests.util.TestUtil;
 import org.junit.jupiter.api.Test;
@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class TestA extends JsonTest {
 
     @Test
-    public void checkTypes() throws ConfigurationException {
+    public void checkTypes() throws ConfigurationMappingException {
         final File file = TestUtil.getFileFromClassPath("test_a.json");
 
         if (file == null || file.exists() == false)

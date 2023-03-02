@@ -28,13 +28,13 @@ import cloud.grabsky.configuration.JsonConfiguration;
 import java.io.File;
 
 /**
- * {@link ConfigurationException} is thrown when mapping of configuration file fails.
+ * {@link ConfigurationMappingException} is thrown when mapping of configuration file fails.
  *
  * @apiNote Use {@link #getCause()} to know the cause of failure.
  */
-public class ConfigurationException extends RuntimeException {
+public class ConfigurationMappingException extends RuntimeException {
 
-    public ConfigurationException(final Class<? extends JsonConfiguration> configurationClass, final File file, final Throwable cause) {
+    public ConfigurationMappingException(final Class<? extends JsonConfiguration> configurationClass, final File file, final Throwable cause) {
         super("An error occurred during mapping of " + file.getPath() + " to " + configurationClass.getSimpleName(), cause);
     }
 
