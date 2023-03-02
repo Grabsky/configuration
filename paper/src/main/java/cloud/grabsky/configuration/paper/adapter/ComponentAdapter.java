@@ -24,6 +24,7 @@
 package cloud.grabsky.configuration.paper.adapter;
 
 import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.JsonDataException;
 import com.squareup.moshi.JsonReader;
 import com.squareup.moshi.JsonReader.Token;
 import com.squareup.moshi.JsonWriter;
@@ -47,33 +48,35 @@ public final class ComponentAdapter extends JsonAdapter<Component> {
 
     @Override
     public Component fromJson(final @NotNull JsonReader in) throws IOException {
-        if (in.peek() == Token.STRING) {
-            final String text = in.nextString();
-            // Returning empty component if value is null or blank
-            if ("".equals(text) == true)
-                return Component.empty();
-            // Parsing and returning
-            return miniMessage.deserialize(text);
-        } else if (in.peek() == Token.BEGIN_ARRAY) {
-            final StringBuilder builder = new StringBuilder();
-            // ...
-            in.beginArray();
-            // ...
-            while (in.hasNext() == true && in.peek() == Token.STRING) {
-                builder.append(in.nextString());
-                // ...
-                if (in.hasNext() == true) {
-                    builder.append("<newline><reset>");
-                }
+        return switch (in.peek()) {
+            case STRING -> {
+                final String text = in.nextString();
+                // Returning empty component if value is null or blank
+                if ("".equals(text) == true)
+                    yield Component.empty();
+                // Parsing and returning
+                yield miniMessage.deserialize(text);
             }
-            // ...
-            in.endArray();
-            // ...
-            return miniMessage.deserialize(builder.toString());
-        } else {
-            in.skipValue();
-        }
-        return Component.empty();
+            case BEGIN_ARRAY -> {
+                final StringBuilder builder = new StringBuilder();
+                // ...
+                in.beginArray();
+                // ...
+                while (in.hasNext() == true && in.peek() == Token.STRING) {
+                    builder.append(in.nextString());
+                    // ...
+                    if (in.hasNext() == true) {
+                        builder.append("<newline><reset>");
+                    }
+                }
+                // ...
+                in.endArray();
+                // ...
+                yield miniMessage.deserialize(builder.toString());
+            }
+            case NULL -> null;
+            default -> throw new JsonDataException("Expected STRING or BEGIN_ARRAY at " + in.getPath() + " but found: " + in.peek());
+        };
     }
 
     @Override
