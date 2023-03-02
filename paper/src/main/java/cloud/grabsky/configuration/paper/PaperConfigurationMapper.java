@@ -29,6 +29,7 @@ import cloud.grabsky.configuration.paper.adapter.EnchantmentAdapterFactory;
 import cloud.grabsky.configuration.paper.adapter.EnchantmentEntryAdapterFactory;
 import cloud.grabsky.configuration.paper.adapter.EntityTypeAdapterFactory;
 import cloud.grabsky.configuration.paper.adapter.ItemFlagAdapter;
+import cloud.grabsky.configuration.paper.adapter.ItemStackAdapterFactory;
 import cloud.grabsky.configuration.paper.adapter.MaterialAdapterFactory;
 import cloud.grabsky.configuration.paper.adapter.NamespacedKeyAdapter;
 import cloud.grabsky.configuration.paper.adapter.PersistentDataEntryAdapterFactory;
@@ -74,6 +75,7 @@ public final class PaperConfigurationMapper extends ConfigurationMapper {
         builder.add(EnchantmentAdapterFactory.INSTANCE);
         builder.add(EnchantmentEntryAdapterFactory.INSTANCE);
         builder.add(EntityTypeAdapterFactory.INSTANCE);
+        builder.add(ItemStackAdapterFactory.INSTANCE);
         builder.add(MaterialAdapterFactory.INSTANCE);
         builder.add(PersistentDataEntryAdapterFactory.INSTANCE);
         builder.add(PersistentDataTypeAdapterFactory.INSTANCE);
