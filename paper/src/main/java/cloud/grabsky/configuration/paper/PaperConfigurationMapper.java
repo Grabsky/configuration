@@ -80,10 +80,10 @@ public final class PaperConfigurationMapper extends ConfigurationMapper {
         builder.add(PersistentDataEntryAdapterFactory.INSTANCE);
         builder.add(PersistentDataTypeAdapterFactory.INSTANCE);
         builder.add(SoundAdapterFactory.INSTANCE);
-        // ...
+        // accepting user-specified consumer (if not null)
         if (consumer != null)
             consumer.accept(builder);
-        // ...
+        // building & returning
         return new PaperConfigurationMapper(builder.build());
     }
 

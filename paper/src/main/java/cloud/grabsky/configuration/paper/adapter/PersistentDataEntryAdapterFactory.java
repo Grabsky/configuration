@@ -70,8 +70,9 @@ public final class PersistentDataEntryAdapterFactory implements JsonAdapter.Fact
                         case "key" -> initializer.key = moshi.adapter(NamespacedKey.class).fromJson(in);
                         case "type" -> initializer.type = moshi.adapter(PersistentDataType.class).fromJson(in);
                         case "value" -> {
-                            if (initializer.type == null)
+                            if (initializer.type == null) {
                                 throw new JsonDataException("Property 'value' must be specified AFTER 'type' at " + in.getPath());
+                            }
                             initializer.value = moshi.adapter(initializer.type.getComplexType()).fromJson(in);
                         }
                         default -> throw new JsonDataException("Unexpected field at " + in.getPath() + ": " + nextName);

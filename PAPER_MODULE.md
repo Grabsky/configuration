@@ -1,7 +1,7 @@
 # grabsky/configuration-paper
 [![](https://github.com/Grabsky/configuration/actions/workflows/gradle.yml/badge.svg)](https://github.com/Grabsky/configuration/actions/workflows/gradle.yml)
 [![](https://www.codefactor.io/repository/github/grabsky/configuration/badge/main)](https://www.codefactor.io/repository/github/grabsky/configuration/overview/main)  
-This module adds serializers for common Bukkit objects. Check out **[Serializers](#serializers)** and **[Syntax](#syntax)** sections below for more reference.
+This module adds serializers for common Bukkit objects. Check out **[Adapters](#adapters)** and **[Syntax](#syntax)** sections below for more reference.
 
 <br />
 
@@ -16,7 +16,7 @@ To use this project in your plugin, add following repository:
 
 ```groovy
 repositories {
-  maven { url = 'https://repo.grabsky.cloud/releases' }
+    maven { url = 'https://repo.grabsky.cloud/releases' }
 }
 ```
 
@@ -24,99 +24,113 @@ Then specify dependency:
 
 ```groovy
 dependencies {
-  implementation 'cloud.grabsky:configuration-core:[version]'
-  implementation 'cloud.grabsky:configuration-paper:[version]'
+    implementation 'cloud.grabsky:configuration-paper:[version]'
 }
 ```
 
 Consider **[relocating](https://imperceptiblethoughts.com/shadow/configuration/relocation/)** to prevent version
-mismatch issues.
+mismatch issues. This can be ignored if your plugin is a **[Paper plugin](https://docs.papermc.io/paper/dev/getting-started/paper-plugins)** with **[isolated classloader](https://docs.papermc.io/paper/dev/getting-started/paper-plugins#classloading-isolation)**.
 
 <br />
 
-## Serializers
-
-Serializers for following types are included:
+## Adapters
+Adapters for following types are included:
 
 ```
-cloud.grabsky.configuration.paper
-├── MaterialSerializer             (org.bukkit.Material)
-├── EntityTypeSerializer           (org.bukkit.entity.EntityType)
-├── EnchantmentSerializer          (org.bukkit.enchantments.Enchantment)
-├── ItemFlagSerializer             (org.bukkit.inventory.ItemFlag)
-├── ItemStackSerializer            (org.bukkit.inventory.ItemStack)
+cloud.grabsky.configuration.paper.adapter
+├─ MaterialAdapter(Factory) ───────────── (org.bukkit.Material)
+├─ EntityTypeAdapter(Factory) ─────────── (org.bukkit.entity.EntityType)
+├─ EnchantmentAdapter(Factory) ────────── (org.bukkit.enchantments.Enchantment)
+├─ ItemFlagAdapter ────────────────────── (org.bukkit.inventory.ItemFlag)
+├─ ItemStackAdapter(Factory) ──────────── (org.bukkit.inventory.ItemStack)
+├─ PersistentDataTypeAdapter ──────────── (org.bukkit.persistence.PersistentDataType)
 │
-├── ComponentSerializer            (net.kyori.adventure.text.Component)
-├── SoundSerializer                (net.kyori.adventure.sound.Sound)
-├── SoundSourceSerializer          (net.kyori.adventure.sound.Sound.Source)
+├─ StringComponentAdapter ─────────────── (java.lang.String)
+├─ ComponentAdapter ───────────────────── (net.kyori.adventure.text.Component)
+├─ SoundAdapter(Factory)  ─────────────── (net.kyori.adventure.sound.Sound)
+├─ SoundSourceAdapter ─────────────────── (net.kyori.adventure.sound.Sound.Source)
 │
-├── EnchantmentEntrySerializer     (cloud.grabsky.configuration.paper.object.EnchantmentEntry)
-└── PersistentDataEntrySerializer  (cloud.grabsky.configuration.paper.object.PersistentDataEntry)
+├─ EnchantmentEntryAdapter(Factory) ───── (cloud.grabsky.configuration.paper.object.EnchantmentEntry)
+└─ PersistentDataEntryAdapter(Factory) ── (cloud.grabsky.configuration.paper.object.PersistentDataEntry)
 ```
 
-You need to add them to your `Gson` instance manually:
-
+You can add them to your `Moshi` instance manually:
 ```java
-final Gson gson=new GsonBuilder()
-        // other options
-        .registerTypeAdapter(NamespacedKey.class,NamespacedKeySerializer.INSTANCE)
-        .create();
+final Moshi moshi = new Moshi.Builder()
+        .add(NamespacedKey.class, NamespacedKeyAdapter.INSTANCE)
+        .add(MaterialAdapterFactory.INSTANCE)
+        .build();
+final ConfigurationMapper mapper = ConfigurationMapper.create(moshi);
 ```
 
-Keep in mind that deserialization is ***not*** implemented. Most of built-in serializers depend on each other.
+or use `PaperConfigurationMapper#create`:
+```java
+final PaperConfigurationMapper mapper = PaperConfigurationMapper.create();
+```
+
+Keep in mind that **①** deserialization is ***not*** implemented, **②** most of built-in serializers depend on each other.
 
 <br />
 
 ## Syntax
-
 This is an example of what serializers are capable of:
 
-- **[NamespacedKeySerializer](#serializers)** does not depend on any serializer.
+- **[NamespacedKeyAdapter](#adapters)** does not depend on any adapter.
 
   ```json5
   "key": "namespaced:key"
   ```
-- **[MaterialSerializer](#serializers)** depends on **[NamespacedKeySerializer](#serializers)**.
+- **[MaterialAdapterFactory](#adapters)** depends on **[NamespacedKeyAdapter](#adapters)**.
 
   ```json5
   "material": "minecraft:diamond"
   ```
-- **[EntityTypeSerializer](#serializers)** depends on **[NamespacedKeySerializer](#serializers)**.
+- **[EntityTypeAdapterFactory](#adapters)** depends on **[NamespacedKeyAdapter](#adapters)**.
 
   ```json5
   "entity_type": "minecraft:cow"
   ```
-- **[EnchantmentSerializer](#serializers)** depends on **[NamespacedKeySerializer](#serializers)**.
+- **[EnchantmentAdapterFactory](#adapters)** depends on **[NamespacedKeyAdapter](#adapters)**.
 
   ```json5
   "enchantment": "minecraft:sharpness"
   ```
-- **[EnchantmentEntrySerializer](#serializers)** depends on **[EnchantmentSerializer](#serializers)**.
+- **[EnchantmentEntryAdapterFactory](#adapters)** depends on **[EnchantmentAdapterFactory](#adapters)**.
 
   ```json5
   "enchantment_entry": { "key": "minecraft:sharpness", "level": 5 }
   ```
-- **[PersistentDataEntrySerializer](#serializers)** depends on **[NamespacedKeySerializer](#serializers)**.
+- **[PersistentDataTypeAdapter](#adapters)** does not depend on any adapter.
 
   ```json5
-  "persistent_data_entry": { "key": "configuration:test/string", "type": "string",  "value": "I am a String." }
+  "persistent_data_type": { "string" }
   ```
-- **[ComponentSerializer](#serializers)** does not depend on any serializer.
+- **[PersistentDataEntryAdapterFactory](#adapters)** depends on **[NamespacedKeyAdapter](#adapters)** and **[PersistentDataTypeAdapter](#adapters)**.
+
+  ```json5
+  "persistent_data_entry": { "key": "claims:claim_level", "type": "integer", "value": 1 }
+  ```
+- **[ComponentAdapter](#adapters)** does not depend on any adapter.
+
+  ```json5
+  "string_component": ["<red>First Line", "<green>Second Line"]  
+  ```
+- **[ComponentAdapter](#adapters)** does not depend on any adapter.
 
   ```json5
   "component": "<red>It uses <rainbow>MiniMessage<red>!"
   ```
-- **[SoundSourceSerializer](#serializers)** does not depend on any serializer.
+- **[SoundSourceAdapter](#adapters)** does not depend on any adapter.
 
   ```json5
   "sound_source": "master"
   ```
-- **[SoundSerializer](#serializers)** depends on **[NamespacedKeySerializer](#serializers)** and **[SoundSourceSerializer](#serializers)**.
+- **[SoundAdapterFactory](#adapters)** depends on **[NamespacedKeyAdapter](#adapters)** and **[SoundSourceAdapter](#adapters)**.
 
   ```json5
   "sound": { "key": "minecraft:block.note_block.banjo", "source": "master", "volume": 1.0, "pitch": 1.0 }
   ```
-- **[ItemStackSerializer](#serializers)** depends on ***all*** serializers listed above, ***except*** **[SoundSourceSerializer](#serializers)** and **[SoundSerializer](#serializers)**.
+- **[ItemStackAdapterFactory](#adapters)** depends on ***all*** adapters listed above, ***except*** **[StringComponentAdapter](#adapters)**, **[SoundSourceAdapter](#adapters)** and **[SoundAdapter](#adapters)**.
 
   ```json5
   "item_example": {
@@ -142,20 +156,20 @@ This is an example of what serializers are capable of:
               { "key": "minecraft:infinity", "level": 1 }
           ],
 
-          "flags": ["HIDE_ATTRIBUTES", "HIDE_DESTROYS", "HIDE_DYE", "HIDE_ENCHANTS", "HIDE_PLACED_ON", "HIDE_POTION_EFFECTS", "HIDE_UNBREAKABLE"],
+          "item_flags": ["HIDE_ATTRIBUTES", "HIDE_DESTROYS", "HIDE_DYE", "HIDE_ENCHANTS", "HIDE_PLACED_ON", "HIDE_POTION_EFFECTS", "HIDE_UNBREAKABLE"],
 
           "custom_model_data": 7,
 
           "persistent_data_container":[
-              { "key": "configuration:test/byte", "type": "byte", "value": 0 },
-              { "key": "configuration:test/byte_array", "type": "byte_array", "value": [0, 1, 1, 0, 1] },
-              { "key": "configuration:test/integer", "type": "integer", "value": 0 },
-              { "key": "configuration:test/integer_array", "type": "integer_array", "value": [-5, 0, 5] },
-              { "key": "configuration:test/long", "type": "long", "value": 173 },
-              { "key": "configuration:test/long_array", "type": "long_array", "value": [-50, 0, 50] },
-              { "key": "configuration:test/float", "type": "float", "value": 7.5 },
-              { "key": "configuration:test/double", "type": "double", "value": 7.5005 },
-              { "key": "configuration:test/string", "type": "string", "value": "I am a String." }
+              { "key": "configuration:a", "type": "byte", "value": 0 },
+              { "key": "configuration:b", "type": "byte_array", "value": [-120, 0, 120 ] },
+              { "key": "configuration:c", "type": "integer", "value": 0 },
+              { "key": "configuration:d", "type": "integer_array", "value": [-5, 0, 5] },
+              { "key": "configuration:e", "type": "long", "value": 173 },
+              { "key": "configuration:f", "type": "long_array", "value": [-50, 0, 50] },
+              { "key": "configuration:g", "type": "float", "value": 7.5 },
+              { "key": "configuration:h", "type": "double", "value": 7.5000005 },
+              { "key": "configuration:i", "type": "string", "value": "Hello, World!" }
           ],
 
           // exclusive to 'damageable' items like tools and armor
@@ -165,7 +179,7 @@ This is an example of what serializers are capable of:
           "skull_texture": "BASE64_ENCODED_VALUE",
 
           // exclusive to spawners
-          "spawner_type": "minecraft:cow",
+          "spawner_entity_type": "minecraft:cow",
 
           // exclusive to spawners (block radius)
           "spawner_activation_range": 16,
