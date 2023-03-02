@@ -35,10 +35,9 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.util.List;
 
 /**
- * Converts {@link String} or {@link List List&lt;String&gt;} to {@link Component} using provided function.
+ * Converts {@link String} or {@link String String[]} to {@link Component} using provided function.
  */
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 public final class ComponentAdapter extends JsonAdapter<Component> {

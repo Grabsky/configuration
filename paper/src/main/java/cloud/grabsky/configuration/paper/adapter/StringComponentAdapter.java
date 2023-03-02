@@ -36,18 +36,17 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 
 /**
- * Converts {@link String} or {@link String String[]} to concatenated ({@link MiniMessage}) {@link String}.
+ * Converts {@link String} or {@link String String[]} to concatenated (joined with newlines) ({@link MiniMessage}) {@link String}.
  */
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 public final class StringComponentAdapter extends JsonAdapter<String> {
-    /* DEFAULT */ public static final StringComponentAdapter INSTANCE = new StringComponentAdapter();
+    /* SINGLETON */ public static final StringComponentAdapter INSTANCE = new StringComponentAdapter();
 
     @Override
     public String fromJson(final @NotNull JsonReader in) throws IOException {
-        switch (in.peek()) {
-            case STRING -> {
-                return in.nextString();
-            }
+        final Token peek = in.peek();
+        return switch (peek) {
+            case STRING -> in.nextString();
             case BEGIN_ARRAY -> {
                 final StringBuilder builder = new StringBuilder();
                 // ...
@@ -63,15 +62,16 @@ public final class StringComponentAdapter extends JsonAdapter<String> {
                 // ...
                 in.endArray();
                 // ...
-                return builder.toString();
+                yield builder.toString();
             }
-            default -> in.skipValue();
-        }
-        throw new JsonDataException("Expected STRING or BEGIN_ARRAY at " + in.getPath() + " but found: " + in.peek());
+            case NULL -> null;
+            default -> throw new JsonDataException("Expected STRING or BEGIN_ARRAY at " + in.getPath() + " but found: " + peek);
+        };
     }
 
     @Override
     public void toJson(final @NotNull JsonWriter out, final String value) {
         throw new UnsupportedOperationException("NOT IMPLEMENTED");
     }
+
 }

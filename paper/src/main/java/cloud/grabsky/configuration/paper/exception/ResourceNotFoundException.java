@@ -29,7 +29,7 @@ package cloud.grabsky.configuration.paper.exception;
 public final class ResourceNotFoundException extends Exception {
 
     public ResourceNotFoundException(final String name) {
-        super("File named'" + name + "' was not found in plugin resources file.");
+        super("File named '" + name + "' was not found in plugin resources file.");
     }
 
 }

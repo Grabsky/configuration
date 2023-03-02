@@ -63,7 +63,7 @@ public final class PersistentDataTypeAdapterFactory implements JsonAdapter.Facto
             put("double", PersistentDataType.DOUBLE);
             put("string", PersistentDataType.STRING);
             // Adding extra (constructor-specified) entries
-            for (var extra : extras) {
+            for (final var extra : extras) {
                 put(extra.left(), extra.right());
             }
         }};
@@ -80,10 +80,10 @@ public final class PersistentDataTypeAdapterFactory implements JsonAdapter.Facto
             public PersistentDataType<?, ?> fromJson(final @NotNull JsonReader in) throws IOException {
                 final String value = in.nextString();
                 // ...
-                if (internalMap.containsKey(value) == false)
-                    throw new JsonDataException("Expected one of " + internalMap.keySet() + " at " + in.getPath() + " but found: " + value);
+                if (internalMap.containsKey(value) == true)
+                    return internalMap.get(value);
                 // ...
-                return internalMap.get(value);
+                throw new JsonDataException("Expected one of " + internalMap.keySet() + " at " + in.getPath() + " but found: " + value);
             }
 
             @Override

@@ -57,9 +57,9 @@ public final class EnchantmentEntryAdapterFactory implements JsonAdapter.Factory
         final JsonAdapter<Enchantment> adapter = moshi.adapter(Enchantment.class);
         // ...
         return new JsonAdapter<>() {
+
             @Override
             public EnchantmentEntry fromJson(final @NotNull JsonReader in) throws IOException {
-                // ...
                 in.beginObject();
                 // ...
                 final EnchantmentEntry.Init initializer = new EnchantmentEntry.Init();
@@ -72,7 +72,6 @@ public final class EnchantmentEntryAdapterFactory implements JsonAdapter.Factory
                         default -> throw new JsonDataException("Unexpected field at " + in.getPath() + ": " + nextName);
                     }
                 }
-                // ...
                 in.endObject();
                 // ...
                 return initializer.init();

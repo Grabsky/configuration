@@ -44,7 +44,7 @@ import java.util.Set;
 import static com.squareup.moshi.Types.getRawType;
 
 /**
- * {@link JsonAdapter JsonAdapter&lt;Material&gt;} converts {@link String} (as {@link NamespacedKey}) to {@link Material}.
+ * Creates {@link JsonAdapter JsonAdapter&lt;Material&gt;} which converts {@link String} (as {@link NamespacedKey}) to {@link Material}.
  */
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class MaterialAdapterFactory implements JsonAdapter.Factory {

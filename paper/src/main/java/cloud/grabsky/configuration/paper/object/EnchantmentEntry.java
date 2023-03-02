@@ -45,8 +45,7 @@ public final class EnchantmentEntry {
 
     /* LAZY INITIALIZER / BUILDER */
 
-    @Internal
-    @NoArgsConstructor(access = AccessLevel.PUBLIC)
+    @Internal @NoArgsConstructor(access = AccessLevel.PUBLIC)
     public static final class Init implements LazyInit<EnchantmentEntry> {
 
         public Enchantment enchantment;

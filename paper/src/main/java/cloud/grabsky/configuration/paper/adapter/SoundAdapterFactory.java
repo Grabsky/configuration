@@ -64,7 +64,6 @@ public final class SoundAdapterFactory implements JsonAdapter.Factory {
         return new JsonAdapter<>() {
             @Override
             public Sound fromJson(final @NotNull JsonReader in) throws IOException {
-                // ...
                 in.beginObject();
                 // ...
                 final SoundInit initializer = new SoundInit();
@@ -79,7 +78,6 @@ public final class SoundAdapterFactory implements JsonAdapter.Factory {
                         default -> throw new JsonDataException("Unexpected field at " + in.getPath() + ": " + nextName);
                     }
                 }
-                // ...
                 in.endObject();
                 // ...
                 return initializer.init();
@@ -93,8 +91,7 @@ public final class SoundAdapterFactory implements JsonAdapter.Factory {
         };
     }
 
-    @Internal
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @Internal @NoArgsConstructor(access = AccessLevel.PRIVATE)
     private static final class SoundInit implements LazyInit<Sound> {
 
         public NamespacedKey key;

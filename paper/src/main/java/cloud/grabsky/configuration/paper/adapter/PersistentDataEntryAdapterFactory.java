@@ -77,7 +77,6 @@ public final class PersistentDataEntryAdapterFactory implements JsonAdapter.Fact
                         default -> throw new JsonDataException("Unexpected field at " + in.getPath() + ": " + nextName);
                     }
                 }
-                // ...
                 in.endObject();
                 // ...
                 return initializer.init();

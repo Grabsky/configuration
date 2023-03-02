@@ -49,8 +49,7 @@ public final class PersistentDataEntry {
 
     /* LAZY INITIALIZER / BUILDER */
 
-    @Internal
-    @NoArgsConstructor(access = AccessLevel.PUBLIC)
+    @Internal @NoArgsConstructor(access = AccessLevel.PUBLIC)
     public static final class Init implements LazyInit<PersistentDataEntry> {
 
         public NamespacedKey key;
