@@ -1,6 +1,5 @@
 package cloud.grabsky.configuration.tests.tests;
 
-import cloud.grabsky.configuration.JsonAdapter;
 import cloud.grabsky.configuration.JsonConfiguration;
 import cloud.grabsky.configuration.JsonPath;
 import cloud.grabsky.configuration.exception.ConfigurationException;
@@ -12,7 +11,9 @@ import java.io.File;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class TestA extends JsonTest {
 

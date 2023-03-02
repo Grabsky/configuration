@@ -24,14 +24,15 @@
 package cloud.grabsky.configuration;
 
 import cloud.grabsky.configuration.exception.ConfigurationException;
-import com.squareup.moshi.*;
 import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.JsonDataException;
+import com.squareup.moshi.JsonReader;
+import com.squareup.moshi.Moshi;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import okio.Okio;
 import okio.Source;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;

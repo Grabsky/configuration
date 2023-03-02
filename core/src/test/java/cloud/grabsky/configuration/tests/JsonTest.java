@@ -1,8 +1,12 @@
 package cloud.grabsky.configuration.tests;
 
 import cloud.grabsky.configuration.ConfigurationMapper;
-import com.squareup.moshi.*;
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.JsonDataException;
+import com.squareup.moshi.JsonReader;
 import com.squareup.moshi.JsonReader.Token;
+import com.squareup.moshi.JsonWriter;
+import com.squareup.moshi.Moshi;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;

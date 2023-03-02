@@ -26,7 +26,6 @@ package cloud.grabsky.configuration.adapter;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.JsonDataException;
 import com.squareup.moshi.JsonReader;
-import com.squareup.moshi.JsonReader.Token;
 import com.squareup.moshi.JsonWriter;
 import lombok.AccessLevel;
 import lombok.Getter;

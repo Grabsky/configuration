@@ -9,7 +9,9 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 
 import static cloud.grabsky.configuration.tests.util.TestUtil.getFileFromClassPath;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class TestB extends JsonTest {
 

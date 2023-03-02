@@ -23,7 +23,11 @@
  */
 package cloud.grabsky.configuration.paper.adapter;
 
-import com.squareup.moshi.*;
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.JsonDataException;
+import com.squareup.moshi.JsonReader;
+import com.squareup.moshi.JsonWriter;
+import com.squareup.moshi.Moshi;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.bukkit.NamespacedKey;

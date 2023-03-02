@@ -24,7 +24,17 @@
 package cloud.grabsky.configuration.paper;
 
 import cloud.grabsky.configuration.ConfigurationMapper;
-import cloud.grabsky.configuration.paper.adapter.*;
+import cloud.grabsky.configuration.paper.adapter.ComponentAdapter;
+import cloud.grabsky.configuration.paper.adapter.EnchantmentAdapterFactory;
+import cloud.grabsky.configuration.paper.adapter.EnchantmentEntryAdapterFactory;
+import cloud.grabsky.configuration.paper.adapter.EntityTypeAdapterFactory;
+import cloud.grabsky.configuration.paper.adapter.ItemFlagAdapter;
+import cloud.grabsky.configuration.paper.adapter.MaterialAdapterFactory;
+import cloud.grabsky.configuration.paper.adapter.NamespacedKeyAdapter;
+import cloud.grabsky.configuration.paper.adapter.PersistentDataEntryAdapterFactory;
+import cloud.grabsky.configuration.paper.adapter.PersistentDataTypeAdapterFactory;
+import cloud.grabsky.configuration.paper.adapter.SoundAdapterFactory;
+import cloud.grabsky.configuration.paper.adapter.SoundSourceAdapter;
 import com.squareup.moshi.Moshi;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
