@@ -24,7 +24,11 @@
 package cloud.grabsky.configuration.paper.adapter;
 
 import cloud.grabsky.configuration.paper.object.EnchantmentEntry;
-import com.squareup.moshi.*;
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.JsonDataException;
+import com.squareup.moshi.JsonReader;
+import com.squareup.moshi.JsonWriter;
+import com.squareup.moshi.Moshi;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.enchantments.Enchantment;
@@ -61,10 +65,11 @@ public final class EnchantmentEntryAdapterFactory implements JsonAdapter.Factory
                 final EnchantmentEntry.Init initializer = new EnchantmentEntry.Init();
                 // ...
                 while (in.hasNext() == true) {
-                    switch (in.nextName()) {
+                    final String nextName = in.nextName();
+                    switch (nextName) {
                         case "key" -> initializer.enchantment = adapter.fromJson(in);
                         case "level" -> initializer.level = in.nextInt();
-                        default -> in.skipValue();
+                        default -> throw new JsonDataException("Unexpected field at " + in.getPath() + ": " + nextName);
                     }
                 }
                 // ...

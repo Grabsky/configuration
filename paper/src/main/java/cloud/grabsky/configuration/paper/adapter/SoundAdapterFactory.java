@@ -25,6 +25,7 @@ package cloud.grabsky.configuration.paper.adapter;
 
 import cloud.grabsky.configuration.util.LazyInit;
 import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.JsonDataException;
 import com.squareup.moshi.JsonReader;
 import com.squareup.moshi.JsonWriter;
 import com.squareup.moshi.Moshi;
@@ -69,12 +70,13 @@ public final class SoundAdapterFactory implements JsonAdapter.Factory {
                 final SoundInit initializer = new SoundInit();
                 // ...
                 while (in.hasNext() == true) {
-                    switch (in.nextName()) {
+                    final String nextName = in.nextName();
+                    switch (nextName) {
                         case "key" -> initializer.key = adapter0.fromJson(in);
                         case "source" -> initializer.source = adapter1.fromJson(in);
                         case "volume" -> initializer.volume = (float) in.nextDouble();
                         case "pitch" -> initializer.pitch = (float) in.nextDouble();
-                        default -> in.skipValue();
+                        default -> throw new JsonDataException("Unexpected field at " + in.getPath() + ": " + nextName);
                     }
                 }
                 // ...

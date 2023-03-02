@@ -24,7 +24,11 @@
 package cloud.grabsky.configuration.paper.adapter;
 
 import cloud.grabsky.configuration.paper.object.PersistentDataEntry;
-import com.squareup.moshi.*;
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.JsonDataException;
+import com.squareup.moshi.JsonReader;
+import com.squareup.moshi.JsonWriter;
+import com.squareup.moshi.Moshi;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.bukkit.NamespacedKey;
@@ -61,8 +65,8 @@ public final class PersistentDataEntryAdapterFactory implements JsonAdapter.Fact
                 final PersistentDataEntry.Init initializer = new PersistentDataEntry.Init();
                 // ...
                 while (in.hasNext() == true) {
-                    final String name = in.nextName();
-                    switch (name) {
+                    final String nextName = in.nextName();
+                    switch (nextName) {
                         case "key" -> initializer.key = moshi.adapter(NamespacedKey.class).fromJson(in);
                         case "type" -> initializer.type = moshi.adapter(PersistentDataType.class).fromJson(in);
                         case "value" -> {
@@ -70,7 +74,7 @@ public final class PersistentDataEntryAdapterFactory implements JsonAdapter.Fact
                                 throw new JsonDataException("Property 'value' must be specified AFTER 'type' at " + in.getPath());
                             initializer.value = moshi.adapter(initializer.type.getComplexType()).fromJson(in);
                         }
-                        default -> in.skipValue();
+                        default -> throw new JsonDataException("Unexpected field at " + in.getPath() + ": " + nextName);
                     }
                 }
                 // ...
