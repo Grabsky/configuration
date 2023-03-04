@@ -29,8 +29,7 @@ import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Internal
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@Internal @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Conditions {
 
     /**
