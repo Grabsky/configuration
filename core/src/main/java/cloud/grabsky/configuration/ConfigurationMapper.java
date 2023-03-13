@@ -168,13 +168,14 @@ public class ConfigurationMapper {
     private static JsonReader atPath(final JsonReader reader, final String path) throws IOException, IllegalArgumentException {
         final String jPath = "$." + path;
         reader.setLenient(true);
-        // ...
+        // "Walking" over the JsonReader in search of matching path...
         while (reader.peek() != Token.END_DOCUMENT) {
+            // Returning JsonReader as soon as both paths are equal
             if (reader.getPath().equals(jPath) == true)
                 return reader;
             // ...
             switch (reader.peek()) {
-                case NAME -> reader.nextName(); // ignoring the result
+                case NAME -> reader.nextName(); // JsonReader#skipName() makes path full of nulls for some reason.
                 case BEGIN_OBJECT -> reader.beginObject();
                 case END_OBJECT -> reader.endObject();
                 case BEGIN_ARRAY -> reader.beginArray();
