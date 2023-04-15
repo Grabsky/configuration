@@ -31,7 +31,6 @@ import com.squareup.moshi.Moshi;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import okio.Okio;
-import okio.Source;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -89,9 +88,7 @@ public class ConfigurationMapper {
             var configurationClass = holder.getConfigurationClass();
             final File configurationFile = holder.getFile();
             // ...
-            try (final Source source = Okio.source(configurationFile)) {
-                // Converting JSON string (from a BufferedReader) to JsonElement
-                final JsonReader reader = JsonReader.of(Okio.buffer(source));
+            try (final JsonReader reader = JsonReader.of(Okio.buffer(Okio.source(configurationFile)))) {
                 // Parsing values and collecting them to FieldDataContainer
                 final Map<String, FieldData> container = this.collect(configurationClass, reader);
                 // Adding container to the map
