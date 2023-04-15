@@ -36,6 +36,7 @@ import com.squareup.moshi.Moshi;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.CreatureSpawner;
@@ -55,12 +56,13 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Set;
 import java.util.UUID;
 
 import static cloud.grabsky.configuration.util.LazyInit.notNull;
 import static com.squareup.moshi.Types.getRawType;
+import static net.kyori.adventure.text.Component.empty;
 
 /**
  * Creates {@link JsonAdapter JsonAdapter&lt;ItemStack&gt;} which converts JSON object to {@link ItemStack}.
@@ -177,10 +179,10 @@ public final class ItemStackAdapterFactory implements JsonAdapter.Factory {
             // for ItemStack > ItemMeta
             item.editMeta((meta) -> {
                 if (name != null)
-                    meta.displayName(name);
+                    meta.displayName(empty().decoration(TextDecoration.ITALIC, false).append(name));
 
                 if (lore != null)
-                    meta.lore(List.of(lore));
+                    meta.lore(Arrays.stream(lore).map(line -> (Component) empty().decoration(TextDecoration.ITALIC, false).append(line)).toList());
 
                 if (customModelData != null)
                     meta.setCustomModelData(customModelData);
