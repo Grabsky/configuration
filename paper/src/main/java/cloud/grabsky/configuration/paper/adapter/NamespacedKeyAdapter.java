@@ -55,8 +55,12 @@ public final class NamespacedKeyAdapter extends JsonAdapter<NamespacedKey> {
     }
 
     @Override
-    public void toJson(final @NotNull JsonWriter out, final NamespacedKey value) {
-        throw new UnsupportedOperationException("NOT IMPLEMENTED");
+    public void toJson(final @NotNull JsonWriter out, final NamespacedKey value) throws IOException {
+        if (value == null)
+            throw new JsonDataException("Expected " + NamespacedKey.class.getName() + " but found: " + null);
+        // ...
+        out.value(value.asString());
+
     }
 
 }
