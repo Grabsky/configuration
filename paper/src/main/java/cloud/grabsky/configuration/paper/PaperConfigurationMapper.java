@@ -36,6 +36,7 @@ import cloud.grabsky.configuration.paper.adapter.PersistentDataEntryAdapterFacto
 import cloud.grabsky.configuration.paper.adapter.PersistentDataTypeAdapterFactory;
 import cloud.grabsky.configuration.paper.adapter.SoundAdapterFactory;
 import cloud.grabsky.configuration.paper.adapter.SoundSourceAdapter;
+import cloud.grabsky.configuration.paper.adapter.WorldAdapterFactory;
 import com.squareup.moshi.Moshi;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
@@ -80,6 +81,7 @@ public final class PaperConfigurationMapper extends ConfigurationMapper {
         builder.add(PersistentDataEntryAdapterFactory.INSTANCE);
         builder.add(PersistentDataTypeAdapterFactory.INSTANCE);
         builder.add(SoundAdapterFactory.INSTANCE);
+        builder.add(WorldAdapterFactory.INSTANCE);
         // accepting user-specified consumer (if not null)
         if (consumer != null)
             consumer.accept(builder);
