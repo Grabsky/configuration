@@ -29,7 +29,6 @@ dependencies {
     implementation 'cloud.grabsky:configuration-core:[version]'
 }
 ```
-Consider **[relocating](https://imperceptiblethoughts.com/shadow/configuration/relocation/)** to prevent version mismatch issues.
 
 <br />
 
