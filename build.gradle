@@ -8,7 +8,7 @@ subprojects { subproject ->
     apply(plugin: "maven-publish")
 
     group = "cloud.grabsky"
-    version = "0.9.7"
+    version = "0.9.8-SNAPSHOT"
 
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
@@ -35,15 +35,6 @@ subprojects { subproject ->
         }
     }
 
-    java {
-        withSourcesJar()
-        withJavadocJar()
-    }
-
-    javadoc {
-        (options as CoreJavadocOptions).addStringOption("Xdoclint:none", "-quiet")
-    }
-
     repositories {
         mavenCentral()
     }
@@ -54,6 +45,15 @@ subprojects { subproject ->
         // lombok
         compileOnly("org.projectlombok:lombok:1.18.26")
         annotationProcessor("org.projectlombok:lombok:1.18.26")
+    }
+
+    java {
+        withSourcesJar()
+        withJavadocJar()
+    }
+
+    javadoc {
+        (options as CoreJavadocOptions).addStringOption("Xdoclint:none", "-quiet")
     }
 
 }
