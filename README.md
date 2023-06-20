@@ -26,7 +26,7 @@ repositories {
 Then specify dependency:
 ```groovy
 dependencies {
-    implementation 'cloud.grabsky:configuration-core:[version]'
+    implementation 'cloud.grabsky:configuration-core:[_VERSION_]'
 }
 ```
 

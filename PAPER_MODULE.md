@@ -24,7 +24,7 @@ Then specify dependency:
 
 ```groovy
 dependencies {
-    implementation 'cloud.grabsky:configuration-paper:[version]'
+    implementation 'cloud.grabsky:configuration-paper:[_VERSION_]'
 }
 ```
 
