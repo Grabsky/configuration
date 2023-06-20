@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 Grabsky
+ * Copyright (c) 2023 Grabsky <44530932+Grabsky@users.noreply.github.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -23,13 +23,18 @@
  */
 package cloud.grabsky.configuration.paper.object;
 
+import cloud.grabsky.configuration.util.LazyInit;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.bukkit.enchantments.Enchantment;
 import org.jetbrains.annotations.NotNull;
 
-@AllArgsConstructor(access = AccessLevel.PUBLIC)
+import static cloud.grabsky.configuration.util.LazyInit.notNull;
+import static org.jetbrains.annotations.ApiStatus.Internal;
+
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class EnchantmentEntry {
 
     @Getter(AccessLevel.PUBLIC)
@@ -37,5 +42,23 @@ public final class EnchantmentEntry {
 
     @Getter(AccessLevel.PUBLIC)
     private final int level;
+
+    /* LAZY INITIALIZER / BUILDER */
+
+    @Internal @NoArgsConstructor(access = AccessLevel.PUBLIC)
+    public static final class Init implements LazyInit<EnchantmentEntry> {
+
+        public Enchantment enchantment;
+        public Integer level;
+
+        @Override
+        public EnchantmentEntry init() throws IllegalStateException {
+            return new EnchantmentEntry(
+                    notNull(enchantment, "enchantment", Enchantment.class),
+                    notNull(level, "enchantment", Integer.class)
+            );
+        }
+
+    }
 
 }

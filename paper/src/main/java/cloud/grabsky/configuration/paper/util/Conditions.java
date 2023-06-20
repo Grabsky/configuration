@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 Grabsky
+ * Copyright (c) 2023 Grabsky <44530932+Grabsky@users.noreply.github.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -29,8 +29,7 @@ import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Internal
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@Internal @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Conditions {
 
     /**

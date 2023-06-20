@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 Grabsky
+ * Copyright (c) 2023 Grabsky <44530932+Grabsky@users.noreply.github.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -21,18 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package cloud.grabsky.configuration.paper.exception;
+package cloud.grabsky.configuration.exception;
 
-import com.google.gson.JsonParseException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import cloud.grabsky.configuration.JsonConfiguration;
 
-import java.lang.reflect.Type;
+import java.io.File;
 
-public class JsonFormatException extends JsonParseException {
+/**
+ * {@link ConfigurationMappingException} is thrown when mapping of configuration file fails.
+ *
+ * @apiNote Use {@link #getCause()} to know the cause of failure.
+ */
+public class ConfigurationMappingException extends RuntimeException {
 
-    public JsonFormatException(@NotNull final Type type, @Nullable final Object value) {
-        super("[" + type.getTypeName() + "] An error occurred during (de)serialization of: " + value);
+    public ConfigurationMappingException(final Class<? extends JsonConfiguration> configurationClass, final File file, final Throwable cause) {
+        super("An error occurred during mapping of " + file.getPath() + " to " + configurationClass.getSimpleName(), cause);
     }
 
 }

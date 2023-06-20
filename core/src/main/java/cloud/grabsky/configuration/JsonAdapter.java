@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 Grabsky
+ * Copyright (c) 2023 Grabsky <44530932+Grabsky@users.noreply.github.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -21,15 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package cloud.grabsky.configuration.paper.exception;
+package cloud.grabsky.configuration;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Indicates that resource with provided name does not exist in plugin classpath. (main/resources/)
+ * Specifies on-demand {@link com.squareup.moshi.JsonAdapter JsonAdapter} that will be then used for this field.
  */
-public final class ResourceNotFoundException extends Exception {
-
-    public ResourceNotFoundException(final String name) {
-        super("File named'" + name + "' was not found in plugin resources file.");
-    }
-
+@Target(ElementType.FIELD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface JsonAdapter {
+    Class<? extends com.squareup.moshi.JsonAdapter<?>> fromJson();
 }

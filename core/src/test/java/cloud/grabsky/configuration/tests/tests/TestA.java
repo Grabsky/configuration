@@ -1,13 +1,14 @@
 package cloud.grabsky.configuration.tests.tests;
 
-import cloud.grabsky.configuration.Configuration;
+import cloud.grabsky.configuration.JsonConfiguration;
 import cloud.grabsky.configuration.JsonPath;
-import cloud.grabsky.configuration.exception.ConfigurationException;
-import cloud.grabsky.configuration.tests.util.TestUtil;
+import cloud.grabsky.configuration.exception.ConfigurationMappingException;
 import cloud.grabsky.configuration.tests.JsonTest;
+import cloud.grabsky.configuration.tests.util.TestUtil;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -17,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class TestA extends JsonTest {
 
     @Test
-    public void checkTypes() throws ConfigurationException {
+    public void checkTypes() throws ConfigurationMappingException {
         final File file = TestUtil.getFileFromClassPath("test_a.json");
 
         if (file == null || file.exists() == false)
@@ -30,15 +31,14 @@ public class TestA extends JsonTest {
         assertEquals(7.777777D, Config.TEST_C);
         assertEquals("OK", Config.TEST_D);
         assertEquals("OK", Config.TEST_E);
-        assertEquals("OK", Config.TEST_F);
-        assertEquals("OK", Config.TEST_G);
+        assertEquals("OK", Config.TEST_F.get(1));
         assertEquals(UUID.fromString("456fb8eb-f13d-4a34-8284-67e2469b634d"), Config.TEST_H);
 
         assertTrue(Config.WAS_RELOADED);
 
     }
 
-    public static final class Config extends Configuration {
+    public static final class Config implements JsonConfiguration {
         public static boolean WAS_RELOADED = false;
 
         @JsonPath("simpleString")
@@ -56,11 +56,8 @@ public class TestA extends JsonTest {
         @JsonPath("firstObject.secondObject.simpleString")
         public static String TEST_E;
 
-        @JsonPath("simpleArray[1]")
-        public static String TEST_F;
-
-        @JsonPath("complexArray[0].simpleString")
-        public static String TEST_G;
+        @JsonPath("simpleArray")
+        public static List<String> TEST_F;
 
         @JsonPath("uuid")
         public static UUID TEST_H;

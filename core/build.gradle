@@ -3,10 +3,12 @@ test {
 }
 
 dependencies {
-    // junit-team/junit5
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.1'
-    // google/gson
-    api 'com.google.code.gson:gson:2.9.1'
-    testImplementation 'com.google.code.gson:gson:2.9.1'
+    // junit5
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.2")
+    // jetbrains annotations (test)
+    testRuntimeOnly("org.jetbrains:annotations:24.0.0")
+    // moshi
+    api('com.squareup.moshi:moshi:1.14.0')
+    testRuntimeOnly("com.squareup.moshi:moshi:1.14.0")
 }

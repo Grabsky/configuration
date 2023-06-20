@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 Grabsky
+ * Copyright (c) 2023 Grabsky <44530932+Grabsky@users.noreply.github.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -23,11 +23,9 @@
  */
 package cloud.grabsky.configuration.paper.util;
 
-import cloud.grabsky.configuration.paper.exception.ResourceNotFoundException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.bukkit.plugin.Plugin;
-import org.jetbrains.annotations.ApiStatus.Internal;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -35,11 +33,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-@Internal
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Resources {
 
-    // Copies InputStream to a file
+    /**
+     * Writes {@link InputStream} to a specified {@link File}.
+     */
     public static void copy(final InputStream is, final File file) throws IOException {
         // Reading file as InputStream
         final OutputStream os = new FileOutputStream(file);
@@ -49,14 +48,18 @@ public final class Resources {
         os.close();
     }
 
-    public static void ensureResourceExistence(final Plugin plugin, final File file) throws ResourceNotFoundException, IOException {
+    /**
+     * Ensures specified {@link File} exists and returns it. In case {@link File} does not exist, it gets copied from {@code classpath/resources/} directory.
+     */
+    public static File ensureResourceExistence(final Plugin plugin, final File file) throws IOException {
         // Returning if file already exist
-        if (file.exists() != false) return;
+        if (file.exists() != false)
+            return file;
         // ...
         final InputStream in = plugin.getResource(file.getName());
         // Throwing 'ResourceNotFoundException' if file does not exist in 'main/resources' directory.
         if (in == null)
-            throw new ResourceNotFoundException(file.getName());
+            throw new IOException("File " + file.getPath() + " does not exist.");
         //
         file.getParentFile().mkdirs();
         file.createNewFile();
@@ -66,5 +69,8 @@ public final class Resources {
         out.write(in.readAllBytes());
         // Closing 'FileOutputStream'
         out.close();
+        // Returning
+        return file;
     }
+
 }

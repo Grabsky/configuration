@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 Grabsky
+ * Copyright (c) 2023 Grabsky <44530932+Grabsky@users.noreply.github.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -21,21 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package cloud.grabsky.configuration.paper.object;
+package cloud.grabsky.configuration.util;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-@AllArgsConstructor(access = AccessLevel.PUBLIC)
-public final class PersistentDataTypeHolder<T, K> {
+public interface LazyInit<T> {
 
-    @Getter(AccessLevel.PUBLIC)
-    private final @NotNull String key;
-
-    @Getter(AccessLevel.PUBLIC)
-    private final @NotNull PersistentDataType<T, K> type;
+    T init() throws IllegalStateException;
+    
+    static <T> T notNull(final @Nullable T obj, final @NotNull String field, final @NotNull Class<T> type) throws IllegalStateException {
+        if (obj == null)
+            throw new IllegalStateException("Field " + field + " : " + type.getName() + " cannot be null.");
+        // ...
+        return obj;
+    }
 
 }

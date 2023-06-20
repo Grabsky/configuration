@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 Grabsky
+ * Copyright (c) 2023 Grabsky <44530932+Grabsky@users.noreply.github.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -21,14 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package cloud.grabsky.configuration.exception;
+package cloud.grabsky.configuration.paper.adapter;
 
-import java.io.File;
+import cloud.grabsky.configuration.adapter.AbstractEnumJsonAdapter;
+import org.bukkit.inventory.ItemFlag;
 
-/** Use {@link #getCause} to get instance of exception that caused this exception to be thrown. */
-public class ConfigurationException extends RuntimeException {
+/**
+ * Converts {@link String} to {@link ItemFlag} using case-insensitive strategy.
+ */
+public final class ItemFlagAdapter extends AbstractEnumJsonAdapter<ItemFlag> {
+    /* SINGLETON */ public static final ItemFlagAdapter INSTANCE = new ItemFlagAdapter();
 
-    public ConfigurationException(final Class<?> configurationClass, final File file, final Throwable cause) {
-        super("An error occurred during mapping of " + file.getPath() + " (class = " + configurationClass.getSimpleName() + ")", cause);
+    private ItemFlagAdapter() {
+        super(ItemFlag.class, false);
     }
+
 }

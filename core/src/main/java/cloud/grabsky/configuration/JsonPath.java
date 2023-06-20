@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 Grabsky
+ * Copyright (c) 2023 Grabsky <44530932+Grabsky@users.noreply.github.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -41,9 +41,7 @@ import java.lang.annotation.Target;
  *     }
  *   }
  * </pre>
- * Element: {@code @JsonPath("customer.name")} <br>
- * Whole array: {@code @JsonPath("customer.invoices")} <br>
- * Element from array: {@code @JsonPath("customer.invoices[0]")}
+ * Now to get {@code name} of the {@code customer}, which is {@code "John Smith"}, do {@code @JsonPath("customer.name")}
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
