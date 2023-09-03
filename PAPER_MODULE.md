@@ -1,12 +1,17 @@
-# grabsky/configuration-paper
-[![](https://github.com/Grabsky/configuration/actions/workflows/gradle.yml/badge.svg)](https://github.com/Grabsky/configuration/actions/workflows/gradle.yml)
-[![](https://www.codefactor.io/repository/github/grabsky/configuration/badge/main)](https://www.codefactor.io/repository/github/grabsky/configuration/overview/main)  
+# configuration-paper
+<span>
+    <a href=""><img alt="Latest Published Version" src="https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Frepo.grabsky.cloud%2Freleases%2Fcloud%2Fgrabsky%2Fconfiguration-paper%2Fmaven-metadata.xml&style=for-the-badge&logo=gradle&label=%20"></a>
+    <a href=""><img alt="Build Status" src="https://img.shields.io/github/actions/workflow/status/Grabsky/configuration/gradle.yml?style=for-the-badge&logo=github&logoColor=white&label=%20"></a>
+    <a href=""><img alt="CodeFactor Grade" src="https://img.shields.io/codefactor/grade/github/Grabsky/configuration/main?style=for-the-badge&logo=codefactor&logoColor=white&label=%20"></a>
+</span>
+<p></p>
+
 This module adds serializers for common Bukkit objects. Check out **[Adapters](#adapters)** and **[Syntax](#syntax)** sections below for more reference.
 
 <br />
 
 ## Requirements
-Requires **Java 17** (or higher) and **Paper 1.19** (or higher).
+Requires **Java 17** (or higher) and **Paper 1.20.1** (or higher).
 
 <br />
 
@@ -16,7 +21,7 @@ To use this project in your plugin, add following repository:
 
 ```groovy
 repositories {
-    maven { url = 'https://repo.grabsky.cloud/releases' }
+    maven { url = 'https://repo.grabsky.cloud/releases/' }
 }
 ```
 
@@ -27,9 +32,7 @@ dependencies {
     implementation 'cloud.grabsky:configuration-paper:[_VERSION_]'
 }
 ```
-
-Consider **[relocating](https://imperceptiblethoughts.com/shadow/configuration/relocation/)** to prevent version
-mismatch issues. This can be ignored if your plugin is a **[Paper plugin](https://docs.papermc.io/paper/dev/getting-started/paper-plugins)** with **[isolated classloader](https://docs.papermc.io/paper/dev/getting-started/paper-plugins#classloading-isolation)**.
+You can also use [GitHub Packages](https://github.com/Grabsky/configuration/packages/) - read more about that [here](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-gradle-registry#using-a-published-package).
 
 <br />
 

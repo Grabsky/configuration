@@ -3,36 +3,52 @@ plugins {
     id("maven-publish")
 }
 
+group = "cloud.grabsky"
+version = "1.20.1-${System.getenv("GITHUB_RUN_NUMBER") ?: "dev"}"
+
 subprojects { subproject ->
     apply(plugin: "java-library")
     apply(plugin: "maven-publish")
 
-    group = "cloud.grabsky"
-    version = "0.9.7"
+    group = rootProject.group
+    version = rootProject.version
 
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
 
-    final Boolean isSnapshot = version.endsWith("-SNAPSHOT")
-    final String hash7 = "git rev-parse --verify --short HEAD".execute().text.trim()
-
     publishing {
         repositories {
             maven {
-                name 'Cloud'
-                url (isSnapshot == true ? "https://repo.grabsky.cloud/snapshots" : "https://repo.grabsky.cloud/releases")
+                url = "https://repo.grabsky.cloud/releases/"
+                authentication { basic(BasicAuthentication) }
                 credentials {
                     username = System.getenv("REPO_USERNAME")
                     password = System.getenv("REPO_SECRET")
                 }
             }
-        }
-        publications {
-            maven(MavenPublication) {
-                version = (isSnapshot == true ? hash7 : version)
-                from components.java
+            maven {
+                url = "https://maven.pkg.github.com/Grabsky/configuration"
+                credentials {
+                    username = System.getenv("GITHUB_ACTOR")
+                    password = System.getenv("GITHUB_TOKEN")
+                }
             }
         }
+        publications {
+            maven(MavenPublication) { from components.java }
+        }
+    }
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        // JetBrains Annotations
+        compileOnly("org.jetbrains:annotations:24.0.0")
+        // Lombok
+        compileOnly("org.projectlombok:lombok:1.18.26")
+        annotationProcessor("org.projectlombok:lombok:1.18.26")
     }
 
     java {
@@ -42,18 +58,6 @@ subprojects { subproject ->
 
     javadoc {
         (options as CoreJavadocOptions).addStringOption("Xdoclint:none", "-quiet")
-    }
-
-    repositories {
-        mavenCentral()
-    }
-
-    dependencies {
-        // jetbrains annotations
-        compileOnly("org.jetbrains:annotations:24.0.0")
-        // lombok
-        compileOnly("org.projectlombok:lombok:1.18.26")
-        annotationProcessor("org.projectlombok:lombok:1.18.26")
     }
 
 }
