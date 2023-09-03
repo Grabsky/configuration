@@ -1,7 +1,12 @@
-# grabsky/configuration
-[![](https://github.com/Grabsky/configuration/actions/workflows/gradle.yml/badge.svg)](https://github.com/Grabsky/configuration/actions/workflows/gradle.yml)
-[![](https://www.codefactor.io/repository/github/grabsky/configuration/badge/main)](https://www.codefactor.io/repository/github/grabsky/configuration/overview/main)  
-Experimental library based on **[square/moshi](https://github.com/square/moshi)** that lets you map JSON configuration files to static fields. Breaking changes are likely to happen before a stable release, use at your own risk.
+# configuration
+<span>
+    <a href=""><img alt="Latest Published Version" src="https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Frepo.grabsky.cloud%2Freleases%2Fcloud%2Fgrabsky%2Fconfiguration-core%2Fmaven-metadata.xml&style=for-the-badge&logo=gradle&label=%20"></a>
+    <a href=""><img alt="Build Status" src="https://img.shields.io/github/actions/workflow/status/Grabsky/configuration/gradle.yml?style=for-the-badge&logo=github&logoColor=white&label=%20"></a>
+    <a href=""><img alt="CodeFactor Grade" src="https://img.shields.io/codefactor/grade/github/Grabsky/configuration/main?style=for-the-badge&logo=codefactor&logoColor=white&label=%20"></a>
+</span>
+<p></p>
+
+Experimental library based on [square/moshi](https://github.com/square/moshi) that lets you map JSON configuration files to static fields.
 
 <br />
 
@@ -11,24 +16,24 @@ Requires **Java 17** (or higher).
 <br />
 
 ## Paper
-If you're planning to use this library for your **[PaperMC/Paper](https://github.com/PaperMC/Paper)** plugins, you may find **[paper module](https://github.com/Grabsky/configuration/blob/main/PAPER_MODULE.md)** useful.
+If you're planning to use this library for your [PaperMC/Paper](https://github.com/PaperMC/Paper) plugins, you may find [paper module](https://github.com/Grabsky/configuration/blob/main/PAPER_MODULE.md) useful.
 
 <br />
-
 
 ## Getting Started
 To use this project in your plugin, add following repository:
 ```groovy
 repositories {
-    maven { url = 'https://repo.grabsky.cloud/releases' }
+    maven { url = 'https://repo.grabsky.cloud/releases/' }
 }
 ```
 Then specify dependency:
 ```groovy
 dependencies {
-    implementation 'cloud.grabsky:configuration-core:[_VERSION_]'
+    implementation 'cloud.grabsky:configuration:[_VERSION_]'
 }
 ```
+You can also use [GitHub Packages](https://github.com/Grabsky/configuration/packages/) - read more about that [here](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-gradle-registry#using-a-published-package).
 
 <br />
 

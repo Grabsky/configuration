@@ -29,6 +29,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.bukkit.enchantments.Enchantment;
+import org.checkerframework.checker.index.qual.PolyUpperBound;
 import org.jetbrains.annotations.NotNull;
 
 import static cloud.grabsky.configuration.util.LazyInit.notNull;
@@ -45,7 +46,7 @@ public final class EnchantmentEntry {
 
     /* LAZY INITIALIZER / BUILDER */
 
-    @Internal @NoArgsConstructor(access = AccessLevel.PUBLIC)
+    @Internal @AllArgsConstructor(access = AccessLevel.PUBLIC) @NoArgsConstructor(access = AccessLevel.PUBLIC)
     public static final class Init implements LazyInit<EnchantmentEntry> {
 
         public Enchantment enchantment;
