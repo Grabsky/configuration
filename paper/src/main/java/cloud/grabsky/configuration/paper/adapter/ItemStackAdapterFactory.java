@@ -126,6 +126,9 @@ public final class ItemStackAdapterFactory implements JsonAdapter.Factory {
         @Json(name = "durability")
         private final @Nullable Integer durability;
 
+        @Json(name = "components")
+        private final @Nullable String components;
+
         public static @Nullable ItemMetaSurrogate fromItemMeta(final @Nullable ItemMeta meta) {
             if (meta == null)
                 return null;
@@ -136,16 +139,17 @@ public final class ItemStackAdapterFactory implements JsonAdapter.Factory {
                     (meta.hasCustomModelData() == true && meta.getCustomModelData() != 0) ? meta.getCustomModelData() : null,
                     (meta.getItemFlags().isEmpty() == false) ? meta.getItemFlags().toArray(new ItemFlag[0]) : null,
                     (meta.hasEnchants() == true && meta.getEnchants().isEmpty() == false) ? (EnchantmentEntry[]) meta.getEnchants().entrySet().stream().map((e) -> new EnchantmentEntry.Init(e.getKey(), e.getValue()).init()).toArray() : null,
-                    null, // NOT (YET) SUPPORTED; Complicated due to PDC storing not storing types.
+                    null, // NOT (YET) SUPPORTED; Complicated due to PDC not storing types.
                     null, // NOT (YET) SUPPORTED; Possible but need to double-check what value is expected there.
-                    null  // NOT (YET) SUPPORTED; May need changing durability to damage as ItemMeta has no idea about the max durability.
+                    null, // NOT (YET) SUPPORTED; May need changing durability to damage as ItemMeta has no idea about the max durability.
+                    null  // NOT SUPPORTED; Unlikely to be in the future.
 
             );
         }
 
         @SuppressWarnings("unchecked")
-        public @NotNull ItemMeta init(final @NotNull Material material) {
-            final ItemMeta meta = Bukkit.getItemFactory().getItemMeta(material);
+        public @NotNull ItemMeta init(final @NotNull ItemStack item) {
+            final ItemMeta meta = item.getItemMeta();
             // ...
             if (name != null)
                 meta.displayName(empty().decoration(TextDecoration.ITALIC, false).append(name));
@@ -171,7 +175,7 @@ public final class ItemStackAdapterFactory implements JsonAdapter.Factory {
 
             // for ItemStack > ItemMeta > Damageable
             if (durability != null && meta instanceof Damageable damageable)
-                damageable.setDamage(material.getMaxDurability() - Math.max(0, durability));
+                damageable.setDamage(item.getType().getMaxDurability() - Math.max(0, durability));
 
             // for ItemStack > ItemMeta > SkullMeta
             if (skullTexture != null && meta instanceof SkullMeta skullMeta) {
@@ -209,8 +213,14 @@ public final class ItemStackAdapterFactory implements JsonAdapter.Factory {
         public ItemStack init() {
             final ItemStack item = new ItemStack(material, (amount != null) ? amount : 1);
             // ...
-            if (meta != null)
-                item.setItemMeta(meta.init(material));
+            if (meta != null) {
+                // Applying components if specified.
+                if (meta.components != null)
+                    Bukkit.getUnsafe().modifyItemStack(item, item.getType().getKey().asString() + meta.components);
+                // Applying other meta.
+                item.setItemMeta(meta.init(item));
+
+            }
             // ...
             return item;
         }
