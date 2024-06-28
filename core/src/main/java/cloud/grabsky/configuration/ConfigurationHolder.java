@@ -29,6 +29,8 @@ import lombok.RequiredArgsConstructor;
 
 import java.io.File;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Holds information about single configuration element.
  */
@@ -48,7 +50,7 @@ public final class ConfigurationHolder<T extends JsonConfiguration> {
      * @param configurationFile {@link File} containing json configuration.
      * @return a new instance of {@link ConfigurationHolder}.
      */
-    public static <T extends JsonConfiguration> ConfigurationHolder<T> of(final Class<T> configurationClass, final File configurationFile) {
+    public static <T extends JsonConfiguration> ConfigurationHolder<T> of(final @NotNull Class<T> configurationClass, final @NotNull File configurationFile) {
         return new ConfigurationHolder<>(configurationClass, configurationFile);
     }
 

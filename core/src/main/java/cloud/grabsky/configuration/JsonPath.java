@@ -28,6 +28,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Specifies json path of the value. Used for field mapping. <br>
  * <pre>
@@ -46,5 +48,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface JsonPath {
-    String value();
+    @NotNull String value();
 }

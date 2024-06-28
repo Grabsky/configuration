@@ -28,11 +28,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Specifies on-demand {@link com.squareup.moshi.JsonAdapter JsonAdapter} that will be then used for this field.
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface JsonAdapter {
-    Class<? extends com.squareup.moshi.JsonAdapter<?>> fromJson();
+    @NotNull Class<? extends com.squareup.moshi.JsonAdapter<?>> fromJson();
 }

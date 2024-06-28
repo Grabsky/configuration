@@ -55,7 +55,7 @@ public class ConfigurationMapper {
      * @param moshi {@link Moshi} instance.
      * @return a new instance of {@link ConfigurationMapper}.
      */
-    public static @NotNull ConfigurationMapper create(@NotNull final Moshi moshi) {
+    public static @NotNull ConfigurationMapper create(final @NotNull Moshi moshi) {
         return new ConfigurationMapper(moshi);
     }
 
@@ -68,7 +68,7 @@ public class ConfigurationMapper {
      * @param configurationFile {@link File} containing json configuration.
      * @throws ConfigurationMappingException when configuration fails to load.
      */
-    public final <T extends JsonConfiguration> void map(@NotNull final Class<T> configurationClass, @NotNull final File configurationFile) throws ConfigurationMappingException {
+    public final <T extends JsonConfiguration> void map(final @NotNull Class<T> configurationClass, final @NotNull File configurationFile) throws ConfigurationMappingException {
         this.map(ConfigurationHolder.of(configurationClass, configurationFile));
     }
 
@@ -81,7 +81,7 @@ public class ConfigurationMapper {
      * @throws ConfigurationMappingException when configuration fails to load.
      */
     @SafeVarargs
-    public final void map(@NotNull final ConfigurationHolder<? extends JsonConfiguration>... holders) throws ConfigurationMappingException {
+    public final void map(final @NotNull ConfigurationHolder<? extends JsonConfiguration>... holders) throws ConfigurationMappingException {
         final Map<ConfigurationHolder<?>, Map<String, FieldData>> configurations = new LinkedHashMap<>();
         // Step 1: Collecting values
         for (var holder : holders) {
@@ -111,7 +111,7 @@ public class ConfigurationMapper {
     }
 
     // Parses and "collects" values defined in configuration class. Fields not annotated with @JsonPath annotation are ignored.
-    private <T extends JsonConfiguration> Map<String, FieldData> collect(@NotNull final Class<T> configurationClass, @NotNull final JsonReader reader) throws IOException, IllegalArgumentException {
+    private <T extends JsonConfiguration> Map<String, FieldData> collect(final @NotNull Class<T> configurationClass, final @NotNull JsonReader reader) throws IOException, IllegalArgumentException {
         final Map<String, FieldData> container = new HashMap<>();
         // For each declared field...
         for (final Field field : configurationClass.getDeclaredFields()) {
@@ -145,7 +145,7 @@ public class ConfigurationMapper {
     /* STATIC HELPERS */
 
     // Updates field values to stored those inside FieldDataContainer. Other fields are ignored.
-    private static <T extends JsonConfiguration> void insert(@NotNull final Class<T> configurationClass, @NotNull final Map<String, FieldData> fields) throws IllegalAccessException, IllegalArgumentException {
+    private static <T extends JsonConfiguration> void insert(final @NotNull Class<T> configurationClass, final @NotNull Map<String, FieldData> fields) throws IllegalAccessException, IllegalArgumentException {
         for (final Field field : configurationClass.getDeclaredFields()) {
             final String fieldName = field.getName();
             // Setting values for matching fields
@@ -156,19 +156,18 @@ public class ConfigurationMapper {
     }
 
     // TO-DO: Use bitwise operator instead.
-    private static boolean isStaticNonFinal(final Field field) {
+    private static boolean isStaticNonFinal(final @NotNull Field field) {
         final int modifiers = field.getModifiers();
         return Modifier.isStatic(modifiers) == true && Modifier.isFinal(modifiers) == false;
     }
 
     // "Puts" JsonReader at a specified path.
-    private static JsonReader atPath(final JsonReader reader, final String path) throws IOException, IllegalArgumentException {
-        final String jPath = "$." + path;
+    private static JsonReader atPath(final @NotNull JsonReader reader, final @NotNull String path) throws IOException, IllegalArgumentException {
         reader.setLenient(true);
         // "Walking" over the JsonReader in search of matching path...
         while (reader.peek() != Token.END_DOCUMENT) {
             // Returning JsonReader as soon as both paths are equal
-            if (reader.getPath().equals(jPath) == true)
+            if (reader.getPath().equals("$." + path) == true)
                 return reader;
             // ...
             switch (reader.peek()) {
@@ -185,7 +184,7 @@ public class ConfigurationMapper {
     }
 
     // Creates an instance of provided Class<T> or throws IllegalAccessException if failed.
-    private static <T> T createInstance(final Class<T> clazz) throws IllegalArgumentException {
+    private static <T> T createInstance(final @NotNull Class<T> clazz) throws IllegalArgumentException {
         try {
             return (clazz.isEnum() == true) ? clazz.getEnumConstants()[0] : clazz.getConstructor().newInstance();
         } catch (final InstantiationException | InvocationTargetException | NoSuchMethodException | IllegalAccessException error) {
