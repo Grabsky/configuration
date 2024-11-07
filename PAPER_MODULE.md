@@ -10,7 +10,7 @@ This module adds serializers for common Bukkit objects. Check out **[Adapters](#
 <br />
 
 ## Requirements
-Requires **Java 17** (or higher) and **Paper 1.20.1** (or higher).
+Requires **Java 21** (or higher) and **Paper 1.21.3** (or higher).
 
 <br />
 
@@ -145,7 +145,11 @@ This is an example of what serializers are capable of:
 
       // optional (defaults to none, empty meta)
       "meta": {
+
           "name": "<red>You can use <rainbow>MiniMessage<red> here!",
+  
+          // custom name can be changed in the anvil
+          "custom_name": "<rainbow>MiniMessage<red> is also supported here!",
 
           "lore": ["<red>and here too."],
 
@@ -161,6 +165,8 @@ This is an example of what serializers are capable of:
           "item_flags": ["HIDE_ATTRIBUTES", "HIDE_DESTROYS", "HIDE_DYE", "HIDE_ENCHANTS", "HIDE_PLACED_ON", "HIDE_POTION_EFFECTS", "HIDE_UNBREAKABLE"],
 
           "custom_model_data": 7,
+
+          "model": "my_namespace:my_model_key",
 
           "persistent_data_container":[
               { "key": "configuration:a", "type": "byte", "value": 0 },
@@ -179,6 +185,9 @@ This is an example of what serializers are capable of:
 
           // exclusive to 'damageable' items like tools and armor
           "durability": 1,
+
+          // food component
+          "food": { "nutrition": 1, "saturation": 0.2, "can_always_eat": true },
 
           // exclusive to player heads
           "skull_texture": "BASE64_ENCODED_VALUE",
