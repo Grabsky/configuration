@@ -1,6 +1,5 @@
 # configuration-paper
 <span>
-    <a href=""><img alt="Latest Published Version" src="https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Frepo.grabsky.cloud%2Freleases%2Fcloud%2Fgrabsky%2Fconfiguration-paper%2Fmaven-metadata.xml&style=for-the-badge&logo=gradle&label=%20"></a>
     <a href=""><img alt="Build Status" src="https://img.shields.io/github/actions/workflow/status/Grabsky/configuration/gradle.yml?style=for-the-badge&logo=github&logoColor=white&label=%20"></a>
     <a href=""><img alt="CodeFactor Grade" src="https://img.shields.io/codefactor/grade/github/Grabsky/configuration/main?style=for-the-badge&logo=codefactor&logoColor=white&label=%20"></a>
 </span>
@@ -16,23 +15,23 @@ Requires **Java 17** (or higher) and **Paper 1.20.1** (or higher).
 <br />
 
 ## Getting Started
-
-To use this project in your plugin, add following repository:
-
+Library is published to the **[GitHub Packages Registry](https://github.com/Grabsky/configuration/packages/)** and may require additional configuration. You can find more details **[here](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-gradle-registry#using-a-published-package)**.
 ```groovy
 repositories {
-    maven { url = 'https://repo.grabsky.cloud/releases/' }
+    maven { url = "https://maven.pkg.github.com/grabsky/configuration"
+        credentials {
+            username = findProperty("gpr.actor") ?: System.getenv("GITHUB_ACTOR")
+            password = findProperty("gpr.token") ?: System.getenv("GITHUB_TOKEN")
+        }
+    }
 }
 ```
-
-Then specify dependency:
 
 ```groovy
 dependencies {
     implementation 'cloud.grabsky:configuration-paper:[_VERSION_]'
 }
 ```
-You can also use [GitHub Packages](https://github.com/Grabsky/configuration/packages/) - read more about that [here](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-gradle-registry#using-a-published-package).
 
 <br />
 
@@ -174,6 +173,9 @@ This is an example of what serializers are capable of:
               { "key": "configuration:h", "type": "double", "value": 7.5000005 },
               { "key": "configuration:i", "type": "string", "value": "Hello, World!" }
           ],
+  
+          // accepts NBT on <= 1.20.4 or item data components on >= 1.20.5
+          "components": "[food={nutrition:3,saturation:1}]"
 
           // exclusive to 'damageable' items like tools and armor
           "durability": 1,
@@ -201,6 +203,7 @@ This is an example of what serializers are capable of:
 
           // exclusive to spawners
           "spawner_spawn_count": 2
+
       }
   }
   ```
