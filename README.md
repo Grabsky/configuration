@@ -11,10 +11,10 @@ Small configuration library based on **[square/moshi](https://github.com/square/
 
 ## Requirements
 ### [Core](#usage)
-Requires **Java 17** (or higher).  
+Requires **Java 21** (or higher).  
 
 ### [Paper Module](https://github.com/Grabsky/configuration/blob/main/PAPER_MODULE.md)
-Requires **Java 17** (or higher) and **Paper 1.20.1** (or higher).
+Requires **Java 21** (or higher) and **Paper 1.21.3** (or higher).
 
 <br />
 
