@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "cloud.grabsky"
-version = "1.20.1-${System.getenv("GITHUB_RUN_NUMBER") ?: "DEV"}"
+version = "1.21.3-${System.getenv("GITHUB_RUN_NUMBER") ?: "DEV"}"
 
 subprojects { subproject ->
     apply(plugin: "java-library")
@@ -37,10 +37,10 @@ subprojects { subproject ->
 
     dependencies {
         // JetBrains Annotations
-        compileOnly("org.jetbrains:annotations:24.0.0")
+        compileOnly("org.jetbrains:annotations:26.0.1")
         // Lombok
-        compileOnly("org.projectlombok:lombok:1.18.26")
-        annotationProcessor("org.projectlombok:lombok:1.18.26")
+        compileOnly("org.projectlombok:lombok:1.18.34")
+        annotationProcessor("org.projectlombok:lombok:1.18.34")
     }
 
     java {
