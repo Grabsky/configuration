@@ -34,6 +34,7 @@ import com.squareup.moshi.JsonDataException;
 import com.squareup.moshi.JsonReader;
 import com.squareup.moshi.JsonWriter;
 import com.squareup.moshi.Moshi;
+import io.papermc.paper.datacomponent.DataComponentTypes;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
@@ -170,7 +171,7 @@ public final class ItemStackAdapterFactory implements JsonAdapter.Factory {
             final ItemMeta meta = item.getItemMeta();
 
             if (itemName != null)
-                meta.displayName(itemName);
+                meta.itemName(itemName);
 
             if (customName != null)
                 meta.displayName(empty().decoration(TextDecoration.ITALIC, false).append(customName));
