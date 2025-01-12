@@ -24,6 +24,7 @@
 package cloud.grabsky.configuration.paper;
 
 import cloud.grabsky.configuration.ConfigurationMapper;
+import cloud.grabsky.configuration.adapter.AbstractEnumJsonAdapter;
 import cloud.grabsky.configuration.paper.adapter.ComponentAdapter;
 import cloud.grabsky.configuration.paper.adapter.EnchantmentAdapterFactory;
 import cloud.grabsky.configuration.paper.adapter.EnchantmentEntryAdapterFactory;
@@ -42,6 +43,8 @@ import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemRarity;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -82,6 +85,8 @@ public final class PaperConfigurationMapper extends ConfigurationMapper {
         builder.add(PersistentDataTypeAdapterFactory.INSTANCE);
         builder.add(SoundAdapterFactory.INSTANCE);
         builder.add(WorldAdapterFactory.INSTANCE);
+        // enums
+        builder.add(ItemRarity.class, new AbstractEnumJsonAdapter<>(ItemRarity.class, false){});
         // accepting user-specified consumer (if not null)
         if (consumer != null)
             consumer.accept(builder);

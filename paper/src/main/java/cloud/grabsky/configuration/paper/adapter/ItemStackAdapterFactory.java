@@ -34,13 +34,13 @@ import com.squareup.moshi.JsonDataException;
 import com.squareup.moshi.JsonReader;
 import com.squareup.moshi.JsonWriter;
 import com.squareup.moshi.Moshi;
-import io.papermc.paper.datacomponent.DataComponentTypes;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemRarity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -118,6 +118,9 @@ public final class ItemStackAdapterFactory implements JsonAdapter.Factory {
         @Json(name = "lore")
         private final @NotNull Component @Nullable [] lore;
 
+        @Json(name = "rarity")
+        private final @Nullable ItemRarity rarity;
+
         @Json(name = "custom_model_data")
         private final @Nullable Integer customModelData;
 
@@ -153,6 +156,7 @@ public final class ItemStackAdapterFactory implements JsonAdapter.Factory {
                     (meta.hasItemName() == true) ? meta.itemName() : null,
                     (meta.hasDisplayName() == true && meta.displayName() != null) ? meta.displayName() : null,
                     (meta.hasLore() == true && meta.lore() != null) ? meta.lore().toArray(new Component[0]) : null, // Should never throw NPE.
+                    (meta.hasRarity() == true) ? meta.getRarity() : null,
                     (meta.hasCustomModelData() == true && meta.getCustomModelData() != 0) ? meta.getCustomModelData() : null,
                     (meta.hasItemModel() == true && meta.getItemModel() != null) ? meta.getItemModel() : null,
                     (meta.getItemFlags().isEmpty() == false) ? meta.getItemFlags().toArray(new ItemFlag[0]) : null,
@@ -178,6 +182,9 @@ public final class ItemStackAdapterFactory implements JsonAdapter.Factory {
 
             if (lore != null)
                 meta.lore(Arrays.stream(lore).map(line -> (Component) empty().decoration(TextDecoration.ITALIC, false).append(line)).toList());
+
+            if (rarity != null)
+                meta.setRarity(rarity);
 
             if (customModelData != null)
                 meta.setCustomModelData(customModelData);
