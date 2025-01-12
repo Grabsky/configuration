@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "cloud.grabsky"
-version = "1.21.3-${System.getenv("GITHUB_RUN_NUMBER") ?: "DEV"}"
+version = "1.21.4-${System.getenv("GITHUB_RUN_NUMBER") ?: "DEV"}"
 
 subprojects { subproject ->
     apply(plugin: "java-library")
