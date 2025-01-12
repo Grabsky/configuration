@@ -157,8 +157,7 @@ This is an example of what serializers are capable of:
               { "key": "minecraft:infinity", "level": 1 }
           ],
 
-          // exclusive to enchanted books
-          "enchantment_storage": [
+          "stored_enchantments": [
               { "key": "minecraft:infinity", "level": 1 }
           ],
 
@@ -189,28 +188,28 @@ This is an example of what serializers are capable of:
           // food component
           "food": { "nutrition": 1, "saturation": 0.2, "can_always_eat": true },
 
-          // exclusive to player heads
+          // not implemented; exclusive to player heads
           "skull_texture": "BASE64_ENCODED_VALUE",
 
-          // exclusive to spawners
+          // not implemented; exclusive to spawners
           "spawner_entity_type": "minecraft:cow",
 
-          // exclusive to spawners (block radius)
+          // not implemented; exclusive to spawners (block radius)
           "spawner_activation_range": 16,
 
-          // exclusive to spawners (ticks)
+          // not implemented; exclusive to spawners (ticks)
           "spawner_min_spawn_delay": 300,
 
-          // exclusive to spawners (ticks)
+          // not implemented; exclusive to spawners (ticks)
           "spawner_max_spawn_delay": 500,
 
-          // exclusive to spawners (ticks)
+          // not implemented; exclusive to spawners (ticks)
           "spawner_max_nearby_entities": 3,
 
-          // exclusive to spawners (block radius)
+          // not implemented; exclusive to spawners (block radius)
           "spawner_spawn_range": 5,
 
-          // exclusive to spawners
+          // not implemented; exclusive to spawners
           "spawner_spawn_count": 2
 
       }

@@ -43,6 +43,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemRarity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.inventory.meta.components.FoodComponent;
@@ -133,6 +134,9 @@ public final class ItemStackAdapterFactory implements JsonAdapter.Factory {
         @Json(name = "enchantments")
         private final @NotNull EnchantmentEntry @Nullable [] enchantments;
 
+        @Json(name = "stored_enchantments")
+        private final @NotNull EnchantmentEntry @Nullable [] storedEnchantments;
+
         @Json(name = "persistent_data_container")
         private final @NotNull PersistentDataEntry @Nullable [] persistentDataEntries;
 
@@ -161,6 +165,9 @@ public final class ItemStackAdapterFactory implements JsonAdapter.Factory {
                     (meta.hasItemModel() == true && meta.getItemModel() != null) ? meta.getItemModel() : null,
                     (meta.getItemFlags().isEmpty() == false) ? meta.getItemFlags().toArray(new ItemFlag[0]) : null,
                     (meta.hasEnchants() == true && meta.getEnchants().isEmpty() == false) ? (EnchantmentEntry[]) meta.getEnchants().entrySet().stream().map((e) -> new EnchantmentEntry.Init(e.getKey(), e.getValue()).init()).toArray() : null,
+                    (meta instanceof EnchantmentStorageMeta enchantmentStorageMeta && enchantmentStorageMeta.hasStoredEnchants() == true && enchantmentStorageMeta.getStoredEnchants().isEmpty() == false)
+                            ? (EnchantmentEntry[]) enchantmentStorageMeta.getStoredEnchants().entrySet().stream().map((e) -> new EnchantmentEntry.Init(e.getKey(), e.getValue()).init()).toArray()
+                            : null,
                     null, // NOT (YET) SUPPORTED; Complicated due to PDC not storing types.
                     null, // NOT (YET) SUPPORTED; Possible but need to double-check what value is expected there.
                     null, // NOT (YET) SUPPORTED; May need changing durability to damage as ItemMeta has no idea about the max durability.
@@ -198,6 +205,12 @@ public final class ItemStackAdapterFactory implements JsonAdapter.Factory {
             if (enchantments != null)
                 for (var entry : enchantments)
                     meta.addEnchant(entry.getEnchantment(), entry.getLevel(), true);
+
+            if (storedEnchantments != null) {
+                final EnchantmentStorageMeta enchantmentStorageMeta = (EnchantmentStorageMeta) meta;
+                for (var entry : storedEnchantments)
+                    enchantmentStorageMeta.addStoredEnchant(entry.getEnchantment(), entry.getLevel(), true);
+            }
 
             if (persistentDataEntries != null) {
                 final PersistentDataContainer container = meta.getPersistentDataContainer();
