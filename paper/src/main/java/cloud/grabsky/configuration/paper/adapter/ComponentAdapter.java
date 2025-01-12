@@ -32,6 +32,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -72,6 +74,11 @@ public final class ComponentAdapter extends JsonAdapter<Component> {
                 in.endArray();
                 // ...
                 yield miniMessage.deserialize(builder.toString());
+            }
+            case BEGIN_OBJECT -> {
+                final String json = in.nextSource().readUtf8();
+                // ...
+                yield GsonComponentSerializer.gson().deserialize(json);
             }
             case NULL -> null;
             default -> throw new JsonDataException("Expected STRING or BEGIN_ARRAY at " + in.getPath() + " but found: " + in.peek());
