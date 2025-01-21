@@ -73,7 +73,7 @@ public final class ComponentAdapter extends JsonAdapter<Component> {
                 // ...
                 in.endArray();
                 // ...
-                yield miniMessage.deserialize(builder.toString());
+                yield miniMessage.deserialize(builder.toString()).compact();
             }
             case BEGIN_OBJECT -> {
                 final String json = in.nextSource().readUtf8();
