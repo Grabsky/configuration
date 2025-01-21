@@ -56,7 +56,7 @@ public final class ComponentAdapter extends JsonAdapter<Component> {
                 if ("".equals(text) == true)
                     yield Component.empty();
                 // Parsing and returning
-                yield miniMessage.deserialize(text);
+                yield miniMessage.deserialize(text).compact();
             }
             case BEGIN_ARRAY -> {
                 final StringBuilder builder = new StringBuilder();
