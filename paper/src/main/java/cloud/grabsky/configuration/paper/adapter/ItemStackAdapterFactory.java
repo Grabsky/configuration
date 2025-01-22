@@ -188,7 +188,7 @@ public final class ItemStackAdapterFactory implements JsonAdapter.Factory {
                 meta.displayName(empty().decoration(TextDecoration.ITALIC, false).append(customName));
 
             if (lore != null)
-                meta.lore(Arrays.stream(lore).map(line -> (Component) empty().decoration(TextDecoration.ITALIC, false).append(line)).toList());
+                meta.lore(Arrays.stream(lore).map(line -> empty().decoration(TextDecoration.ITALIC, false).append(line).compact()).toList());
 
             if (rarity != null)
                 meta.setRarity(rarity);
