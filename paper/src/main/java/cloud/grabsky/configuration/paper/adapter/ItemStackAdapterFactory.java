@@ -54,6 +54,7 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Set;
 import java.util.UUID;
 
@@ -221,7 +222,18 @@ public final class ItemStackAdapterFactory implements JsonAdapter.Factory {
             // for ItemStack > ItemMeta > SkullMeta
             if (skullTexture != null && meta instanceof SkullMeta skullMeta) {
                 final PlayerProfile profile = Bukkit.createProfile(EMPTY_UUID);
-                profile.setProperty(new ProfileProperty("textures", skullTexture));
+                final String textures = (skullTexture.startsWith("http") == true)
+                        ? Base64.getEncoder().encodeToString(
+                        String.format("""
+                                {
+                                    "textures": {
+                                        "SKIN": { "url": "%s" }
+                                    }
+                                }
+                            """, skullTexture).trim().getBytes())
+                        : skullTexture;
+                // ...
+                profile.setProperty(new ProfileProperty("textures", textures));
                 // ...
                 skullMeta.setPlayerProfile(profile);
             }
