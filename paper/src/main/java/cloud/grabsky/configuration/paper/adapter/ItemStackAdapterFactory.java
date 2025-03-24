@@ -34,14 +34,26 @@ import com.squareup.moshi.JsonDataException;
 import com.squareup.moshi.JsonReader;
 import com.squareup.moshi.JsonWriter;
 import com.squareup.moshi.Moshi;
+import io.papermc.paper.datacomponent.DataComponentTypes;
+import io.papermc.paper.datacomponent.item.Consumable;
+import io.papermc.paper.datacomponent.item.CustomModelData;
+import io.papermc.paper.datacomponent.item.Equippable;
+import io.papermc.paper.datacomponent.item.FoodProperties;
+import io.papermc.paper.datacomponent.item.ResolvableProfile;
+import io.papermc.paper.datacomponent.item.consumable.ItemUseAnimation;
+import io.papermc.paper.registry.RegistryKey;
+import io.papermc.paper.registry.set.RegistrySet;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.entity.EntityType;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemRarity;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ItemType;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -55,6 +67,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -66,6 +79,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 
 import static com.squareup.moshi.Types.getRawType;
 import static net.kyori.adventure.text.Component.empty;
@@ -88,24 +102,25 @@ public final class ItemStackAdapterFactory implements JsonAdapter.Factory {
 
             @Override
             public ItemStack fromJson(final @NotNull JsonReader in) throws IOException {
-                // Creating ItemStack lazy initializer
+                // Reading ItemStackSurrogate from JSON.
                 final @Nullable ItemStackSurrogate surrogate = adapter.nullSafe().fromJson(in);
-                // ...
+                // Throwing exception if surrogate is null.
                 if (surrogate == null)
-                    throw new JsonDataException("something is wrong bro");
-                // ...
+                    throw new JsonDataException("Invalid ItemStack definition found at " + in.getPath() + " path.");
+                // Initializing the surrogate.
                 return surrogate.init();
             }
 
             @Override
-            public void toJson(final @NotNull JsonWriter out, final ItemStack value) throws IOException {
-                adapter.toJson(out, ItemStackSurrogate.fromItemStack(value));
+            public void toJson(final @NotNull JsonWriter out, final ItemStack value) {
+                throw new UnsupportedOperationException("NOT_IMPLEMENTED");
             }
 
         };
     }
 
     @Internal
+    @SuppressWarnings("UnstableApiUsage")
     @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
     private static final class ItemMetaSurrogate {
 
@@ -150,58 +165,150 @@ public final class ItemStackAdapterFactory implements JsonAdapter.Factory {
         @Json(name = "food")
         private final @Nullable FoodComponentContainer food;
 
+        @Json(name = "consumable")
+        private final @Nullable ConsumableComponentContainer consumable;
+
+        @Json(name = "equippable")
+        private final @Nullable EquippableComponentContainer equippable;
+
+        @Json(name = "note_block_sound")
+        private final @Nullable NamespacedKey noteBlockSound;
+
+        @Json(name = "max_stack_size")
+        private final @Nullable Integer maxStackSize;
+
+        @Json(name = "max_damage")
+        private final @Nullable Integer maxDamage;
+
+        @Json(name = "enchantment_glint_override")
+        private final @Nullable Boolean enchantmentGlintOverride;
+
         @Json(name = "components")
         private final @Nullable String components;
 
-        public static @Nullable ItemMetaSurrogate fromItemMeta(final @Nullable ItemMeta meta) {
-            if (meta == null)
-                return null;
-            // ...
-            return new ItemMetaSurrogate(
-                    (meta.hasItemName() == true) ? meta.itemName() : null,
-                    (meta.hasDisplayName() == true && meta.displayName() != null) ? meta.displayName() : null,
-                    (meta.hasLore() == true && meta.lore() != null) ? meta.lore().toArray(new Component[0]) : null, // Should never throw NPE.
-                    (meta.hasRarity() == true) ? meta.getRarity() : null,
-                    (meta.hasCustomModelData() == true && meta.getCustomModelData() != 0) ? meta.getCustomModelData() : null,
-                    (meta.hasItemModel() == true && meta.getItemModel() != null) ? meta.getItemModel() : null,
-                    (meta.getItemFlags().isEmpty() == false) ? meta.getItemFlags().toArray(new ItemFlag[0]) : null,
-                    (meta.hasEnchants() == true && meta.getEnchants().isEmpty() == false) ? (EnchantmentEntry[]) meta.getEnchants().entrySet().stream().map((e) -> new EnchantmentEntry.Init(e.getKey(), e.getValue()).init()).toArray() : null,
-                    (meta instanceof EnchantmentStorageMeta enchantmentStorageMeta && enchantmentStorageMeta.hasStoredEnchants() == true && enchantmentStorageMeta.getStoredEnchants().isEmpty() == false)
-                            ? (EnchantmentEntry[]) enchantmentStorageMeta.getStoredEnchants().entrySet().stream().map((e) -> new EnchantmentEntry.Init(e.getKey(), e.getValue()).init()).toArray()
-                            : null,
-                    null, // NOT (YET) SUPPORTED; Complicated due to PDC not storing types.
-                    null, // NOT (YET) SUPPORTED; Possible but need to double-check what value is expected there.
-                    null, // NOT (YET) SUPPORTED; May need changing durability to damage as ItemMeta has no idea about the max durability.
-                    (meta.hasFood() == true) ? new FoodComponentContainer(meta.getFood().getNutrition(), meta.getFood().getSaturation(), meta.getFood().canAlwaysEat()) : null,
-                    null  // NOT SUPPORTED; Unlikely to be in the future.
-
-            );
-        }
-
         @SuppressWarnings("unchecked")
         public @NotNull ItemMeta init(final @NotNull ItemStack item) {
-            final ItemMeta meta = item.getItemMeta();
+            // Getting the type of the item. Can be null if the material is not a valid item.
+            final @Nullable ItemType type = item.getType().asItemType();
 
+            // Throwing IllegalArgumentException when the type is null.
+            if (type == null)
+                throw new IllegalArgumentException("Specified ItemStack is not a valid item.");
+
+            // minecraft:item_name
             if (itemName != null)
-                meta.itemName(itemName);
+                item.setData(DataComponentTypes.ITEM_NAME, itemName);
 
+            // minecraft:custom_name
             if (customName != null)
-                meta.displayName(empty().decoration(TextDecoration.ITALIC, false).append(customName));
+                item.setData(DataComponentTypes.CUSTOM_NAME, empty().decoration(TextDecoration.ITALIC, false).append(customName));
 
-            if (lore != null)
-                meta.lore(Arrays.stream(lore).map(line -> empty().decoration(TextDecoration.ITALIC, false).append(line).compact()).toList());
+            // minecraft:note_block_sound
+            if (noteBlockSound != null)
+                item.setData(DataComponentTypes.NOTE_BLOCK_SOUND, noteBlockSound);
 
+            // minecraft:rarity
             if (rarity != null)
-                meta.setRarity(rarity);
+                item.setData(DataComponentTypes.RARITY, rarity);
+
+            // minecraft:item_model
+            if (model != null)
+                item.setData(DataComponentTypes.ITEM_MODEL, model);
+
+            // minecraft:max_stack_size
+            if (maxStackSize != null)
+                item.setData(DataComponentTypes.MAX_STACK_SIZE, maxStackSize);
+
+            // minecraft:max_damage
+            if (maxDamage != null)
+                item.setData(DataComponentTypes.MAX_DAMAGE, maxDamage);
+
+            // minecraft:enchantment_glint_override
+            if (enchantmentGlintOverride != null)
+                item.setData(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, enchantmentGlintOverride);
+
+            // minecraft:durability
+            if (durability != null)
+                item.setData(DataComponentTypes.DAMAGE, item.getType().getMaxDurability() - Math.max(0, durability));
+
+            // minecraft:food
+            if (food != null) {
+                final var component = (type.hasDefaultData(DataComponentTypes.FOOD) == true) ? type.getDefaultData(DataComponentTypes.FOOD).toBuilder() : FoodProperties.food();
+                // Overriding values.
+                if (food.nutrition != null)
+                    component.nutrition(food.nutrition);
+                if (food.saturation != null)
+                    component.saturation(food.saturation);
+                if (food.canAlwaysEat != null)
+                    component.canAlwaysEat(food.canAlwaysEat);
+                // Setting the component.
+                item.setData(DataComponentTypes.FOOD, component);
+            }
+
+            // minecraft:consumable
+            if (consumable != null) {
+                final var component = (type.hasDefaultData(DataComponentTypes.CONSUMABLE) == true) ? type.getDefaultData(DataComponentTypes.CONSUMABLE).toBuilder() : Consumable.consumable();
+                // Overriding values.
+                if (consumable.consume_seconds != null)
+                    component.consumeSeconds(consumable.consume_seconds);
+                if (consumable.animation != null)
+                    component.animation(ItemUseAnimation.valueOf(consumable.animation.toUpperCase()));
+                if (consumable.sound != null)
+                    component.sound(consumable.sound);
+                if (consumable.hasConsumeParticles != null)
+                    component.hasConsumeParticles(consumable.hasConsumeParticles);
+                // Setting the component.
+                item.setData(DataComponentTypes.CONSUMABLE, component);
+            }
+
+            // minecraft:equippable
+            if (equippable != null) {
+                final var component = (type.hasDefaultData(DataComponentTypes.EQUIPPABLE) == true) ? type.getDefaultData(DataComponentTypes.EQUIPPABLE).toBuilder() : Equippable.equippable(equippable.slot);
+                // Overriding values.
+                if (equippable.equipSound != null)
+                    component.equipSound(equippable.equipSound);
+                if (equippable.assetId != null)
+                    component.assetId(equippable.assetId);
+                if (equippable.allowedEntities != null)
+                    component.allowedEntities(RegistrySet.keySetFromValues(RegistryKey.ENTITY_TYPE, equippable.allowedEntities));
+                if (equippable.dispensable != null)
+                    component.dispensable(equippable.dispensable);
+                if (equippable.swappable != null)
+                    component.swappable(equippable.swappable);
+                if (equippable.damageOnHurt != null)
+                    component.damageOnHurt(equippable.damageOnHurt);
+                if (equippable.cameraOverlay != null)
+                    component.cameraOverlay(equippable.cameraOverlay);
+                // Setting the component.
+                item.setData(DataComponentTypes.EQUIPPABLE, component);
+            }
+
+            // minecraft:profile
+            if (skullTexture != null) {
+                // Creating a dummy profile.
+                final PlayerProfile profile = Bukkit.createProfile(EMPTY_UUID);
+                // Setting textures based on specified value.
+                final String textures = (skullTexture.startsWith("http") == true)
+                        ? Base64.getEncoder().encodeToString(
+                                String.format("""
+                                    {
+                                        "textures": {
+                                            "SKIN": { "url": "%s" }
+                                        }
+                                    }
+                                    """, skullTexture).trim().getBytes())
+                        : skullTexture;
+                // Setting textures property in the profile.
+                profile.setProperty(new ProfileProperty("textures", textures));
+                // Setting the component.
+                item.setData(DataComponentTypes.PROFILE, ResolvableProfile.resolvableProfile(profile));
+            }
+
+            // Getting and modifying the ItemMeta.
+            final ItemMeta meta = item.getItemMeta();
 
             if (customModelData != null)
                 meta.setCustomModelData(customModelData);
-
-            if (model != null)
-                meta.setItemModel(model);
-
-            if (itemFlags != null)
-                meta.addItemFlags(itemFlags);
 
             if (enchantments != null)
                 for (var entry : enchantments)
@@ -217,40 +324,6 @@ public final class ItemStackAdapterFactory implements JsonAdapter.Factory {
                 final PersistentDataContainer container = meta.getPersistentDataContainer();
                 for (final var entry : persistentDataEntries)
                     container.set(entry.getKey(), (PersistentDataType<?, Object>) entry.getType(), entry.getValue()); // Cast should be safe assuming serialization was successful
-            }
-
-            // for ItemStack > ItemMeta > SkullMeta
-            if (skullTexture != null && meta instanceof SkullMeta skullMeta) {
-                final PlayerProfile profile = Bukkit.createProfile(EMPTY_UUID);
-                final String textures = (skullTexture.startsWith("http") == true)
-                        ? Base64.getEncoder().encodeToString(
-                        String.format("""
-                                {
-                                    "textures": {
-                                        "SKIN": { "url": "%s" }
-                                    }
-                                }
-                            """, skullTexture).trim().getBytes())
-                        : skullTexture;
-                // ...
-                profile.setProperty(new ProfileProperty("textures", textures));
-                // ...
-                skullMeta.setPlayerProfile(profile);
-            }
-
-            // for ItemStack > ItemMeta > Damageable
-            if (durability != null && meta instanceof Damageable damageable)
-                damageable.setDamage(item.getType().getMaxDurability() - Math.max(0, durability));
-
-            // Food Component
-            if (food != null) {
-                final FoodComponent foodComponent = meta.getFood();
-                // ...
-                foodComponent.setNutrition(food.nutrition != null ? food.nutrition : (int) 0);
-                foodComponent.setSaturation(food.saturation != null ? food.saturation : (float) 0);
-                foodComponent.setCanAlwaysEat(food.canAlwaysEat);
-                // ...
-                meta.setFood(foodComponent);
             }
 
             // Returning...
@@ -271,14 +344,6 @@ public final class ItemStackAdapterFactory implements JsonAdapter.Factory {
         @Json(name = "meta")
         private final @Nullable ItemMetaSurrogate meta;
 
-        public static @NotNull ItemStackSurrogate fromItemStack(final @NotNull ItemStack item) {
-            return new ItemStackSurrogate(
-                    item.getType(),
-                    item.getAmount(),
-                    (item.hasItemMeta() == true && item.getItemMeta() != null) ? ItemMetaSurrogate.fromItemMeta(item.getItemMeta()) : null
-            );
-        }
-
         @Override
         public ItemStack init() {
             final ItemStack item = new ItemStack(material, (amount != null) ? amount : 1);
@@ -297,18 +362,65 @@ public final class ItemStackAdapterFactory implements JsonAdapter.Factory {
     }
 
 
-    @Internal
-    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @Internal @AllArgsConstructor(access = AccessLevel.PRIVATE)
     private static final class FoodComponentContainer {
 
         @Json(name = "nutrition")
-        private final @NotNull Integer nutrition;
+        private final @Nullable Integer nutrition;
 
         @Json(name = "saturation")
         private final @Nullable Float saturation;
 
         @Json(name = "can_always_eat")
-        private boolean canAlwaysEat = false;
+        private final @Nullable Boolean canAlwaysEat;
+
+    }
+
+    @Internal @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    private static final class ConsumableComponentContainer {
+
+        @Json(name = "consume_seconds")
+        private final @Nullable Float consume_seconds;
+
+        @Json(name = "animation")
+        private final @Nullable String animation;
+
+        @Json(name = "sound")
+        private final @Nullable NamespacedKey sound;
+
+        @Json(name = "has_consume_particles")
+        private final @Nullable Boolean hasConsumeParticles;
+
+        // TO-DO: on_consume_effects
+
+    }
+
+    @Internal @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    private static final class EquippableComponentContainer {
+
+        @Json(name = "slot")
+        private final @NotNull EquipmentSlot slot;
+
+        @Json(name = "equip_sound")
+        private final @Nullable NamespacedKey equipSound;
+
+        @Json(name = "asset_id")
+        private final @Nullable NamespacedKey assetId;
+
+        @Json(name = "allowed_entities")
+        private final @Nullable List<EntityType> allowedEntities;
+
+        @Json(name = "dispensable")
+        private final @Nullable Boolean dispensable;
+
+        @Json(name = "swappable")
+        private final @Nullable Boolean swappable;
+
+        @Json(name = "damage_on_hurt")
+        private final @Nullable Boolean damageOnHurt;
+
+        @Json(name = "camera_overlay")
+        private final @Nullable NamespacedKey cameraOverlay;
 
     }
 
