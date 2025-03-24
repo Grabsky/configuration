@@ -285,8 +285,6 @@ public final class ItemStackAdapterFactory implements JsonAdapter.Factory {
 
             // minecraft:profile
             if (skullTexture != null) {
-                // Creating a dummy profile.
-                final PlayerProfile profile = Bukkit.createProfile(EMPTY_UUID);
                 // Setting textures based on specified value.
                 final String textures = (skullTexture.startsWith("http") == true)
                         ? Base64.getEncoder().encodeToString(
@@ -298,10 +296,12 @@ public final class ItemStackAdapterFactory implements JsonAdapter.Factory {
                                     }
                                     """, skullTexture).trim().getBytes())
                         : skullTexture;
-                // Setting textures property in the profile.
-                profile.setProperty(new ProfileProperty("textures", textures));
                 // Setting the component.
-                item.setData(DataComponentTypes.PROFILE, ResolvableProfile.resolvableProfile(profile));
+                item.setData(DataComponentTypes.PROFILE, ResolvableProfile.resolvableProfile()
+                        .name(null)
+                        .uuid(EMPTY_UUID)
+                        .addProperty(new ProfileProperty("textures", textures))
+                );
             }
 
             // Getting and modifying the ItemMeta.
