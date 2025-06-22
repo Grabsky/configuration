@@ -23,6 +23,7 @@ jobs:
         with:
           arguments: publish
         env:
-          # GitHub Packages
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VELA_USERNAME: ${{ secrets.VELA_USERNAME }}
+          VELA_PASSWORD: ${{ secrets.VELA_PASSWORD }}
 
