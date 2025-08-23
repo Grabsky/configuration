@@ -39,6 +39,7 @@ import io.papermc.paper.datacomponent.item.Consumable;
 import io.papermc.paper.datacomponent.item.CustomModelData;
 import io.papermc.paper.datacomponent.item.Equippable;
 import io.papermc.paper.datacomponent.item.FoodProperties;
+import io.papermc.paper.datacomponent.item.ItemLore;
 import io.papermc.paper.datacomponent.item.ResolvableProfile;
 import io.papermc.paper.datacomponent.item.consumable.ItemUseAnimation;
 import io.papermc.paper.registry.RegistryKey;
@@ -202,6 +203,10 @@ public final class ItemStackAdapterFactory implements JsonAdapter.Factory {
             // minecraft:custom_name
             if (customName != null)
                 item.setData(DataComponentTypes.CUSTOM_NAME, empty().decoration(TextDecoration.ITALIC, false).append(customName));
+
+            // minecraft:lore
+            if (lore != null)
+                item.setData(DataComponentTypes.LORE, ItemLore.lore(Arrays.stream(lore).map(line -> empty().decoration(TextDecoration.ITALIC, false).append(line).compact()).toList()));
 
             // minecraft:note_block_sound
             if (noteBlockSound != null)
