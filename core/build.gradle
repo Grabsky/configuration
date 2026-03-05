@@ -7,6 +7,6 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.2")
     // Moshi
-    api('com.squareup.moshi:moshi:1.14.0')
-    testRuntimeOnly("com.squareup.moshi:moshi:1.14.0")
+    api('com.squareup.moshi:moshi:1.15.2')
+    testRuntimeOnly("com.squareup.moshi:moshi:1.15.2")
 }
