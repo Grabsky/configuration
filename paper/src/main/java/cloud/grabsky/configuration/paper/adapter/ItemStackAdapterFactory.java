@@ -356,10 +356,14 @@ public final class ItemStackAdapterFactory implements JsonAdapter.Factory {
             if (meta != null) {
                 // Applying components if specified.
                 if (meta.components != null)
-                    Bukkit.getUnsafe().modifyItemStack(item, item.getType().getKey().asString() + meta.components);
+                    // In 26.1, Paper changed modifyItemStack method to only accept component string.
+                    if (Bukkit.getUnsafe().getProtocolVersion() >= 775) {
+                        Bukkit.getUnsafe().modifyItemStack(item, meta.components);
+                    } else {
+                        Bukkit.getUnsafe().modifyItemStack(item, item.getType().getKey().asString() + meta.components);
+                    }
                 // Applying other meta.
                 item.setItemMeta(meta.init(item));
-
             }
             // ...
             return item;
