@@ -6,4 +6,6 @@ dependencies {
     api project(":configuration-core")
     // Paper API
     compileOnly("io.papermc.paper:paper-api:26.3.build.+")
+    // https://github.com/ProjectUnified/UniItem
+    implementation("io.github.projectunified:uni-item-all:2.7.2")
 }

@@ -25,8 +25,6 @@ package cloud.grabsky.configuration.paper.adapter;
 
 import cloud.grabsky.configuration.paper.object.EnchantmentEntry;
 import cloud.grabsky.configuration.paper.object.PersistentDataEntry;
-import cloud.grabsky.configuration.util.LazyInit;
-import com.destroystokyo.paper.profile.PlayerProfile;
 import com.destroystokyo.paper.profile.ProfileProperty;
 import com.squareup.moshi.Json;
 import com.squareup.moshi.JsonAdapter;
@@ -34,9 +32,10 @@ import com.squareup.moshi.JsonDataException;
 import com.squareup.moshi.JsonReader;
 import com.squareup.moshi.JsonWriter;
 import com.squareup.moshi.Moshi;
+import io.github.projectunified.uniitem.all.AllItemProvider;
+import io.github.projectunified.uniitem.api.ItemKey;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.Consumable;
-import io.papermc.paper.datacomponent.item.CustomModelData;
 import io.papermc.paper.datacomponent.item.Equippable;
 import io.papermc.paper.datacomponent.item.FoodProperties;
 import io.papermc.paper.datacomponent.item.ItemLore;
@@ -51,15 +50,11 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemRarity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ItemType;
-import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.inventory.meta.components.FoodComponent;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
@@ -80,7 +75,6 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import lombok.val;
 
 import static com.squareup.moshi.Types.getRawType;
 import static net.kyori.adventure.text.Component.empty;
@@ -109,7 +103,7 @@ public final class ItemStackAdapterFactory implements JsonAdapter.Factory {
                 if (surrogate == null)
                     throw new JsonDataException("Invalid ItemStack definition found at " + in.getPath() + " path.");
                 // Initializing the surrogate.
-                return surrogate.init();
+                return surrogate.init(moshi.adapter(Material.class), in.getPath() + ".material");
             }
 
             @Override
@@ -144,9 +138,6 @@ public final class ItemStackAdapterFactory implements JsonAdapter.Factory {
 
         @Json(name = "model")
         private final @Nullable NamespacedKey model;
-
-        @Json(name = "item_flags")
-        private final @NotNull ItemFlag @Nullable [] itemFlags;
 
         @Json(name = "enchantments")
         private final @NotNull EnchantmentEntry @Nullable [] enchantments;
@@ -188,7 +179,7 @@ public final class ItemStackAdapterFactory implements JsonAdapter.Factory {
         private final @Nullable String components;
 
         @SuppressWarnings("unchecked")
-        public @NotNull ItemMeta init(final @NotNull ItemStack item) {
+        public @NotNull ItemMeta init(final @NotNull ItemStack item, final boolean isCustom) {
             // Getting the type of the item. Can be null if the material is not a valid item.
             final @Nullable ItemType type = item.getType().asItemType();
 
@@ -238,7 +229,8 @@ public final class ItemStackAdapterFactory implements JsonAdapter.Factory {
 
             // minecraft:food
             if (food != null) {
-                final var component = (type.hasDefaultData(DataComponentTypes.FOOD) == true) ? type.getDefaultData(DataComponentTypes.FOOD).toBuilder() : FoodProperties.food();
+                final var existing = (isCustom == true) ? item.getData(DataComponentTypes.FOOD) : type.getDefaultData(DataComponentTypes.FOOD);
+                final var component = (existing != null) ? existing.toBuilder() : FoodProperties.food();
                 // Overriding values.
                 if (food.nutrition != null)
                     component.nutrition(food.nutrition);
@@ -252,7 +244,8 @@ public final class ItemStackAdapterFactory implements JsonAdapter.Factory {
 
             // minecraft:consumable
             if (consumable != null) {
-                final var component = (type.hasDefaultData(DataComponentTypes.CONSUMABLE) == true) ? type.getDefaultData(DataComponentTypes.CONSUMABLE).toBuilder() : Consumable.consumable();
+                final var existing = (isCustom == true) ? item.getData(DataComponentTypes.CONSUMABLE) : type.getDefaultData(DataComponentTypes.CONSUMABLE);
+                final var component = (existing != null) ? existing.toBuilder() : Consumable.consumable();
                 // Overriding values.
                 if (consumable.consume_seconds != null)
                     component.consumeSeconds(consumable.consume_seconds);
@@ -268,7 +261,8 @@ public final class ItemStackAdapterFactory implements JsonAdapter.Factory {
 
             // minecraft:equippable
             if (equippable != null) {
-                final var component = (type.hasDefaultData(DataComponentTypes.EQUIPPABLE) == true) ? type.getDefaultData(DataComponentTypes.EQUIPPABLE).toBuilder() : Equippable.equippable(equippable.slot);
+                final var existing = (isCustom == true) ? item.getData(DataComponentTypes.EQUIPPABLE) : type.getDefaultData(DataComponentTypes.EQUIPPABLE);
+                final var component = (existing != null) ? existing.toBuilder() : Equippable.equippable(equippable.slot);
                 // Overriding values.
                 if (equippable.equipSound != null)
                     component.equipSound(equippable.equipSound);
@@ -338,10 +332,10 @@ public final class ItemStackAdapterFactory implements JsonAdapter.Factory {
 
     @Internal
     @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-    private static final class ItemStackSurrogate implements LazyInit<ItemStack> {
+    private static final class ItemStackSurrogate {
 
         @Json(name = "material")
-        private final @NotNull Material material;
+        private final @Nullable String material;
 
         @Json(name = "amount")
         private final @Nullable Integer amount;
@@ -349,9 +343,46 @@ public final class ItemStackAdapterFactory implements JsonAdapter.Factory {
         @Json(name = "meta")
         private final @Nullable ItemMetaSurrogate meta;
 
-        @Override
-        public ItemStack init() {
-            final ItemStack item = new ItemStack(material, (amount != null) ? amount : 1);
+        private @NotNull ItemStack resolveItem(final @NotNull JsonAdapter<Material> materialAdapter, final @NotNull String path, final boolean isCustom) {
+            // Resolving vanilla materials through the existing Material adapter.
+            if (isCustom == false) {
+                try {
+                    return new ItemStack(materialAdapter.fromJsonValue(material), (amount != null) ? amount : 1);
+                } catch (final JsonDataException exception) {
+                    throw new JsonDataException("Invalid item material '" + material + "' at " + path, exception);
+                }
+            }
+
+            // Splitting the provider type from the item identifier.
+            final String[] parts = material.substring(1).split("]", 2);
+            if (parts.length != 2 || parts[0].isBlank() == true || parts[1].isBlank() == true)
+                throw new JsonDataException("Expected \"[type] item_id\" at " + path + " but found: " + material);
+
+            // Resolving the item through UniItem.
+            final ItemKey key = new ItemKey(parts[0], parts[1].stripLeading());
+            final @Nullable ItemStack item;
+            try {
+                item = new AllItemProvider().item(key);
+            } catch (final IllegalArgumentException exception) {
+                throw new JsonDataException("Invalid UniItem '" + material + "' at " + path, exception);
+            }
+            if (item == null)
+                throw new JsonDataException("Could not resolve UniItem '" + material + "' at " + path);
+
+            // Cloning the resolved item before applying overrides.
+            final ItemStack copy = item.clone();
+            if (amount != null)
+                copy.setAmount(amount);
+            return copy;
+        }
+
+        public @NotNull ItemStack init(final @NotNull JsonAdapter<Material> materialAdapter, final @NotNull String path) {
+            // Throwing an exception when the material is missing.
+            if (material == null)
+                throw new JsonDataException("Missing item material at " + path);
+            // Resolving the base item before applying components and meta.
+            final boolean isCustom = material.startsWith("[");
+            final ItemStack item = resolveItem(materialAdapter, path, isCustom);
             // ...
             if (meta != null) {
                 // Applying components if specified.
@@ -363,7 +394,7 @@ public final class ItemStackAdapterFactory implements JsonAdapter.Factory {
                         Bukkit.getUnsafe().modifyItemStack(item, item.getType().getKey().asString() + meta.components);
                     }
                 // Applying other meta.
-                item.setItemMeta(meta.init(item));
+                item.setItemMeta(meta.init(item, isCustom));
             }
             // ...
             return item;

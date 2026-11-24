@@ -134,6 +134,10 @@ This is an example of what serializers are capable of:
   ```
 - **[ItemStackAdapterFactory](#adapters)** depends on ***all*** adapters listed above, ***except*** **[StringComponentAdapter](#adapters)**, **[SoundSourceAdapter](#adapters)** and **[SoundAdapter](#adapters)**.
 
+  To use a UniItem provider, set `material` to `[type] item_id`, for example `"[craftengine] mypack:ruby_sword"`.
+  The provider plugin must be loaded and accessible to the consuming plugin. Any configured amount and metadata
+  are applied to the resolved item. If `amount` is omitted, the resolved amount is kept.
+
   ```json5
   "item_example": {
 
