@@ -46,13 +46,13 @@ subprojects { subproject ->
         // JetBrains Annotations
         compileOnly("org.jetbrains:annotations:26.0.1")
         // Lombok
-        compileOnly("org.projectlombok:lombok:1.18.42")
-        annotationProcessor("org.projectlombok:lombok:1.18.42")
+        compileOnly("org.projectlombok:lombok:1.18.48")
+        annotationProcessor("org.projectlombok:lombok:1.18.48")
     }
 
     compileJava {
         options.fork = true
-        // Setting compatibility to Java 21 and above.
+        // Setting compatibility to Java 25 and above.
         sourceCompatibility = JavaVersion.VERSION_25
         targetCompatibility = JavaVersion.VERSION_25
     }
