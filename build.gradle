@@ -3,7 +3,7 @@ plugins {
     id("maven-publish")
 }
 
-final String VERSION = "1.21.4"
+final String VERSION = "26.3"
 final String RUN_NUMBER = System.getenv("GITHUB_RUN_NUMBER") ?: "DEV"
 
 group = "cloud.grabsky"
@@ -53,8 +53,8 @@ subprojects { subproject ->
     compileJava {
         options.fork = true
         // Setting compatibility to Java 21 and above.
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
+        sourceCompatibility = JavaVersion.VERSION_25
+        targetCompatibility = JavaVersion.VERSION_25
     }
 
     java {
